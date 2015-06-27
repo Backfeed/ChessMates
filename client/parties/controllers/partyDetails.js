@@ -21,6 +21,22 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
             );
         };
 
+        $scope.updatePosition = function(position){
+            $meteor.call('updatePosition', $scope.party._id, position).then(
+                function(){
+                    console.log('success on new position');
+                },
+                function(err){
+                    console.log('failed', err);
+                }
+            );
+        };
+
+        $scope.$watch('party.position', function(){
+            if ($scope.party && $scope.party.position)
+                board.position($scope.party.position);
+        });
+
         $scope.$on('$destroy', function() {
             subscriptionHandle.stop();
         });
@@ -35,10 +51,10 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
 
         var board,
             game = new Chess(),
-            statusEl = $('#status');
-
-    // do not pick up pieces if the game is over
-    // only pick up pieces for the side to move
+            statusEl = $('#status'),
+            pgnEl = $('#pgn');
+        // do not pick up pieces if the game is over
+        // only pick up pieces for the side to move
         var onDragStart = function(source, piece, position, orientation) {
             if (game.game_over() === true ||
                 (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -61,9 +77,10 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
             updateStatus();
         };
 
-// update the board position after the piece snap
-// for castling, en passant, pawn promotion
+        // update the board position after the piece snap
+        // for castling, en passant, pawn promotion
         var onSnapEnd = function() {
+            $scope.updatePosition(game.fen());
             board.position(game.fen());
         };
 
@@ -96,6 +113,7 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
             }
 
             statusEl.html(status);
+            pgnEl.html(game.pgn());
         };
 
         var cfg = {
