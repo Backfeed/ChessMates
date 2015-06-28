@@ -93,7 +93,7 @@ Meteor.methods({
                 {$push: {rsvps: {user: this.userId, rsvp: rsvp}}});
         }
     },
-    updatePosition: function (partyId, position) {
+    updatePosition: function (partyId, position, pgn) {
         check(partyId, String);
         check(position, String);
         if (! this.userId)
@@ -107,19 +107,43 @@ Meteor.methods({
             if (Meteor.isServer) {
                 Parties.update(
                     {_id: partyId},
-                    {$set: {"position": position}});
+                    {$set: {"position": position, "pgn": pgn}});
             } else {
-                // minimongo doesn't yet support $ in modifier. as a temporary
-                // workaround, make a modifier that uses an index. this is
-                // safe on the client since there's only one thread.
                 var modifier = {$set: {}};
                 modifier.$set["position"] = position;
+                modifier.$set["pgn"] = pgn;
                 Parties.update(partyId, modifier);
             }
         } else {
             // add new position entry
             Parties.update(partyId,
-                {$push: {position: position}});
+                {$push: {position: position, pgn: pgn}});
+        }
+    },
+    updateStatus: function (partyId, status) {
+        check(partyId, String);
+        check(status, String);
+        if (! this.userId)
+            throw new Meteor.Error(403, "You must be logged in");
+        var party = Parties.findOne(partyId);
+        if (! party)
+            throw new Meteor.Error(404, "No such party");
+
+        if (status) {
+
+            if (Meteor.isServer) {
+                Parties.update(
+                    {_id: partyId},
+                    {$set: {"status": status}});
+            } else {
+                var modifier = {$set: {}};
+                modifier.$set["status"] = status;
+                Parties.update(partyId, modifier);
+            }
+        } else {
+            // add new status entry
+            Parties.update(partyId,
+                {$push: {status: status}});
         }
     }
 });

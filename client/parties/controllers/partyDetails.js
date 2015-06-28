@@ -21,8 +21,8 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
             );
         };
 
-        $scope.updatePosition = function(position){
-            $meteor.call('updatePosition', $scope.party._id, position).then(
+        $scope.updatePosition = function(position, pgn){
+            $meteor.call('updatePosition', $scope.party._id, position, pgn).then(
                 function(){
                     console.log('success on new position');
                 },
@@ -32,9 +32,22 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
             );
         };
 
+        $scope.updateStatus = function(status){
+            $meteor.call('updateStatus', $scope.party._id, status).then(
+                function(){
+                    console.log('status updated');
+                },
+                function(err){
+                    console.log('failed', err);
+                }
+            );
+        };
+
         $scope.$watch('party.position', function(){
-            if ($scope.party && $scope.party.position)
+            if ($scope.party && $scope.party.position) {
+                console.log($scope.party.position);
                 board.position($scope.party.position);
+            }
         });
 
         $scope.$on('$destroy', function() {
@@ -50,9 +63,7 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
         };
 
         var board,
-            game = new Chess(),
-            statusEl = $('#status'),
-            pgnEl = $('#pgn');
+            game = new Chess();
         // do not pick up pieces if the game is over
         // only pick up pieces for the side to move
         var onDragStart = function(source, piece, position, orientation) {
@@ -80,8 +91,8 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
         // update the board position after the piece snap
         // for castling, en passant, pawn promotion
         var onSnapEnd = function() {
-            $scope.updatePosition(game.fen());
-            board.position(game.fen());
+            $scope.updatePosition(game.fen(), game.pgn());
+            //board.position(game.fen());
         };
 
         var updateStatus = function() {
@@ -112,13 +123,12 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
                 }
             }
 
-            statusEl.html(status);
-            pgnEl.html(game.pgn());
+            $scope.updateStatus(status);
         };
 
         var cfg = {
             draggable: true,
-            position: 'start',
+            //position: 'start',
             onDragStart: onDragStart,
             onDrop: onDrop,
             onSnapEnd: onSnapEnd
