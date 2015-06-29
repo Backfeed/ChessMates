@@ -17,10 +17,10 @@ function engineGame(options, scope) {
     // only pick up pieces for White
     var onDragStart = function(source, piece, position, orientation) {
         var re = playerColor == 'white' ? /^b/ : /^w/
-            if (game.game_over() ||
-                piece.search(re) !== -1) {
-                return false;
-            }
+        if (game.game_over() ||
+            piece.search(re) !== -1) {
+            return false;
+        }
     };
 
     setInterval(function ()
@@ -208,7 +208,7 @@ function engineGame(options, scope) {
                 // TODO this is just for show off
                 scope.updatePosition(game.fen(), game.pgn());
                 //uciCmd("eval");
-            /// Is it sending feedback?
+                /// Is it sending feedback?
             } else if(match = line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)) {
                 engineStatus.search = 'Depth: ' + match[1] + ' Nps: ' + match[2];
             }
@@ -219,7 +219,7 @@ function engineGame(options, scope) {
                 /// Is it measuring in centipawns?
                 if(match[1] == 'cp') {
                     engineStatus.score = (score / 100.0).toFixed(2);
-                /// Did it find a mate?
+                    /// Did it find a mate?
                 } else if(match[1] == 'mate') {
                     engineStatus.score = 'Mate in ' + Math.abs(score);
                 }

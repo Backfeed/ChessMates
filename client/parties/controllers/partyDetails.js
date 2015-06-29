@@ -172,6 +172,4 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
         }
         init();
 
-
-
     }]);
