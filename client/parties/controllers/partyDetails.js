@@ -172,4 +172,24 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
         }
         init();
 
+        //TODO pass to directive
+        $scope.myInterval = 5000;
+        var slides = $scope.slides = [];
+        $scope.addSlide = function() {
+            var newWidth = 300 + slides.length + 1;
+            slides.push({
+                text: ['d4 d6','Nf3 Bf5','c2 c3','h5 h7'][slides.length % 4]
+            });
+        };
+        for (var i=0; i<4; i++) {
+            $scope.addSlide();
+        }
+        // rating
+        $scope.rate = 3;
+
+        $scope.hoveringOver = function(value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / 5);
+        };
+
     }]);

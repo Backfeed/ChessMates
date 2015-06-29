@@ -66,8 +66,19 @@
     <pre id=evaluation></pre>
 </div>
 
+<div style="width: 300px; background-color: rosybrown;" layout="column">
+    <carousel interval="myInterval">
+        <slide ng-repeat="slide in slides" active="slide.active">
+            <!--<div class="carousel-caption">-->
+                <!--<h4>Suggested Move {{$index}}</h4>-->
+            <!--</div>-->
+            <h1>{{slide.text}}</h1>
+            <rating ng-model="rate" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
+        </slide>
+    </carousel>
+</div>
 
-<div id="board2" style="width: 200px"></div>
+<div id="board2" style="width: 200px" layout="row"></div>
 
 <div layout="row" layout-align="left">
     <md-button ng-click="startGame()">Start</md-button>
