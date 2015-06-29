@@ -205,6 +205,8 @@ function engineGame(options, scope) {
                 prepareMove();
                 uciCmd("eval", evaler)
                 evaluation_el.textContent = "";
+                // TODO this is just for show off
+                scope.updatePosition(game.fen(), game.pgn());
                 //uciCmd("eval");
             /// Is it sending feedback?
             } else if(match = line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)) {
@@ -249,7 +251,6 @@ function engineGame(options, scope) {
     // for castling, en passant, pawn promotion
     var onSnapEnd = function() {
         board.position(game.fen());
-        scope.updatePosition(game.fen(), game.pgn());
     };
 
     var cfg = {
@@ -350,6 +351,9 @@ function engineGame(options, scope) {
             displayStatus();
             prepareMove();
             return true;
+        },
+        getBoard: function() {
+            return board;
         }
     };
 }

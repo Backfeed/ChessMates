@@ -47,6 +47,7 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
             if ($scope.party && $scope.party.position) {
                 console.log($scope.party.position);
                 board.position($scope.party.position);
+                game.getBoard().position($scope.party.position);
             }
         });
 
@@ -144,10 +145,10 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
             board.clear();
         };
 
+        var game = engineGame(null, $scope);
+
         function init()
         {
-            var game = engineGame(null, $scope);
-
             var newGame = function newGame() {
                 var baseTime = parseFloat($('#timeBase').val()) * 60;
                 var inc = parseFloat($('#timeInc').val());

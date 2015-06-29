@@ -1,10 +1,10 @@
 <md-content layout-padding>
   <div layout="column">
       <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center" ng-hide="$root.currentUser || $root.loggingIn">
-        <span>Log in to create a party!</span>
+        <span>Log in to create a game!</span>
       </md-whiteframe>
       <form ng-show="$root.currentUser">
-        <h2 class="md-headline">Create a new party:</h2>
+        <h2 class="md-headline">Create a new game:</h2>
         <md-input-container>
           <label>Name</label>
           <input ng-model="newParty.name" id="nameInput" type="text" aria-label="Name">
@@ -21,7 +21,7 @@
   </div>
 
   <div layout="column">
-    <h2 class="md-headline">Parties:</h2>
+    <h2 class="md-headline">Games:</h2>
     <form layout="row">
       <md-input-container md-no-float>
         <md-icon md-svg-icon="action:ic_search_24px"></md-icon>
@@ -41,13 +41,6 @@
           <div id="board3" style="width: 200px; float: left"></div>
           <div style="clear:both"></div>
       </div>
-    <!--<div class="angular-google-map-container">-->
-      <!--<ui-gmap-google-map center="map.center" zoom="map.zoom">-->
-        <!--<ui-gmap-markers models="parties" coords="'location'" click="onClicked()"-->
-                         <!--fit="true" idkey="'_id'" doRebuildAll="true">-->
-        <!--</ui-gmap-markers>-->
-      <!--</ui-gmap-google-map>-->
-    <!--</div>-->
   </div>
   <div layout="column" layout-padding>
     <div dir-paginate="party in parties | itemsPerPage: perPage" total-items="partiesCount.count" layout="column">
