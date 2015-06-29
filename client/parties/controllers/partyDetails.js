@@ -144,4 +144,33 @@ angular.module("socially").controller("PartyDetailsCtrl", ['$scope', '$statePara
             board.clear();
         };
 
+        function init()
+        {
+            var game = engineGame(null, $scope);
+
+            var newGame = function newGame() {
+                var baseTime = parseFloat($('#timeBase').val()) * 60;
+                var inc = parseFloat($('#timeInc').val());
+                var skill = parseInt($('#skillLevel').val());
+                game.reset();
+                game.setTime(baseTime, inc);
+                game.setSkillLevel(skill);
+                game.setPlayerColor($('#color-white').hasClass('active') ? 'white' : 'black');
+                game.setDisplayScore($('#showScore').is(':checked'));
+                game.start();
+            }
+
+            game.setSkillLevel
+
+            document.getElementById("skillLevel").addEventListener("change", function ()
+            {
+                game.setSkillLevel(parseInt(this.value, 10));
+            });
+
+            newGame();
+        }
+        init();
+
+
+
     }]);
