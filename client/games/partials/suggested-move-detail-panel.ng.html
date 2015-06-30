@@ -1,0 +1,34 @@
+<evaluations-area>
+    
+    <move-slide-carousel>
+
+        <carousel-handler>
+            <carousel-point type="move-evaluated|move-visible|move-not-evaluated"></carousel-point>
+            <carousel-point type="move-evaluated|move-visible|move-not-evaluated"></carousel-point>
+            <carousel-point type="move-evaluated|move-visible|move-not-evaluated"></carousel-point>
+        </carousel-handler>
+        
+        <evaluation class="visible">
+            {{move}}
+            <h2>Evaluation:</h2>
+            <stars-handler></stars-handler>
+            {{avg_stars}} stars | {{reputation_sum}} of total player reputation
+            <choose-selected-move checked></choose-selected-move>
+            <input type="text" name="associated-comment" />
+            <input type="submit" name="evaluate" />
+        </evaluation>
+        
+        <evaluation class="hidden"></evaluation>
+        
+        <evaluation class="hidden"></evaluation>            
+        
+    </move-slide-carousel>
+    
+    <comments>
+        <comment>{{created_at}}: {{body}}</comment>
+        <comment>{{created_at}}: {{body}}</comment>
+        <comment>{{created_at}}: {{body}}</comment>
+        <input type="text" name="new-comment" />
+    </comments>
+    
+</evaluations-area>

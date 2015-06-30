@@ -1,0 +1,18 @@
+<moves-sort-by>
+    <option value="Relevance"><!-- relevance_score --></option>
+    <option value="Reputation"><!-- reputation_sum --></option>
+    <option value="Stars"><!-- avg_stars --></option>
+    <option value="Time"><!-- created_at/updated_at --></option>
+</moves-sort-by>
+
+<suggested-move-cells>
+    
+    <suggested-move-cell>
+        {{move}} {{avg_stars}} {{reputation_sum}}
+    </suggested-move-cell>
+    
+    <suggested-move-cell></suggested-move-cell>
+    
+    <suggested-move-cell></suggested-move-cell>
+
+</suggested-move-cells>
