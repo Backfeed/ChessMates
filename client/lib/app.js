@@ -1,9 +1,11 @@
-angular.module('socially',[
+angular.module('blockchess',[
     'angular-meteor',
     'ui.router',
     'angularUtils.directives.dirPagination',
     'ngMaterial',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'blockchess.utilities',
+    'blockchess.games'
 ]);
 
 var themeIcons = ['$mdIconProvider' , function ($mdIconProvider) {
@@ -19,11 +21,12 @@ var themeIcons = ['$mdIconProvider' , function ($mdIconProvider) {
 
 }];
 
-angular.module('socially')
+angular.module('blockchess')
+    .constant('TIME_PER_MOVE', 1000 * 60 * 5)
     .config(themeIcons);
 
 function onReady() {
-    angular.bootstrap(document, ['socially']);
+    angular.bootstrap(document, ['blockchess']);
 }
 
 if (Meteor.isCordova)
