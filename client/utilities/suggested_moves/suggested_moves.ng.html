@@ -1,0 +1,27 @@
+<select ng-model="filter">
+    <option value="relevance_score">Relevance</option>
+    <option value="reputation_sum">Reputation</option>
+    <option value="avg_stars">Stars</option>
+    <option value="created_at">Created At</option>
+</select>
+
+<table>
+  <thead>
+    <tr>
+      <td>Move</td>
+      <td>Stars</td>
+      <td>Reputation</td>
+      <td>Relevance</td>
+      <td>Created At</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="move in moves">
+      <td>{{ ::move.move }}</td>
+      <td>{{ move.avg_stars }}</td>
+      <td>{{ move.reputation_sum }}</td>
+      <td>{{ move.relevance }}</td>
+      <td>{{ ::move.created_at }}</td>
+    </tr>
+  </tbody>
+</table>

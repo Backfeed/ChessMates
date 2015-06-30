@@ -13,5 +13,11 @@ function config($stateProvider){
 }
 
 function BlockchessGamesController($scope) {
-  console.log('Game Controller!')
-} 
+  angular.extend($scope, {
+    suggestedMoves: []
+  });
+
+  $scope.$on('moveMade', function() {
+    $scope.suggestedMoves = [];
+  });
+}

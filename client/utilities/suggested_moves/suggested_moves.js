@@ -5,7 +5,7 @@ function suggestedMoves() {
   return {
     templateUrl: "client/utilities/suggested_moves/suggested_moves.ng.html",
     controller: suggestedMovesController,
-    scope: { suggestedMoves: '=' }
+    scope: { moves: '=' }
   }
 }
 
