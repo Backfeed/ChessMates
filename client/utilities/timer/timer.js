@@ -28,7 +28,7 @@ function timerController($scope, $interval, TIME_PER_MOVE) {
   })
 
   $scope.$watch('timeLeft', function(){
-    $scope.timeLeftPercentage = ($scope.timeLeft / TIME_PER_MOVE)  * 100;
+    $scope.timeLeftPercentage = Math.round( ($scope.timeLeft / TIME_PER_MOVE)  * 100 );
   });
 
   $scope.$on('moveMade', function(){

@@ -1,15 +1,28 @@
-.hour-glass {
-  height: 300px;
-  width: 20px;
-  border: 1px solid #000;
-  background: #fff;
-  position: relative;
-}
-
-.hour-glass-fill {
-  background: #e7e7e7;
-  transition: 1s height;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+.timer {
+  md-progress-circular {
+    margin: 0 auto;
+    
+    &:before {
+      content: "40:22";
+      top: 13px;
+      position: absolute;
+      left: 7px;
+    }
+  }
+  
+  .hour-glass {
+    height: 100px;
+    width: 20px;
+    border: 1px solid #000;
+    background: #fff;
+    position: relative;
+  }
+  
+  .hour-glass-fill {
+    background: #e7e7e7;
+    transition: 1s height;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
 }
