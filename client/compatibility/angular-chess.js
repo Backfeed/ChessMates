@@ -22,6 +22,9 @@
         promotion: 'q' // NOTE: always promote to a queen for example simplicity
       });
 
+      // Blockchess adition
+      $rootScope.$broadcast('singleMove', source, target, !!move)
+
       // illegal move
       if (!move) {
         $log.log('Illegal move.. cannot move from ' + source + ' to ' + target);
@@ -29,7 +32,6 @@
       }
       
       $log.debug('moved from ' + source + ' to ' + target);
-      $rootScope.$broadcast('singleMove', source, target, !!move)
     };
     
     this.onSnapEnd = function(game, board, source, target, piece) {
