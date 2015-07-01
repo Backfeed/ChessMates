@@ -7,16 +7,16 @@
     <table class="reference" style="width:100%">
       <tbody>
         <tr>
-          <th>userId</th>
-          <th>gameId</th>
+          <th>user_id</th>
+          <th>game_id</th>
           <th>Fen</th>
           <th>Actions</th>
         </tr>
         <tr ng-repeat="move in suggested_moves">
-          <td>{{ move.owner }}</td>
+          <td>{{ move.user_id }}</td>
           <td>{{ move.game_id }}</td>
           <td>{{ move.fen }}</td>
-          <td><a ng-click="current_move=move">Show Evaluations</a></td>
+          <td><a ng-click="setSelectedMove(move)" >Show Evaluations</a></td>
         </tr>
       </tbody>
     </table>
@@ -40,7 +40,7 @@
   </div>
   <div class="col-md-4">
 
-    <h2 class="md-headline">Evaluations for {{ current_move.fen }}</h2>
+    <h2 class="md-headline">Evaluations for {{ selected_move.fen }}</h2>
 
     <table class="reference" style="width:100%">
       <tbody>
