@@ -17,8 +17,8 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="move in moves">
-      <td>{{ ::move.move }}</td>
+    <tr ng-repeat="move in moves" ng-click="select(move)">
+      <td>{{ ::move.fen }}</td>
       <td>{{ move.avg_stars }}</td>
       <td>{{ move.reputation_sum }}</td>
       <td>{{ move.relevance }}</td>

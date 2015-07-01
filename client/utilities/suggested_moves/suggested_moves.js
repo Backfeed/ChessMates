@@ -9,6 +9,8 @@ function suggestedMoves() {
   }
 }
 
-function suggestedMovesController($scope) {
-
+function suggestedMovesController($rootScope, $scope) {
+  $scope.select = function(move) {
+    $rootScope.$broadcast('suggestedMovesSelected', move);
+  }
 }

@@ -15,32 +15,39 @@ function config($stateProvider){
 function GamesController($scope, $meteor, Engine) {
   $scope.Engine = Engine;
   var gameId = "1";
-  $scope.selected_move = {}
-  $scope.suggestedMoves = $meteor.collection(SuggestedMoves);
-  $scope.evaluations    = $meteor.collection(Evaluations).subscribe('evaluations', $scope.selected_move._id);
-  $scope.evauluateMove = evauluateMove
-  $scope.select = select
+
+  angular.extend($scope, {
+    suggestedMoves: $meteor.collection(SuggestedMoves),
+    evauluateMove : evauluateMove,
+    selected_move : {},
+    evaluations   : $meteor.collection(Evaluations)
+  });
 
   $meteor.autorun($scope, function() {
     $meteor.subscribe('suggested_moves', {}, gameId).then(function(){
       console.log($scope.suggested_moves);
     });
+
+    $meteor.subscribe('evaluations', {}, $scope.getReactively('selected_move')._id).then(function(){
+      console.log($scope.suggested_moves);
+    });
+
   });
 
   $scope.$on('singleMove', singleMove);
+  $scope.$on('suggestedMovesSelected', suggestedMovesSelected);
 
   function singleMove(e, from, to, isLegal) {
     console.log(e, from, to, isLegal)
     if (isLegal) {
       $scope.suggestedMoves.push({fen: from+to, game_id: gameId, currentUser_id: $scope.currentUser._id});
     } else {
-      console.log('fool');
+      console.log("that's illegal fool");
       alert("that's illegal fool");
     }
   }
 
   function evauluateMove() {
-    console.log($scope.selected_move);
     $scope.evaluations.push({
       user_id: $scope.currentUser._id,
       game_id: gameId,
@@ -50,8 +57,7 @@ function GamesController($scope, $meteor, Engine) {
     });
   }
 
-  function select(move) {
-    console.log(move);
+  function suggestedMovesSelected(e, move) {
     $scope.selected_move = move;
   }
 
