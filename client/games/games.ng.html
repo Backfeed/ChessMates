@@ -1,11 +1,60 @@
-<div class="col-md-4">
-  <ng-include src="'client/games/partials/chess-board.ng.html'"></ng-include>
-</div>
+<section class="game-area" flex="66" layout="row">
+  
+  <div class="game-sidebar" flex="15">
+      <timer></timer>
+      <dl class="game-metadata">
+        <dt>Clan's Score:</dt>
+        <dd>240</dd>
+        <img src="img/logo.png" alt="">
+        <dt>Tal's Score:</dt>
+        <dd>59</dd>
+        <dt>Tokens:</dt>
+        <dd>532</dd>
+      </dl>
+  </div>
+  
+  <div flex="60">
+    <ng-include src="'client/games/partials/chess-board.ng.html'"></ng-include>
+  </div>
+  
+  <div flex="25">
+    <suggested-moves moves="suggestedMoves"></suggested-moves>
+  </div>
 
-<div class="col-md-4">
-  <suggested-moves moves="suggestedMoves"></suggested-moves>
-</div>
+</section>
 
-<div class="col-md-4">
-  <ng-include src="'client/games/partials/suggested_moves_panel.ng.html'"></ng-include>
-</div>
+<!-- <ng-include src="'client/games/partials/suggested_moves_panel.ng.html'"></ng-include> -->
+
+<evaluations-area layout="column" flex="33">
+    
+    <move-slide-carousel>
+
+        <carousel-handler>
+            <carousel-point type="move-evaluated|move-visible|move-not-evaluated"></carousel-point>
+            <carousel-point type="move-evaluated|move-visible|move-not-evaluated"></carousel-point>
+            <carousel-point type="move-evaluated|move-visible|move-not-evaluated"></carousel-point>
+        </carousel-handler>
+        
+        <evaluation class="visible">
+            <h2>{{move}}</h2>
+            <stars-handler></stars-handler>
+            {{avg_stars}} stars | {{reputation_sum}} of total player reputation
+            <choose-selected-move checked></choose-selected-move>
+            <input type="text" name="associated-comment" />
+            <input type="submit" name="evaluate" />
+        </evaluation>
+        
+        <evaluation class="hidden"></evaluation>
+        
+        <evaluation class="hidden"></evaluation>            
+        
+    </move-slide-carousel>
+    
+    <comments>
+        <comment>{{created_at}}: {{body}}</comment>
+        <comment>{{created_at}}: {{body}}</comment>
+        <comment>{{created_at}}: {{body}}</comment>
+        <input type="text" name="new-comment" />
+    </comments>
+    
+</evaluations-area>

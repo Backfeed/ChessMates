@@ -1,6 +1,9 @@
 <div class="timer">
-  <div class="hour-glass">
+  Time left:
+  <md-progress-circular md-mode="determinate" value="{{ timeLeftPercentage }}"></md-progress-circular>
+  <!-- TODO: make pseudo-element md-progress-circular:before content dynamic with {{ timeLeft | date: 'mm:ss' }} -->
+  
+  <!-- <div class="hour-glass">
     <div class="hour-glass-fill" style="height: {{ timeLeftPercentage }}%"></div>
-  </div>
-  Timeleft: {{ timeLeft | date: 'mm:ss' }}
+  </div> -->
 </div>
