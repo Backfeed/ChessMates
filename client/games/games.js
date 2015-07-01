@@ -18,9 +18,11 @@ function GamesController($scope, $meteor, Engine) {
 
   angular.extend($scope, {
     suggestedMoves: $meteor.collection(SuggestedMoves),
+    comments      : $meteor.collection(Comments).subscribe('evaluations', $scope.selected_move._id),
+    evaluations   : $meteor.collection(Evaluations),
     evauluateMove : evauluateMove,
-    selected_move : {},
-    evaluations   : $meteor.collection(Evaluations)
+    addComment : addComment,
+    selected_move : {}
   });
 
   $meteor.autorun($scope, function() {
@@ -29,6 +31,10 @@ function GamesController($scope, $meteor, Engine) {
     });
 
     $meteor.subscribe('evaluations', {}, $scope.getReactively('selected_move')._id).then(function(){
+      console.log($scope.suggested_moves);
+    });
+
+    $meteor.subscribe('comments', {}, $scope.getReactively('selected_move')._id).then(function(){
       console.log($scope.suggested_moves);
     });
 
@@ -59,6 +65,17 @@ function GamesController($scope, $meteor, Engine) {
 
   function suggestedMovesSelected(e, move) {
     $scope.selected_move = move;
+  }
+
+  function addComment() {
+    console.log($scope.comment);
+    $scope.comments.push({
+      user_id: $scope.currentUser._id,
+      game_id: gameId,
+      suggested_move_id: $scope.selected_move._id,
+      body: $scope.comment.body
+    });
+    $scope.comment = ''
   }
 
 }

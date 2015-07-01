@@ -4,17 +4,15 @@ angular.module("blockchess").controller("GameCtrl", ['$scope', '$stateParams', '
     $scope.selected_move = {}
 
     $scope.suggested_moves = $meteor.collection(SuggestedMoves);
-    $scope.evaluations = $meteor.collection(Evaluations).subscribe('evaluations', $scope.selected_move_id);;
+    $scope.evaluations = $meteor.collection(Evaluations).subscribe('evaluations', $scope.selected_move_id);
+
+    $scope.comments = $meteor.collection(Comments).subscribe('evaluations', $scope.selected_move._id);
 
     $scope.sort = { 'fen': 1 };
 
     //$scope.suggested_moves = $meteor.collection(function() {
     //  return SuggestedMoves.find({ 'game_id': $stateParams.game_id });
     //}).subscribe('suggested_moves');
-
-    $scope.evaluations = $meteor.collection(function() {
-        return Evaluations.find();
-    }).subscribe('evaluations');
 
     // $scope.sort_types = [
     //                       { 'value': 'updated_at',       'text': 'Recent'},
