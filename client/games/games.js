@@ -18,6 +18,7 @@ function GamesController($scope, $meteor, Engine) {
   $scope.selected_move = {}
   $scope.suggestedMoves = $meteor.collection(SuggestedMoves);
   $scope.evaluations    = $meteor.collection(Evaluations).subscribe('evaluations', $scope.selected_move._id);
+  $scope.comments       = $meteor.collection(Comments).subscribe('evaluations', $scope.selected_move._id);
   $scope.evauluateMove = evauluateMove
   $scope.select = select
 
@@ -48,6 +49,17 @@ function GamesController($scope, $meteor, Engine) {
       favorite_move: $scope.selected_move.favorite_move,
       stars: $scope.selected_move.stars
     });
+  }
+
+  function addComment() {
+    console.log($scope.comment);
+    $scope.comments.push({
+      user_id: $scope.currentUser._id,
+      game_id: gameId,
+      suggested_move_id: $scope.selected_move._id,
+      body: $scope.comment.body
+    });
+    $scope.comment = ''
   }
 
   function select(move) {
