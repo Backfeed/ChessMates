@@ -18,7 +18,7 @@ function GamesController($scope, $meteor, Engine) {
 
   angular.extend($scope, {
     suggestedMoves: $meteor.collection(SuggestedMoves),
-    comments      : $meteor.collection(Comments).subscribe('evaluations', $scope.selected_move._id),
+    comments      : $meteor.collection(Comments),
     evaluations   : $meteor.collection(Evaluations),
     evauluateMove : evauluateMove,
     addComment : addComment,
