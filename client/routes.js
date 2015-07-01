@@ -29,9 +29,14 @@ angular.module("blockchess").config(['$urlRouterProvider', '$stateProvider', '$l
         }]
       }
     }).state('game', {
-      url: '/game',
+      url: '/game/:game_id',
       templateUrl: 'client/parties/views/game.ng.html',
-      controller: 'GameCtrl'
+      controller: 'GameCtrl',
+      resolve: {
+        "currentUser": ["$meteor", function($meteor){
+          return $meteor.requireUser();
+        }]
+      }
     });
 
 
