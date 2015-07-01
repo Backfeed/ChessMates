@@ -4,6 +4,7 @@ angular.module('blockchess',[
     'angularUtils.directives.dirPagination',
     'ngMaterial',
     'ui.bootstrap',
+    'nywton.chess',
     'blockchess.utilities',
     'blockchess.games'
 ]);
