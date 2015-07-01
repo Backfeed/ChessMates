@@ -1,17 +1,17 @@
 angular.module("blockchess").controller("GameCtrl", ['$scope', '$stateParams', '$meteor',
   function($scope, $stateParams, $meteor){
-    $scope.games = $meteor.collection(Games, false).subscribe('games');
-    $scope.suggested_moves = $meteor.collection(SuggestedMoves, true).subscribe('suggested_moves');
+    // $scope.games = $meteor.collection(Games, false).subscribe('games');
+
+    // $scope.suggested_moves = $meteor.collection(SuggestedMoves, true).subscribe('suggested_moves');
 
     // $scope.suggested_moves = $meteor.object(SuggestedMoves, 1);
 
     // $scope.sort = { 'updated_at': 1 };
 
-    // $scope.suggested_moves = $meteor.collection(function() {
-    //     return SuggestedMoves.find({ 'gameId': '1' }, {
-    //         sort : $scope.getReactively('sort')
-    //     });
-    // });
+    $scope.suggested_moves = $meteor.collection(function() {
+        return SuggestedMoves.find({ 'game_id': $stateParams.game_id });
+    }).subscribe('suggested_moves');
+
 
     // $scope.sort_types = [
     //                       { 'value': 'updated_at',       'text': 'Recent'},
@@ -30,6 +30,14 @@ angular.module("blockchess").controller("GameCtrl", ['$scope', '$stateParams', '
     //   });
 
     // });
+
+
+    $scope.createMoveSuggestion = function(){
+      $scope.suggested_move.owner   = $scope.currentUser._id;
+      $scope.suggested_move.game_id = $stateParams.game_id;
+      $scope.suggested_moves.push($scope.suggested_move);
+      $scope.suggested_move = '';
+    }
 
 
     $scope.updateGameState = function(gameId, fen, pgn){
