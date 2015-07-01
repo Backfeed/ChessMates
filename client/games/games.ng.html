@@ -18,6 +18,12 @@
   </div>
   
   <div flex="25">
+     valuations: {{ evaluations }}
+     selected_move: {{ selected_move }}
+     <form ng-submit="evauluateMove()">
+      Stars: <input type="number" ng-model="selected_move.stars">
+      Is Favorite: <input type="checkbox" ng-model="selected_move.favorite_move">
+     </form>
     <suggested-moves moves="suggestedMoves"></suggested-moves>
   </div>
 
