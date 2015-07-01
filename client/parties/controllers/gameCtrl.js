@@ -1,6 +1,6 @@
 angular.module("blockchess").controller("GameCtrl", ['$scope', '$stateParams', '$meteor',
   function($scope, $stateParams, $meteor){
-    $scope.games = $meteor.collection(Games, false).subscribe('games');
+    // $scope.games = $meteor.collection(Games, false).subscribe('games');
 
     // $scope.suggested_moves = $meteor.collection(SuggestedMoves, true).subscribe('suggested_moves');
 
@@ -33,7 +33,7 @@ angular.module("blockchess").controller("GameCtrl", ['$scope', '$stateParams', '
 
 
     $scope.createMoveSuggestion = function(){
-      $scope.suggested_move.owner   = $root.currentUser._id;
+      $scope.suggested_move.owner   = $scope.currentUser._id;
       $scope.suggested_move.game_id = $stateParams.game_id;
       $scope.suggested_moves.push($scope.suggested_move);
       $scope.suggested_move = '';
