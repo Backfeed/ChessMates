@@ -34,4 +34,5 @@ Meteor.publish("parties", function (options, searchString) {
         {invited: {$exists: true}}
       ]}
     ]} ,options);
+
 });

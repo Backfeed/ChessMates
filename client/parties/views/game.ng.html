@@ -1,0 +1,18 @@
+<md-content layout-padding>
+    <div layout="column">
+        <div ng-repeat="move in suggested_moves">
+          {{move}}
+        </div>
+    </div>
+
+     <form ng-show="$root.currentUser">
+          <h2 class="md-headline">Create a new Move Suggestion:</h2>
+          <md-input-container>
+              <label>fen</label>
+              <input ng-model="suggested_move.fen" id="nameInput" type="text" aria-label="Fen">
+          </md-input-container>
+
+          <md-button ng-click="suggested_move.owner=$root.currentUser._id;suggested_moves.push(suggested_move); suggested_move='';">Suggest this Move</md-button>
+      </form>
+
+</md-content>
