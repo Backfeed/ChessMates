@@ -1,18 +1,79 @@
-<md-content layout-padding>
-    <div layout="column">
-        <div ng-repeat="move in suggested_moves">
-          {{move}}
-        </div>
-    </div>
+<div class="row" style="width: 1200px;">
 
-     <form ng-show="$root.currentUser">
-          <h2 class="md-headline">Create a new Move Suggestion:</h2>
-          <md-input-container>
-              <label>fen</label>
-              <input ng-model="suggested_move.fen" id="nameInput" type="text" aria-label="Fen">
-          </md-input-container>
+  <div class="col-md-4">
 
-          <md-button ng-click="createMoveSuggestion()">Suggest this Move</md-button>
-      </form>
+    <h2 class="md-headline">Suggested Moves</h2>
 
-</md-content>
+    <table class="reference" style="width:100%">
+      <tbody>
+        <tr>
+          <th>user_id</th>
+          <th>game_id</th>
+          <th>Fen</th>
+          <th>Actions</th>
+        </tr>
+        <tr ng-repeat="move in suggested_moves">
+          <td>{{ move.user_id }}</td>
+          <td>{{ move.game_id }}</td>
+          <td>{{ move.fen }}</td>
+          <td><a ng-click="setSelectedMove(move)" >Show Evaluations</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="col-md-2">
+
+    <h2 class="md-headline">Suggest a Move</h2>
+    <form ng-show="$root.currentUser">
+      <md-input-container>
+        <label>fen</label>
+        <input ng-model="suggested_move.fen" id="nameInput" type="text" aria-label="Fen">
+      </md-input-container>
+
+      <md-button ng-click="createMoveSuggestion()">Submit</md-button>
+    </form>
+
+    <br><br>
+
+  </div>
+  <div class="col-md-4">
+
+    <h2 class="md-headline">Evaluations for {{ selected_move.fen }}</h2>
+
+    <table class="reference" style="width:100%">
+      <tbody>
+        <tr>
+          <th>userId</th>
+          <th>gameId</th>
+          <th>Suggested Move Id</th>
+        </tr>
+        <tr ng-repeat="evaluation in evaluations">
+          <td>{{ evaluation.user_id }}</td>
+          <td>{{ evaluation.game_id }}</td>
+          <td>{{ evaluation.suggested_move_id }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="col-md-2">
+
+    <h2 class="md-headline">Evaluate Move</h2>
+    <form ng-show="$root.currentUser">
+      <md-input-container>
+        <label>Stars</label>
+        <input ng-model="evaluation.stars" id="nameInput" type="text" aria-label="Stars">
+      </md-input-container>
+
+      <md-button ng-click="evauluateMove(current_move)">Submit</md-button>
+    </form>
+
+    <br><br>
+
+  </div>
+
+</div>
+

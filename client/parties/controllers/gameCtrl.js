@@ -1,18 +1,18 @@
 angular.module("blockchess").controller("GameCtrl", ['$scope', '$stateParams', '$meteor',
   function($scope, $stateParams, $meteor){
-    // $scope.games = $meteor.collection(Games, false).subscribe('games');
 
-    //$scope.suggested_moves = $meteor.collection(SuggestedMoves, true).subscribe('suggested_moves', $stateParams.game_id);
+    $scope.selected_move = {}
+
     $scope.suggested_moves = $meteor.collection(SuggestedMoves);
+    $scope.evaluations = $meteor.collection(Evaluations).subscribe('evaluations', $scope.selected_move_id);
 
-    // $scope.suggested_moves = $meteor.object(SuggestedMoves, 1);
+    $scope.comments = $meteor.collection(Comments).subscribe('evaluations', $scope.selected_move._id);
 
-     $scope.sort = { 'fen': 1 };
+    $scope.sort = { 'fen': 1 };
 
     //$scope.suggested_moves = $meteor.collection(function() {
     //  return SuggestedMoves.find({ 'game_id': $stateParams.game_id });
     //}).subscribe('suggested_moves');
-
 
     // $scope.sort_types = [
     //                       { 'value': 'updated_at',       'text': 'Recent'},
@@ -25,21 +25,31 @@ angular.module("blockchess").controller("GameCtrl", ['$scope', '$stateParams', '
      $meteor.autorun($scope, function() {
 
        $meteor.subscribe('suggested_moves', {
-         sort: $scope.getReactively('sort')
+          sort: $scope.getReactively('sort')
        }, $stateParams.game_id).then(function(){
-         console.log($scope.suggested_moves);
+          console.log($scope.suggested_moves);
        });
 
      });
 
+    $scope.setSelectedMove = function(move){
+      $scope.selected_move = move;
+    }
 
     $scope.createMoveSuggestion = function(){
-      $scope.suggested_move.owner   = $scope.currentUser._id;
+      $scope.suggested_move.user_id   = $scope.currentUser._id;
       $scope.suggested_move.game_id = $stateParams.game_id;
       $scope.suggested_moves.push($scope.suggested_move);
       $scope.suggested_move = '';
     }
 
+    $scope.evauluateMove = function(){
+      $scope.evaluation.user_id           = $scope.currentUser._id;
+      $scope.evaluation.game_id           = $stateParams.game_id;
+      $scope.evaluation.suggested_move_id = $scope.selected_move._id;
+      $scope.evaluations.push($scope.evaluation);
+      $scope.evaluation = '';
+    }
 
     $scope.updateGameState = function(gameId, fen, pgn){
       $meteor.call('updateGameState', gameId, fen, pgn).then(

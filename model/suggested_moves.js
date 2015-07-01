@@ -11,17 +11,10 @@ var movesDontContainFen = function (game_id, fen) {
 };
 
 Meteor.methods({
-
-
-
 });
 
-
 SuggestedMoves.helpers({
-  currentGame: function() {
-    return SuggestedMoves.findOne({ 'game_id': this.game_id });
-  },
-  userSuggestedMove: function() {
-    return SuggestedMoves.findOne(this.userId);
-  }
+  game:        function() { return Games.findOne({ '_id': this.game_id });              },
+  user:        function() { return Meteor.users.findOne({ '_id': this.user_id });       },
+  evaluations: function() { return Evaluations.find({ 'suggested_move_id': this._id }); }
 });
