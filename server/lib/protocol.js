@@ -1,4 +1,4 @@
-console.log('Hello World');
+//console.log('Hello World');
 
 var A = {id:"Primavera",reputation:50, tokens:100};
 var B = {id:"Yanik",  reputation:100, tokens:200};
@@ -35,7 +35,7 @@ function starClick(move, user, star, contributor) {
   }
 
   for(i=0; i < moves[move][star].length; i++) {
-                console.log(moves[move][star][i].user);
+                //console.log(moves[move][star][i].user);
   }
 }
 
@@ -47,12 +47,12 @@ function endTurn() {
 
   //iterate through each move
   for (move in moves) {
-    console.log("checking out move: " + move);
+    //console.log("checking out move: " + move);
     var average = 0; var totalrep = 0;
 
       //iterate through each star
       for (star in moves[move]) {
-      console.log("starring.. " + star);
+      //console.log("starring.. " + star);
 
         //calculate the weight of each star
         var rep = 0;
@@ -71,7 +71,7 @@ function endTurn() {
       average /= totalrep;
       turn[move] = { reputation: totalrep, value: average }
 
-      console.log("move " + move + " = " + average + " with " + totalrep + " reputation");
+      //console.log("move " + move + " = " + average + " with " + totalrep + " reputation");
 
       //distribute tokens to the contributor of that move
       moves[move][0].tokens += Math.round(average);
@@ -79,7 +79,7 @@ function endTurn() {
 
   //select the move to be played
 
-  console.log(turn);
+  //console.log(turn);
 
   //first sort the move by the amount of reputation engaged
   var sorted = [];
@@ -87,19 +87,19 @@ function endTurn() {
     sorted.push( [ move, turn[move].reputation ]);
   }
   sorted.sort(function(a, b) { return b[1] - a[1]; });
-  console.log(sorted);
+  //console.log(sorted);
 
   //then identify the highest ranked within the 3 highest reputable one.
   var winner = {value: 0, move: 0};
   var j = sorted.length > 3 ? 3 : sorted.length;
   for(i=0; i<j; i++)  {
     if( turn[sorted[i][0]].value > winner.value ) {
-      console.log("current value for " + sorted[i][0] + " = " + turn[sorted[i][0]].value);
+      //console.log("current value for " + sorted[i][0] + " = " + turn[sorted[i][0]].value);
       winner.move = sorted[i][0];
       winner.value = turn[sorted[i][0]].value;
     }
   }
-  console.log("AND THE WINNER IS: " + winner.move);
+  //console.log("AND THE WINNER IS: " + winner.move);
 
   //distribute 25 tokens to the contributor who picked the winning move !
   moves[winner.move][0].tokens += 25;
@@ -130,4 +130,4 @@ starClick("C3C2", D, 5, C);
 endTurn();
 
 
-console.log(A, B, C, D);
+//console.log(A, B, C, D);

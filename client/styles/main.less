@@ -1,9 +1,37 @@
-body {
-  background-color: rgba(0,0,0,.04);
+@import "bootstrap/custom.bootstrap.import.less";
 
-  .navbar {
-    background-color: #ffffff;
+.md-toolbar {
+  background-color: #ffffff;
+}
+
+.game-sidebar {
+  text-align: center;
+}
+
+.game-metadata {
+  dt {
+    font-size: 12px;
+    font-weight: normal;
   }
+  dd {
+    font-size: 32px;
+    font-weight: bold;
+  }
+}
+
+.game-area, move-slide-carousel, comments {
+  border: 3px black solid;
+  border-radius: 7.5px;
+}
+
+h2 {
+  font-size: 28px;
+  color: white;
+  background-color: black;
+  padding: 5px;
+  text-align: center;
+  border-radius: 7.5px;
+  font-weight: bold;
 }
 
 // @import "../utilities/suggested_moves/suggested_moves.import.less";
