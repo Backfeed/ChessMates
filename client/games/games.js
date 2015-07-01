@@ -12,12 +12,17 @@ function config($stateProvider){
         });
 }
 
-function BlockchessGamesController($scope) {
-  angular.extend($scope, {
-    suggestedMoves: []
-  });
+function BlockchessGamesController($scope, $meteor, Engine) {
+  $scope.suggestedMoves = $meteor.collection(SuggestedMoves);
+  $scope.Engine = Engine;
 
-  $scope.$on('moveMade', function() {
-    $scope.suggestedMoves = [];
-  });
+  $scope.$on('singleMove', singleMove);
+}
+
+function singleMove(e, from, to, isLegal) {
+  console.log(e, from, to, isLegal)
+  if (isLegal) {
+    debugger
+    $scope.suggestedMoves.push({move: from+to})
+  }
 }
