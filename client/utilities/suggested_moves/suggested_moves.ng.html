@@ -1,12 +1,13 @@
 <h2>Suggested Moves</h2>
-<select ng-model="filter">
+Sort by: 
+<select ng-model="sorting">
     <option value="relevance_score">Relevance</option>
     <option value="reputation_sum">Reputation</option>
     <option value="avg_stars">Stars</option>
     <option value="created_at">Created At</option>
 </select>
 
-<table>
+<table class="table table-bordered table-hover">
   <thead>
     <tr>
       <td>Move</td>
@@ -17,7 +18,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="move in moves" ng-click="select(move)">
+    <tr ng-repeat="move in moves | orderBy : sorting" ng-click="select(move)">
       <td>{{ ::move.fen }}</td>
       <td>{{ move.avg_stars }}</td>
       <td>{{ move.reputation_sum }}</td>
