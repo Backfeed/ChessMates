@@ -11,7 +11,4 @@ var movesDontContainFen = function (game_id, fen) {
 };
 
 Meteor.methods({
-
-
-
 })

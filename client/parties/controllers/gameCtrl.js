@@ -12,6 +12,9 @@ angular.module("blockchess").controller("GameCtrl", ['$scope', '$stateParams', '
         return SuggestedMoves.find({ 'game_id': $stateParams.game_id });
     }).subscribe('suggested_moves');
 
+    $scope.evaluations = $meteor.collection(function() {
+        return Evaluations.find({ 'game_id': $stateParams.game_id });
+    }).subscribe('suggested_moves');
 
     // $scope.sort_types = [
     //                       { 'value': 'updated_at',       'text': 'Recent'},
@@ -33,12 +36,20 @@ angular.module("blockchess").controller("GameCtrl", ['$scope', '$stateParams', '
 
 
     $scope.createMoveSuggestion = function(){
-      $scope.suggested_move.owner   = $scope.currentUser._id;
+      $scope.suggested_move.user_id   = $scope.currentUser._id;
       $scope.suggested_move.game_id = $stateParams.game_id;
       $scope.suggested_moves.push($scope.suggested_move);
       $scope.suggested_move = '';
     }
 
+
+    $scope.evauluateMove = function(move){
+      $scope.evaluation.user_id           = $scope.currentUser._id;
+      $scope.evaluation.game_id           = $stateParams.game_id;
+      $scope.evaluation.suggested_move_id = move._id;
+      $scope.evaluations.push($scope.evaluation);
+      $scope.evaluation = '';
+    }
 
     $scope.updateGameState = function(gameId, fen, pgn){
       $meteor.call('updateGameState', gameId, fen, pgn).then(
