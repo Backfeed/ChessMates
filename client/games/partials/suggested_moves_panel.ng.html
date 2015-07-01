@@ -1,0 +1,93 @@
+<evaluations-area>
+
+  <md-tabs md-center-tabs md-dynamic-height md-no-bar>
+    <md-tab label="•" md-on-select md-on-deselect>
+      <div class="evaluation text-center">
+        <p class="text-center">Backfeed me</p>
+        <h2 class="evaluation-step center-block">D4D2</h2>
+    
+        <div class="rating">
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+        </div>
+        
+        <button type="button" class="btn btn-default choose-favorite-move" data-toggle="button"><img src="img/favorite.png" />My favorite move</button>
+      </div>
+      
+      <hr />
+      
+      <comments>
+          <div class="comment" layout="row" layout-align="space-between">
+             <div class="comment-meta">
+               <span class="commenter-name">Zeev</span>
+               <span class="comment-type">- suggested this move</span>
+             </div>
+             <div class="comment-time pull-right">• 4 minutes ago</div>
+          </div>
+          
+          <input type="text" class="form-control" name="new-comment" placeholder="What do you think of this move?" />
+          
+          <div class="comment" layout="row" layout-align="space-between">
+             <div class="comment-meta">
+               <span class="commenter-name">Tal</span>
+               <span class="comment-type"> - comment</span>
+             </div>
+             <div class="comment-time pull-right">• 1 minute ago</div>
+          </div>
+          <div class="comment-body">Very nice and elegant move.</div>
+          
+          <div class="comment" layout="row" layout-align="space-between">
+             <div class="comment-meta">
+               <span class="commenter-name">Tal</span>
+               <span class="comment-type">- backfeed 3 stars</span>
+             </div>
+             <div class="comment-time pull-right">• 1 minute ago</div>
+          </div>
+      </comments>
+    </md-tab>
+    
+    <md-tab label="•" md-on-select md-on-deselect>
+      <div class="evaluation text-center">
+        <p class="text-center">Backfeed me</p>
+        <h2 class="evaluation-step center-block">D4D2</h2>
+    
+        <div class="rating">
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+        </div>
+        
+        <button type="button" class="btn btn-default choose-favorite-move" data-toggle="button"><img src="img/favorite.png" />My favorite move</button>
+        
+        <comments>
+            <comment>{{created_at}}: {{body}}</comment>
+            <input type="text" name="associated-comment" />
+            <comment>{{created_at}}: {{body}}</comment>
+            <comment>{{created_at}}: {{body}}</comment>
+            <input type="text" name="new-comment" />
+        </comments>
+          
+      </div>
+    </md-tab>
+  </md-tabs>
+
+  <!-- 
+      class="active|move-evaluated|move-not-evaluated"
+  <h2>{{move}}</h2>
+  <stars-handler></stars-handler>
+  <choose-selected-move checked></choose-selected-move>
+  <input type="text" name="associated-comment" />
+  
+  <comments>
+      <comment>{{created_at}}: {{body}}</comment>
+      <input type="text" name="associated-comment" />
+      <comment>{{created_at}}: {{body}}</comment>
+      <comment>{{created_at}}: {{body}}</comment>
+      <input type="text" name="new-comment" />
+  </comments> -->
+</evaluations-area>

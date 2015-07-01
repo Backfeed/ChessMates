@@ -1,0 +1,24 @@
+<section class="game-area" layout="row">
+  
+  <div class="game-sidebar" flex="15">
+      <timer></timer>
+      <dl class="game-metadata">
+        <dt>Clan's Score:</dt>
+        <dd>240</dd>
+        <img src="img/logo.png" alt="">
+        <dt>Tal's Score:</dt>
+        <dd>59</dd>
+        <dt>Tokens:</dt>
+        <dd>532</dd>
+      </dl>
+  </div>
+  
+  <div flex>
+    <ng-include src="'client/games/partials/chess-board.ng.html'"></ng-include>
+  </div>
+  
+  <div flex="25">
+    <suggested-moves moves="suggestedMoves"></suggested-moves>
+  </div>
+
+</section>

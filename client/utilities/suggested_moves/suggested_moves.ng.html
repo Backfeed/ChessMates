@@ -1,10 +1,13 @@
 <h2>Suggested Moves</h2>
-<select ng-model="filter">
-    <option value="relevance_score">Relevance</option>
-    <option value="reputation_sum">Reputation</option>
-    <option value="avg_stars">Stars</option>
-    <option value="created_at">Created At</option>
-</select>
+
+<div id="filter-dropdown">
+  <md-select ng-model="filter" placeholder="Sort by..." class="pull-right">
+      <md-option ng-value="relevance_score">Relevance</md-option>
+      <md-option ng-value="reputation_sum">Reputation</md-option>
+      <md-option ng-value="avg_stars">Stars</md-option>
+      <md-option ng-value="created_at">Created At</md-option>
+  </md-select>
+</div>
 
 <table>
   <thead>
