@@ -105,7 +105,5 @@ Meteor.methods({
       // created_at
 
 
-    },
-
-
-})
+    }
+});
