@@ -1,0 +1,37 @@
+.evaluation-step {
+  width: 100px;
+  margin-top: 0;
+  border: solid #FF00FF 1px;
+}
+
+.choose-favorite-move {
+  font-size: x-large;
+  background-color: transparent;
+}
+
+.rating > span {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+.rating:hover > span:before {
+   content: "\2605"; /* Place a solid star over all the empty stars when you hover them. */
+   position: absolute;
+}
+.rating > span:hover ~ span:before {
+   content: ""; /* Remove the solid star from any siblings after the one you’re hovering. */
+}
+
+evaluations-area {
+  .md-tab {
+    font-size: 40px;
+  }
+  hr {
+    border-top: 3px solid black;
+    margin-bottom: 0;
+  }
+}
+
+.evaluation {
+  padding: 10px;
+}

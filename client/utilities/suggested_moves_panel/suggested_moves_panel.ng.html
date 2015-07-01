@@ -1,6 +1,26 @@
 <evaluations-area>
-
   <md-tabs md-center-tabs md-dynamic-height md-no-bar>
+    <md-tab label="•" md-on-select md-on-deselect ng-repeat="move in moves">
+      <div class="evaluation text-center">
+        <!-- <p class="text-center">Backfeed me</p> -->
+        <h2 class="evaluation-step center-block">{{ ::move.notation.toUpperCase() }}</h2>
+    
+        <div class="rating">
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+            <span>☆</span>
+        </div>
+        
+        <button type="button" class="btn btn-default choose-favorite-move" data-toggle="button"><img src="img/favorite.png" />My favorite move</button>
+      </div>
+      
+      <hr />
+      
+      <comments comments="move.comments"></comments>
+    </md-tab>
+
     <md-tab label="•" md-on-select md-on-deselect>
       <div class="evaluation text-center">
         <p class="text-center">Backfeed me</p>
@@ -48,32 +68,8 @@
           </div>
       </comments>
     </md-tab>
-    
-    <md-tab label="•" md-on-select md-on-deselect>
-      <div class="evaluation text-center">
-        <p class="text-center">Backfeed me</p>
-        <h2 class="evaluation-step center-block">D4D2</h2>
-    
-        <div class="rating">
-            <span>☆</span>
-            <span>☆</span>
-            <span>☆</span>
-            <span>☆</span>
-            <span>☆</span>
-        </div>
-        
-        <button type="button" class="btn btn-default choose-favorite-move" data-toggle="button"><img src="img/favorite.png" />My favorite move</button>
-        
-        <comments>
-            <comment>{{created_at}}: {{body}}</comment>
-            <input type="text" name="associated-comment" />
-            <comment>{{created_at}}: {{body}}</comment>
-            <comment>{{created_at}}: {{body}}</comment>
-            <input type="text" name="new-comment" />
-        </comments>
-          
-      </div>
-    </md-tab>
+
+
   </md-tabs>
 
   <!-- 

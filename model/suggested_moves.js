@@ -2,7 +2,7 @@ SuggestedMoves = new Mongo.Collection("suggested_moves");
 
 SuggestedMoves.allow({
   insert: function (userId, suggested_move) {
-    return userId && movesDontContainFen(suggested_move.game_id, suggested_move.fen);
+    return userId && movesDontContainFen(suggested_move.game_id, suggested_move.notation);
   }
 });
 

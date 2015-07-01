@@ -15,7 +15,7 @@
         <tr ng-repeat="move in suggested_moves">
           <td>{{ move.user_id }}</td>
           <td>{{ move.game_id }}</td>
-          <td>{{ move.fen }}</td>
+          <td>{{ move.notation }}</td>
           <td><a ng-click="setSelectedMove(move)" >Show Evaluations</a></td>
         </tr>
       </tbody>
@@ -29,7 +29,7 @@
     <form ng-show="$root.currentUser">
       <md-input-container>
         <label>fen</label>
-        <input ng-model="suggested_move.fen" id="nameInput" type="text" aria-label="Fen">
+        <input ng-model="suggested_move.notation" id="nameInput" type="text" aria-label="Fen">
       </md-input-container>
 
       <md-button ng-click="createMoveSuggestion()">Submit</md-button>
@@ -40,7 +40,7 @@
   </div>
   <div class="col-md-4">
 
-    <h2 class="md-headline">Evaluations for {{ selected_move.fen }}</h2>
+    <h2 class="md-headline">Evaluations for {{ selected_move.notation }}</h2>
 
     <table class="reference" style="width:100%">
       <tbody>
