@@ -1,4 +1,5 @@
 Games = new Mongo.Collection('games');
+GamesHistory = new Mongo.Collection('games_history');
 
 Games.allow({
     insert: function (userId, game) {
