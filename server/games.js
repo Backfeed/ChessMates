@@ -1,5 +1,3 @@
-Meteor.publish("games", function (options) {
-
-  // return Games.find({} ,options);
+Meteor.publish('games', function (options) {
   return Games.find({} ,options);
 });

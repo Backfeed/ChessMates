@@ -25,6 +25,12 @@
     "Mongo",
     "Meteor",
     "Kadira",
+    "check",
+    "Parties",
+    "Games",
+    "Comments",
+    "Evaluations",
+    "SuggestedMoves",
     "$"
   ]
 }

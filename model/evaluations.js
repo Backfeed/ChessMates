@@ -1,10 +1,11 @@
-Evaluations = new Mongo.Collection("evaluations");
+Evaluations = new Mongo.Collection('evaluations');
 
 Evaluations.allow({
-  insert: function (userId, evaluation) {
+  insert: function () {
     return true;
   }
 });
 
 Meteor.methods({
-})
+
+});

@@ -1,10 +1,11 @@
-Comments = new Mongo.Collection("comments");
+Comments = new Mongo.Collection('comments');
 
 Comments.allow({
-  insert: function (userId, comment) {
+  insert: function () {
     return true;
   }
 });
 
 Meteor.methods({
-})
+
+});
