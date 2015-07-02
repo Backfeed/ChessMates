@@ -1,23 +1,23 @@
 Games = new Mongo.Collection('games');
 GamesHistory = new Mongo.Collection('games_history');
 
-Games.allow({
-    insert: function (userId, game) {
-        return userId && game.owner === userId;
-    },
-    update: function (userId, game, fields, modifier) {
-        if (userId !== game.owner)
-            return false;
-
-        return true;
-    },
-    remove: function (userId, game) {
-        if (userId !== game.owner)
-            return false;
-
-        return true;
-    }
-});
+//Games.allow({
+//    insert: function (userId, game) {
+//        return userId && game.owner === userId;
+//    },
+//    update: function (userId, game, fields, modifier) {
+//        if (userId !== game.owner)
+//            return false;
+//
+//        return true;
+//    },
+//    remove: function (userId, game) {
+//        if (userId !== game.owner)
+//            return false;
+//
+//        return true;
+//    }
+//});
 
 Meteor.methods({
     updateGameState: function updateGameState(gameId, fen, pgn) {

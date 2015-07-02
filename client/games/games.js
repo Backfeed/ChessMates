@@ -17,44 +17,43 @@ function GamesController($scope, $meteor, Engine) {
   var gameId = "1";
 
   angular.extend($scope, {
-    suggestedMoves: $meteor.collection(SuggestedMoves),
-    comments      : $meteor.collection(Comments),
-    evaluations   : $meteor.collection(Evaluations),
-    evauluateMove : evauluateMove,
+    game : $meteor.collection(Games),
+    suggestedMoves : {},
+    comments       : {},
+    evaluations    : {},
+    evaluateMove : evaluateMove,
     addComment : addComment,
     selected_move : {}
   });
 
   $meteor.autorun($scope, function() {
-    $meteor.subscribe('suggested_moves', {}, gameId).then(function(){
-      console.log($scope.suggested_moves);
+    $meteor.subscribe('games', {}, gameId).then(function(){
+      console.log('Game loaded');
     });
 
-    $meteor.subscribe('evaluations', {}, $scope.getReactively('selected_move')._id).then(function(){
-      console.log($scope.suggested_moves);
-    });
-
-    $meteor.subscribe('comments', {}, $scope.getReactively('selected_move')._id).then(function(){
-      console.log($scope.suggested_moves);
-    });
+    //$meteor.subscribe('evaluations', {}, $scope.getReactively('selected_move')._id).then(function(){
+    //  console.log($scope.suggested_moves);
+    //});
 
   });
 
+  //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
   $scope.$on('singleMove', singleMove);
   $scope.$on('suggestedMovesSelected', suggestedMovesSelected);
 
   function singleMove(e, from, to, isLegal) {
-    console.log(e, from, to, isLegal)
+    console.log(e, from, to, isLegal);
     if (isLegal) {
-      $scope.suggestedMoves.push({fen: from+to, game_id: gameId, currentUser_id: $scope.currentUser._id});
+      //TODO validate that this is the first time the player makes a suggestion
+      //TODO alert the user that the move has been suggested
+      $scope.game.suggestedMoves.push({fen: from+to, game_id: gameId, currentUser_id: $scope.currentUser._id});
     } else {
       console.log("that's illegal fool");
-      alert("that's illegal fool");
     }
   }
 
-  function evauluateMove() {
-    $scope.evaluations.push({
+  function evaluateMove() {
+    $scope.game.evaluations.push({
       user_id: $scope.currentUser._id,
       game_id: gameId,
       suggested_move_id: $scope.selected_move._id,
