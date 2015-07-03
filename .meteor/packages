@@ -22,3 +22,6 @@ angularui:angular-ui-bootstrap
 dburles:collection-helpers
 nemo64:bootstrap
 fortawesome:fontawesome
+momentjs:moment
+matb33:collection-hooks
+aldeed:collection2
