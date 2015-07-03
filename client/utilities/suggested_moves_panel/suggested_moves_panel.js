@@ -5,7 +5,7 @@ function suggestedMovesPanel() {
   return {
     templateUrl: "client/utilities/suggested_moves_panel/suggested_moves_panel.ng.html",
     controller: suggestedMovesPanelController,
-    scope: { suggestedMoves: '=' ,  selectedMove: '=' }
+    scope: { moves: '=' ,  selectedMove: '=' }
   }
 }
 

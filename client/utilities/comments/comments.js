@@ -1,5 +1,5 @@
 angular.module('blockchess.utilities.comments', [])
-.directive('comments', comments)
+.directive('comments', comments);
 
 function comments() {
   return {
@@ -13,11 +13,15 @@ function comments() {
   }
 }
 
-function commentsController($scope, $interval, TIME_PER_MOVE) {
+function commentsController($scope, $meteor, $interval, TIME_PER_MOVE) {
   angular.extend($scope, {
     add: add,
     users : $meteor.collection(Meteor.users, false).subscribe('users')
   });
+
+  $scope.getUserById = function(userId){
+    return Meteor.users.findOne(userId);
+  };
 
   function add() {
     console.log($scope.comment);

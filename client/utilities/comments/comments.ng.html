@@ -1,9 +1,9 @@
 <div class="comment" layout="row" layout-align="space-between">
-   <div class="comment-meta">
-     <span class="commenter-name">{{ ::move.author }}</span>
+   <div class="comment-meta"><!-- TODO maybe use a filter for the user name-->
+     <span class="commenter-name">{{ getUserById(move.user_id) | displayName }}</span>
      <span class="comment-type">- suggested this move</span>
    </div>
-   <div class="comment-time pull-right">• {{ move.date }}</div>
+   <div class="comment-time pull-right">• {{ move.created_at | date : 'shortTime' }}</div>
 </div>
 
 <form ng-submit="add()">
@@ -15,12 +15,12 @@
 </form>
 <div ng-repeat="comment in comments">
   <div class="comment" layout="row" layout-align="space-between">
-     <div class="comment-meta">
-       <span class="commenter-name">{{ ::comment.author }}</span>
+     <div class="comment-meta"> <!-- TODO maybe use a filter for the user name + make bind once-->
+       <span class="commenter-name">{{ getUserById(comment.user_id) | displayName }}</span>
        <span class="comment-type" ng-if="comment.type == 'comment'"> - comment</span>
        <span class="comment-type" ng-if="comment.type == 'backfeed'"> - backfeed {{ comment.stars }} stars</span>
-     </div>
-     <div class="comment-time pull-right">• {{ comment.date }}</div>
+     </div><!-- TODO maybe use a filter with momentjs for better parsing -->
+     <div class="comment-time pull-right">• {{ comment.created_at | date : 'shortTime' }}</div>
   </div>
-  <div class="comment-body">{{ comment.body }}</div>
+  <div class="comment-body">{{ comment.text}}</div>
 </div>
