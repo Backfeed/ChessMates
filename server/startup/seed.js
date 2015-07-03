@@ -51,7 +51,7 @@ Meteor.startup(function () {
     });
   }
   // Add a record/document of a game's move
-  if (GamesHistory.find().count() === 0) {
+  if (GamesHistory.find().count() === 0 && games) {
     var gamesHistory = [
       {
         'game_id': '1',
