@@ -20,19 +20,19 @@ function GamesController($scope, $meteor, Engine) {
   // For development
   $scope.playAI = function() {
     Engine.getMove($scope.foo.game.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "));
-  }
+  };
 
   var gameId = "1";
 
   angular.extend($scope, {
-    game : $meteor.collection(Games),
+    game           : $meteor.collection(Games),
     suggestedMoves : {},
     comments       : {},
     evaluations    : {},
-    evaluateMove : evaluateMove,
-    addComment : addComment,
-    fen : 'start',
-    selected_move : {}
+    evaluateMove   : evaluateMove,
+    addComment     : addComment,
+    fen            : 'start',
+    selected_move  : {}
   });
 
   $meteor.autorun($scope, function() {
