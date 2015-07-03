@@ -48,16 +48,16 @@ Meteor.startup(function () {
     });
   }
   // Add a record/document of a game's move
-  if (GamesHistory.find().count() === 0) {
-    var gamesHistory = [
-      {
-        'game_id': 'NvZmGdZPZoq5rEaX2',
-        'created_at': '1435857130718',
-        'game_status': games[0]
-      }
-    ];
-  }
-  _.forEach(gamesHistory, function(history) {
-    GamesHistory.insert(history);
-  });
+  // if (GamesHistory.find().count() === 0) {
+  //   var gamesHistory = [
+  //     {
+  //       'game_id': 'NvZmGdZPZoq5rEaX2',
+  //       'created_at': '1435857130718',
+  //       'game_status': games[0]
+  //     }
+  //   ];
+  // }
+  // _.forEach(gamesHistory, function(history) {
+  //   GamesHistory.insert(history);
+  // });
 });
