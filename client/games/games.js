@@ -26,11 +26,10 @@ function GamesController($scope, $meteor, Engine) {
 
   angular.extend($scope, {
     suggestedMoves: $meteor.collection(SuggestedMoves),
-    comments      : $meteor.collection(Comments),
     evaluations   : $meteor.collection(Evaluations),
     evauluateMove : evauluateMove,
     history: "",
-    selected_move : {}
+    selectedMove : {}
   });
 
   $scope.$on('singleMove', singleMove);
@@ -39,13 +38,10 @@ function GamesController($scope, $meteor, Engine) {
 
   $meteor.autorun($scope, function() {
     $meteor.subscribe('suggested_moves', {}, gameId).then(function(){
-      console.log($scope.suggested_moves);
+      console.log($scope.suggestedMoves);
     });
-    $meteor.subscribe('evaluations', {}, $scope.getReactively('selected_move')._id).then(function(){
-      console.log($scope.suggested_moves);
-    });
-    $meteor.subscribe('comments', {}, $scope.getReactively('selected_move')._id).then(function(){
-      console.log($scope.suggested_moves);
+    $meteor.subscribe('evaluations', {}, $scope.getReactively('selectedMove')._id).then(function(){
+      console.log($scope.evaluations);
     });
   });
 
@@ -68,14 +64,14 @@ function GamesController($scope, $meteor, Engine) {
     $scope.evaluations.push({
       user_id: $scope.currentUser._id,
       game_id: gameId,
-      suggested_move_id: $scope.selected_move._id,
-      favorite_move: $scope.selected_move.favorite_move,
-      stars: $scope.selected_move.stars
+      suggested_move_id: $scope.selectedMove._id,
+      favorite_move: $scope.selectedMove.favorite_move,
+      stars: $scope.selectedMove.stars
     });
   }
 
   function suggestedMovesSelected(e, move) {
-    $scope.selected_move = move;
+    $scope.selectedMove = move;
   }
 
 }

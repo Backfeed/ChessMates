@@ -1,6 +1,6 @@
 <evaluations-area>
   <md-tabs md-center-tabs md-dynamic-height md-no-bar>
-    <md-tab label="•" md-on-select md-on-deselect ng-repeat="move in moves">
+    <md-tab label="•" md-on-select md-on-deselect ng-repeat="move in suggestedMoves">
       <div class="evaluation text-center">
         <!-- <p class="text-center">Backfeed me</p> -->
         <h2 class="evaluation-step center-block">{{ ::move.notation.toUpperCase() }}</h2>
@@ -18,7 +18,7 @@
       
       <hr />
       
-      <comments comments="move.comments"></comments>
+      <comments selected-move="selectedMove"></comments>
     </md-tab>
 
     <md-tab label="•" md-on-select md-on-deselect>
