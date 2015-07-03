@@ -6,12 +6,23 @@ function comments() {
     restrict: 'E',
     templateUrl: "client/utilities/comments/comments.ng.html",
     controller: commentsController,
-    scope: { comments: '=' }
+    scope: { comments: '=', selected_move: '=' }
   }
 }
 
-function commentsController($scope, $interval, TIME_PER_MOVE) {
+function commentsController($rootScope, $scope) {
   angular.extend($scope, {
+    addComment: addComment
   });
 
+  function addComment() {
+    console.log($scope.comment);
+    $scope.comments.push({
+      user_id: $rootScope.currentUser._id,
+      game_id: "1",
+      suggested_move_id: $scope.selected_move._id,
+      body: $scope.comment.body
+    });
+    $scope.comment = ''
+  }
 }

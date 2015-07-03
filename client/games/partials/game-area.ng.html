@@ -14,7 +14,9 @@
   </div>
   
   <div flex>
-    <nywton-chessgame data-game="game" data-board="board"></nywton-chessgame>
+    <nywton-chessgame data-game="foo.game" data-board="foo.board"></nywton-chessgame>
+    <button ng-click="playAI()">Play AI</button>
+    History: {{ history }}
   </div>
   
   <div flex="40">

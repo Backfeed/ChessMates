@@ -13,7 +13,15 @@ function config($stateProvider){
 }
 
 function GamesController($scope, $meteor, Engine) {
+  // For development
   $scope.Engine = Engine;
+  // avoid binding break
+  $scope.foo = {};
+  // For development
+  $scope.playAI = function() {
+    Engine.getMove($scope.foo.game.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "));
+  }
+
   var gameId = "1";
 
   angular.extend($scope, {
@@ -21,30 +29,33 @@ function GamesController($scope, $meteor, Engine) {
     comments      : $meteor.collection(Comments),
     evaluations   : $meteor.collection(Evaluations),
     evauluateMove : evauluateMove,
-    addComment : addComment,
+    history: "",
     selected_move : {}
   });
+
+  $scope.$on('singleMove', singleMove);
+  $scope.$on('suggestedMovesSelected', suggestedMovesSelected);
+  $scope.$on('angularStockfish::bestMove', onBestMove);
 
   $meteor.autorun($scope, function() {
     $meteor.subscribe('suggested_moves', {}, gameId).then(function(){
       console.log($scope.suggested_moves);
     });
-
     $meteor.subscribe('evaluations', {}, $scope.getReactively('selected_move')._id).then(function(){
       console.log($scope.suggested_moves);
     });
-
     $meteor.subscribe('comments', {}, $scope.getReactively('selected_move')._id).then(function(){
       console.log($scope.suggested_moves);
     });
-
   });
 
-  $scope.$on('singleMove', singleMove);
-  $scope.$on('suggestedMovesSelected', suggestedMovesSelected);
+  function onBestMove(e, from, to, promotion) {
+    $scope.foo.game.move({ from: from, to: to, promotion: promotion });
+    $scope.foo.board.position($scope.foo.game.fen());
+  }
 
   function singleMove(e, from, to, isLegal) {
-    console.log(e, from, to, isLegal)
+    console.log(e, from, to, isLegal);
     if (isLegal) {
       $scope.suggestedMoves.push({fen: from+to, game_id: gameId, currentUser_id: $scope.currentUser._id});
     } else {
@@ -65,17 +76,6 @@ function GamesController($scope, $meteor, Engine) {
 
   function suggestedMovesSelected(e, move) {
     $scope.selected_move = move;
-  }
-
-  function addComment() {
-    console.log($scope.comment);
-    $scope.comments.push({
-      user_id: $scope.currentUser._id,
-      game_id: gameId,
-      suggested_move_id: $scope.selected_move._id,
-      body: $scope.comment.body
-    });
-    $scope.comment = ''
   }
 
 }
