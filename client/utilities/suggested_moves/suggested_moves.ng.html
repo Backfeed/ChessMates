@@ -24,8 +24,8 @@
       <td>{{ ::move.notation }}</td>
       <td>{{ move.avg_stars }}</td>
       <td>{{ move.reputation_sum }}</td>
-      <td>{{ move.relevance }}</td>
-      <td>{{ ::move.created_at }}</td>
+      <td>{{ move.relevance_score }}</td>
+      <td>{{ ::move.created_at | date : 'shortTime' }}</td>
     </tr>
   </tbody>
 </table>

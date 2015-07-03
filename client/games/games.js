@@ -23,12 +23,17 @@ function GamesController($scope, $meteor, Engine) {
     evaluations    : {},
     evaluateMove : evaluateMove,
     addComment : addComment,
+    fen : 'start',
     selected_move : {}
   });
 
   $meteor.autorun($scope, function() {
+    //TODO gameId should become game._id in production(using mongo default _id value)
     $meteor.subscribe('games', {}, gameId).then(function(){
-      console.log('Game loaded');
+      $scope.game = $scope.game[0]; //Games.findOne(gameId);
+      //$scope.fen = $scope.getReactively('game').fen;
+      $scope.suggestedMoves = $scope.getReactively('game', true).suggested_moves;
+      console.log('Game loaded start position');
     });
 
     //$meteor.subscribe('evaluations', {}, $scope.getReactively('selected_move')._id).then(function(){
@@ -41,15 +46,22 @@ function GamesController($scope, $meteor, Engine) {
   $scope.$on('singleMove', singleMove);
   $scope.$on('suggestedMovesSelected', suggestedMovesSelected);
 
-  function singleMove(e, from, to, isLegal) {
-    console.log(e, from, to, isLegal);
-    if (isLegal) {
-      //TODO validate that this is the first time the player makes a suggestion
-      //TODO alert the user that the move has been suggested
-      $scope.game.suggestedMoves.push({fen: from+to, game_id: gameId, currentUser_id: $scope.currentUser._id});
-    } else {
-      console.log("that's illegal fool");
-    }
+  function singleMove(e, board, game) {
+    //TODO validate that this is the first time the player makes a suggestion
+    var pgn = game.pgn();
+    var notation = pgn.slice(pgn.lastIndexOf('.')+2, pgn.length);
+    $meteor.call('suggestMove', gameId, board.fen(), notation).then(
+      function(){
+        //TODO alert the user that the move has been suggested
+        console.log('success on suggesting a move');
+        alert('success on suggesting a move');
+        //TODO move the piece back
+        board.position($scope.fen);
+      },
+      function(err){
+        console.log('failed', err);
+      }
+    );
   }
 
   function evaluateMove() {

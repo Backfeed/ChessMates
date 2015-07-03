@@ -6,12 +6,19 @@ function comments() {
     restrict: 'E',
     templateUrl: "client/utilities/comments/comments.ng.html",
     controller: commentsController,
-    scope: { comments: '=' }
+    scope: {
+      move: '=',
+      comments: '='
+    }
   }
 }
 
-function commentsController($scope, $interval, TIME_PER_MOVE) {
+function commentsController($scope, $meteor, $interval, TIME_PER_MOVE) {
   angular.extend($scope, {
+    users : $meteor.collection(Meteor.users, false).subscribe('users')
   });
 
+  $scope.getUserById = function(userId){
+    return Meteor.users.findOne(userId);
+  };
 }

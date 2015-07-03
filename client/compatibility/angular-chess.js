@@ -1,8 +1,8 @@
 (function () {
   'use strict';
-  
+
   angular.module('nywton.chess', ['nywton.chessboard'])
-  
+
   .service('NywtonChessGameService', ['$log', '$rootScope', function ChessGameService($log, $rootScope) {
     this.onDragStart = function(game, source, piece, position, orientation) {
       $log.debug('lift piece ' + piece + ' from ' + source + ' - ' + position + ' - ' + orientation);
@@ -13,7 +13,7 @@
       }
       return true;
     };
-  
+
     this.onDrop = function(game, source, target) {
       // see if the move is legal
       var move = game.move({
@@ -22,31 +22,32 @@
         promotion: 'q' // NOTE: always promote to a queen for example simplicity
       });
 
-      // Blockchess adition
-      $rootScope.$broadcast('singleMove', source, target, !!move)
-
       // illegal move
       if (!move) {
         $log.log('Illegal move.. cannot move from ' + source + ' to ' + target);
         return 'snapback';
       }
-      
+
       $log.debug('moved from ' + source + ' to ' + target);
     };
-    
+
     this.onSnapEnd = function(game, board, source, target, piece) {
       $log.debug('onSnapEnd ' + piece + ' from ' + source + ' to ' + target);
-      // update the board position after the piece snap 
+      // update the board position after the piece snap
       // for castling, en passant, pawn promotion
       board.position(game.fen());
+
+      // Blockchess addition
+      $rootScope.$broadcast('singleMove', board, game);
+
     };
-    
+
     this.makeRandomMove = function (game, board) {
       $log.info('position: ' + game.fen());
       var moves = game.moves();
       var move = moves[Math.floor(Math.random() * moves.length)];
       game.move(move);
-      
+
       var useAnimations = true;
       board.position(game.fen(), useAnimations);
       $log.info('move: ' + move);
@@ -69,14 +70,14 @@
       controller: ['$scope', function chessgame($scope) {
         var game = $scope.game = new $window.Chess();
         game.name = $scope.name || 'game' + $scope.$id;
-        
+
         this.game = function gameF() {
           return $scope.game;
         };
         this.board = function boardF() {
           return $scope.board;
         };
-        
+
         $scope.onDragStart = function onDragStartF(source, piece, position, orientation) {
           return ChessGameService.onDragStart($scope.game, source, piece, position, orientation);
         };
@@ -91,7 +92,7 @@
         };
       }],
     };
-    
+
     return directive;
   }])
 
@@ -120,22 +121,22 @@
       }],
       link: function link($scope, $element, $attrs, $ctrl) {
         var thisCtrl = $element.controller('nywtonAllowOnlyLegalMoves');
-        
+
         // board is not ready yet.. so we have to cheat a bit.
         var getBoard = function getBoardF() {
           return $ctrl.board();
         };
-        
+
         $ctrl.config_push(['onDragStart', thisCtrl.onDragStart]);
         $ctrl.config_push(['onSnapEnd', thisCtrl.getOnSnapEndFunc(getBoard)]);
         $ctrl.config_push(['onDrop', thisCtrl.onDrop]);
         $ctrl.config_push(['onChange', thisCtrl.onChange]);
       },
     };
-    
+
     return directive;
   }])
-  
+
   .directive('nywtonRandomVsRandom', ['$timeout','$window','NywtonChessGameService', function($timeout, $window, ChessGameService) {
     var directive = {
       restrict: 'A',
@@ -145,11 +146,11 @@
         var _MIN_INTERVAL = 100;
         var interval = 1000;
         var timeoutPromise = null;
-        
+
         this.setInterval = function getIntervalF(t) {
           interval = t >= _MIN_INTERVAL ? t : interval;
         };
-        
+
         this.makeRandomMoveDelayedInvocation = function makeRandomMoveDelayedInvocationF(game, board) {
           $timeout.cancel(timeoutPromise);
           timeoutPromise = $timeout(function makeRandomMoveF() {
@@ -160,14 +161,14 @@
             }
           }, interval);
         };
-        
+
         $scope.$on('$destroy', function onDestroyF() {
           $timeout.cancel(timeoutPromise);
         });
       }],
       link: function link($scope, $element, $attrs, $ctrl) {
         var thisCtrl = $element.controller('nywtonRandomVsRandom');
-        
+
         $attrs.$observe('interval', function(val) {
           if(val) {
             var parsedValue = $window.parseInt(val);
@@ -176,7 +177,7 @@
             }
           }
         });
-        
+
         $scope.$watch(function() {
           return $ctrl.game() && $ctrl.game().game_over();
         }, function(newValue, oldValue) {
@@ -192,7 +193,7 @@
         });
       },
     };
-    
+
     return directive;
   }])
 
