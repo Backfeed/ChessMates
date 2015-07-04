@@ -35,6 +35,9 @@ function GamesController($scope, $meteor, Engine) {
     $scope.foo.game.move({ from: from, to: to, promotion: promotion });
     $scope.foo.board.position($scope.foo.game.fen());
     $scope.fen = $scope.foo.game.fen(); // save for returning the piece to before suggestion position
+    $scope.game.fen = $scope.foo.game.fen(); //TODO all users should see the updated position
+    $scope.game.pgn = $scope.foo.game.pgn();
+    logTurn();
   }
 
   //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
@@ -66,6 +69,15 @@ function GamesController($scope, $meteor, Engine) {
   function suggestedMovesSelected(e, move) {
     $scope.selected_move = move;
     $scope.foo.board.position(move.fen);
+  }
+
+  function logTurn(){
+    if ($scope.game.turns) {
+      $scope.game.turns.push($scope.game.suggested_moves);
+    } else {
+      $scope.game.turns = [$scope.game.suggested_moves];
+    }
+    $scope.game.suggested_moves = [];
   }
 
 }
