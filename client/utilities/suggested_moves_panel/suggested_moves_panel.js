@@ -17,14 +17,34 @@ function suggestedMovesPanelController($scope) {
   });
 
   function evaluateMove(move) {
-    //TODO first search if evaluation exists
     $scope.rating = this.rating;
+    var evaluation = getEvaluationByUser(move);
+    if (evaluation)
+    {
+      updateEvaluation(evaluation, this.rating);
+    } else {
+      addEvaluation(move, this.rating);
+    }
+  }
+
+  function getEvaluationByUser(move)
+  {
+    return _.find(move.evaluations, function(item)
+    {
+      return item.user_id === Meteor.userId()
+    });
+  }
+
+  function addEvaluation(move, stars) {
     move.evaluations.push({
       user_id: Meteor.userId(),
       created_at: Date.now(),
-      stars: this.rating
+      stars: stars
     });
-    //TODO else update. do the same for favorite_move
+  }
+
+  function updateEvaluation(evaluation, stars) {
+    evaluation.stars = stars;
   }
 
   function hoveringOver (value) {
