@@ -15,8 +15,7 @@ function comments() {
 
 function commentsController($scope, $meteor, $interval, TIME_PER_MOVE) {
   angular.extend($scope, {
-    add: add,
-    users : $meteor.collection(Meteor.users, false).subscribe('users')
+    add: add
   });
 
   $scope.getUserById = function(userId){
@@ -24,12 +23,10 @@ function commentsController($scope, $meteor, $interval, TIME_PER_MOVE) {
   };
 
   function add() {
-    console.log($scope.comment);
     $scope.comments.push({
-      user_id: $rootScope.currentUser._id,
-      game_id: "1",
-      suggested_move_id: $scope.selectedMove._id,
-      body: $scope.newComment.body
+      user_id: Meteor.userId(),
+      created_at: Date.now(),
+      text: $scope.newComment.body
     });
     $scope.newComment.body = ''
   }
