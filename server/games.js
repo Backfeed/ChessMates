@@ -1,6 +1,6 @@
 Meteor.publish('games', function (options, gameId) {
-  return Games.find({ game_id: gameId}, options);
+  return Games.find({});
 });
-Games.helpers({
-  game:  function() { return Games.findOne({ 'game_id': this.game_id }); }
-});
+//Games.helpers({
+//  game:  function() { return Games.findOne({ 'game_id': this.game_id }); }
+//});
