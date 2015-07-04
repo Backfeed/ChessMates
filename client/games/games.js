@@ -64,6 +64,7 @@ function GamesController($scope, $meteor, Engine) {
 
   function suggestedMovesSelected(e, move) {
     $scope.selected_move = move;
+    $scope.foo.board.position(move.fen);
   }
 
 }
