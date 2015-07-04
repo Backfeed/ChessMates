@@ -25,15 +25,11 @@ function GamesController($scope, $meteor, Engine) {
   var gameId = "1";
 
   angular.extend($scope, {
-    suggestedMoves : {},
-    comments       : {},
-    evaluations    : {},
-    evaluateMove   : evaluateMove,
     fen            : 'start',
     selected_move  : {}
   });
 
-  $scope.game = $meteor.object(Games, { game_id: gameId }).subscribe('games');;
+  $scope.game = $meteor.object(Games, { game_id: gameId }).subscribe('games');
 
   function onBestMove(e, from, to, promotion) {
     $scope.foo.game.move({ from: from, to: to, promotion: promotion });
@@ -62,18 +58,8 @@ function GamesController($scope, $meteor, Engine) {
     //TODO alert the user that the move has been suggested
     alert('success on suggesting a move');
     //TODO move the piece back
-    board.position($scope.fen);
+    $scope.foo.board.position($scope.fen);
 
-  }
-
-  function evaluateMove() {
-    $scope.game.evaluations.push({
-      user_id: $scope.currentUser._id,
-      game_id: gameId,
-      suggested_move_id: $scope.selectedMove._id,
-      favorite_move: $scope.selectedMove.favorite_move,
-      stars: $scope.selectedMove.stars
-    });
   }
 
   function suggestedMovesSelected(e, move) {
