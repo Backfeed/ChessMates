@@ -38,7 +38,8 @@
       board.position(game.fen());
 
       // Blockchess addition
-      $rootScope.$broadcast('singleMove', board, game);
+      //TODO listen to this event inside the games.js controller
+      $rootScope.$broadcast('singleMove');
 
     };
 

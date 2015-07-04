@@ -19,6 +19,9 @@ function GamesController($scope, $meteor, Engine) {
   $scope.foo = {};
   // For development
   $scope.playAI = function() {
+    //TODO fix this. For now pressing the button will play the first selected move(for dev)
+    $scope.foo.game.move($scope.game.suggested_moves[0].notation);
+    $scope.foo.board.position($scope.foo.game.fen());
     Engine.getMove($scope.foo.game.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "));
   };
 
@@ -45,23 +48,24 @@ function GamesController($scope, $meteor, Engine) {
   $scope.$on('suggestedMovesSelected', suggestedMovesSelected);
   $scope.$on('angularStockfish::bestMove', onBestMove);
 
-  function singleMove(e, board, game) {
+  function singleMove(e) {
     //TODO validate that this is the first time the player makes a suggestion
-    var pgn = game.pgn();
+    var pgn = $scope.foo.game.pgn();
     var notation = pgn.slice(pgn.lastIndexOf('.')+2, pgn.length);
     var newMove = {
         user_id: Meteor.userId(),
         notation: notation,
         avg_stars: '4.5',
         created_at: Date.now(),
-        fen: game.fen(),
+        fen: $scope.foo.game.fen(),
         comments: []
     };
     $scope.game.suggested_moves.push(newMove);
 
     //TODO alert the user that the move has been suggested
     alert('success on suggesting a move');
-    //TODO move the piece back
+    //TODO move the piece back in a more elegant way
+    $scope.foo.game.undo();
     $scope.foo.board.position($scope.fen);
 
   }
