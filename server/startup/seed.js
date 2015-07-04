@@ -85,7 +85,17 @@ Meteor.startup(function () {
         ]
       }
     ];
-    _.forEach(games, function(game) {
+
+    var new_game = [
+      {
+        'game_id': '1',
+        'pgn': '',
+        'fen': 'start',
+        'turns': [],
+        'suggested_moves': []
+      }
+    ];
+    _.forEach(new_game, function(game) {
       Games.insert(game);
     });
   }
