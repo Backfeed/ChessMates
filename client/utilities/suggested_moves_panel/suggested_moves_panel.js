@@ -37,6 +37,7 @@ function suggestedMovesPanelController($scope, $rootScope) {
   }
 
   function addEvaluation(move, stars) {
+    move.evaluations = [];
     move.evaluations.push({
       user_id: Meteor.userId(),
       created_at: Date.now(),
