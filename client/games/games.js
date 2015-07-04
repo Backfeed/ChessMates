@@ -50,8 +50,7 @@ function GamesController($scope, $meteor, Engine) {
 
   function singleMove(e) {
     //TODO validate that this is the first time the player makes a suggestion
-    var pgn = $scope.foo.game.pgn();
-    var notation = pgn.slice(pgn.lastIndexOf('.')+2, pgn.length);
+    var notation = getNotation($scope.foo.game.pgn());
     var newMove = {
         user_id: Meteor.userId(),
         notation: notation,
@@ -83,5 +82,18 @@ function GamesController($scope, $meteor, Engine) {
     }
     $scope.game.suggested_moves = [];
   }
+
+  function getNotation(pgn){
+    return pgn.slice(pgn.lastIndexOf('.')+2, pgn.length);
+  }
+
+  $scope.$watch('game.fen', function(){
+    if ($scope.game.fen && $scope.fen !== $scope.game.fen)
+    {
+      $scope.foo.game.load($scope.game.fen);
+      $scope.foo.board.position($scope.game.fen);
+      $scope.fen = $scope.game.fen;
+    }
+  });
 
 }
