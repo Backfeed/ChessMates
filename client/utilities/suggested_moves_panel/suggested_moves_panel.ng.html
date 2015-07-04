@@ -1,6 +1,6 @@
 <evaluations-area>
     <md-tabs md-center-tabs md-dynamic-height md-no-bar>
-        <md-tab label="•" md-on-select md-on-deselect ng-repeat="move in moves">
+        <md-tab label="•" ng-repeat="move in moves" md-on-select="selectMove(move)">
             <div class="evaluation text-center">
                 <!--&lt;!&ndash; <p class="text-center">Backfeed me</p> &ndash;&gt; no upper case neede. lower case for position upper case for piece name-->
                 <h2 class="evaluation-step center-block">{{ ::move.notation }}</h2>

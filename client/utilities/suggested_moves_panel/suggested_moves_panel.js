@@ -9,9 +9,10 @@ function suggestedMovesPanel() {
   }
 }
 
-function suggestedMovesPanelController($scope) {
+function suggestedMovesPanelController($scope, $rootScope) {
   angular.extend($scope, {
     evaluateMove   : evaluateMove,
+    selectMove     : selectMove,
     rating         : 3,
     hoveringOver   : hoveringOver
   });
@@ -47,7 +48,12 @@ function suggestedMovesPanelController($scope) {
     evaluation.stars = stars;
   }
 
-  function hoveringOver (value) {
+  function hoveringOver(value) {
     //TODO add tooltip from spec
+  }
+
+  function selectMove(move) {
+    //TODO why is this undefind?
+    //$rootScope.$broadcast('suggestedMovesSelected', move);
   }
 }
