@@ -51,6 +51,7 @@ function GamesController($scope, $meteor, Engine) {
 
   // For development
   function restart () {
+    cancelMoveHighlights();
     $scope.foo.game.reset();
     $scope.foo.board.position('start');
     $scope.game.fen = 'start';
