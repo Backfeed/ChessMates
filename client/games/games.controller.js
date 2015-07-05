@@ -49,6 +49,14 @@ function GamesController($scope, $meteor, Engine) {
     return flag;
   }
 
+  function getCurrentUserMove() {
+    var move;
+    $scope.game.suggested_moves.forEach(function(m){
+      if (m.user_id === $scope.currentUser._id) { move = m; }
+    });
+    return move;
+  }
+
   // For development
   function restart () {
     cancelMoveHighlights();
@@ -80,6 +88,7 @@ function GamesController($scope, $meteor, Engine) {
   function singleMove(e, notation) {
     if (isCurrentUserPlayed()) {
       alert('Can only suggest one move per turn');
+      $scope.foo.selectedMove = getCurrentUserMove()
     } else if (suggestedMoveExists(notation)) {
       alert('move exists');
       $scope.foo.selectedMove = getMoveFrom(notation);
