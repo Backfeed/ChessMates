@@ -7,7 +7,6 @@ function GamesController($scope, $meteor, Engine) {
   angular.extend($scope, {
     fen            : 'start',
     Engine : Engine, // DEV ONLY
-    isCurrentUserPlayed: isCurrentUserPlayed,
     foo: { selectedMove  : {} },
     game: $meteor.object(Games, { game_id: gameId }).subscribe('games'),
     executeMove: executeMove,
@@ -41,22 +40,6 @@ function GamesController($scope, $meteor, Engine) {
     $('.highlight-square').removeClass('highlight-square');
   }
 
-  function isCurrentUserPlayed() {
-    var flag = false;
-    $scope.game.suggested_moves.forEach(function(move){
-      if (move.user_id === $scope.currentUser._id) { flag = true; }
-    });
-    return flag;
-  }
-
-  function getCurrentUserMove() {
-    var move;
-    $scope.game.suggested_moves.forEach(function(m){
-      if (m.user_id === $scope.currentUser._id) { move = m; }
-    });
-    return move;
-  }
-
   // For development
   function restart () {
     cancelMoveHighlights();
@@ -86,12 +69,12 @@ function GamesController($scope, $meteor, Engine) {
   }
 
   function singleMove(e, notation) {
-    if (isCurrentUserPlayed()) {
+    if (getMoveBy('user_id', $scope.currentUser._id)) {
       alert('Can only suggest one move per turn');
-      $scope.foo.selectedMove = getCurrentUserMove()
-    } else if (suggestedMoveExists(notation)) {
+      $scope.foo.selectedMove = getMoveBy('user_id', $scope.currentUser._id);
+    } else if (getMoveBy('notation', notation)) {
       alert('move exists');
-      $scope.foo.selectedMove = getMoveFrom(notation);
+      $scope.foo.selectedMove = getMoveBy('notation', notation);
     } else {
       $scope.game.suggested_moves.push({
         user_id: Meteor.userId(),
@@ -108,20 +91,12 @@ function GamesController($scope, $meteor, Engine) {
     $scope.foo.board.position($scope.fen);
   }
 
-  function getMoveFrom(notation) {
+  function getMoveBy(attr, val) {
     var move;
     $scope.game.suggested_moves.forEach(function(m) {
-      if (m.notation === notation) { move = m; }
+      if (m[attr] === val) { move = m; }
     });
     return move;
-  }
-
-  function suggestedMoveExists(notation) {
-    var flag = false;
-    $scope.game.suggested_moves.forEach(function(move) {
-      if (move.notation === notation) { flag = true; }
-    });
-    return flag;
   }
 
   function logTurn() {
