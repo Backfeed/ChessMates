@@ -18,6 +18,15 @@ function GamesController($scope, $meteor, Engine) {
   // avoid binding break
   $scope.foo = {};
   // For development
+  $scope.restart = function() {
+    $scope.foo.game.reset();
+    $scope.foo.board.position('start');
+    $scope.game.fen = 'start';
+    $scope.game.pgn = '';
+    $scope.game.turns = [];
+    $scope.game.suggested_moves = [];
+  };
+
   $scope.playAI = function() {
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
     $scope.foo.game.move($scope.game.suggested_moves[0].notation);
@@ -68,7 +77,7 @@ function GamesController($scope, $meteor, Engine) {
     $scope.foo.board.position($scope.fen);
 
   }
-
+  //TODO only highlight
   function suggestedMovesSelected(e, move) {
     $scope.selected_move = move;
     $scope.foo.board.position(move.fen);
