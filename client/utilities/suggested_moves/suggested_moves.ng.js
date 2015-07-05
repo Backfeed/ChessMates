@@ -6,12 +6,12 @@ function suggestedMoves() {
     templateUrl: "client/utilities/suggested_moves/suggested_moves.ng.html",
     restrict: 'E',
     controller: suggestedMovesController,
-    scope: { moves: '=' }
+    scope: { moves: '=', selectedMove: '=' }
   }
 }
 
 function suggestedMovesController($rootScope, $scope) {
   $scope.select = function(move) {
-    $rootScope.$broadcast('suggestedMovesSelected', move);
+    $scope.selectedMove = move;
   }
 }

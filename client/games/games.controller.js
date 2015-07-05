@@ -6,10 +6,9 @@ function GamesController($scope, $meteor, Engine) {
   
   angular.extend($scope, {
     fen            : 'start',
-    selected_move  : {},
     Engine : Engine, // DEV ONLY
     isCurrentUserPlayed: isCurrentUserPlayed,
-    foo: {},
+    foo: { selectedMove  : {} },
     game: $meteor.object(Games, { game_id: gameId }).subscribe('games'),
     executeMove: executeMove,
     restart: restart // DEV ONLY
@@ -24,10 +23,22 @@ function GamesController($scope, $meteor, Engine) {
     }
   });
 
+
   //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
   $scope.$on('singleMove', singleMove);
-  $scope.$on('suggestedMovesSelected', suggestedMovesSelected);
   $scope.$on('angularStockfish::bestMove', onAIMove);
+  $scope.$watch('foo.selectedMove', selectedMoveChanged);
+
+  function selectedMoveChanged(move) {
+    cancelMoveHighlights();
+    var from = move.notation.substr(0,2);
+    var to = move.notation.substr(2);
+    $('.square-'+from + ', .square-'+to).addClass('highlight-square');
+  }
+
+  function cancelMoveHighlights() {
+    $('.highlight-square').removeClass('highlight-square');
+  }
 
   function isCurrentUserPlayed() {
     var flag = false;
@@ -48,6 +59,7 @@ function GamesController($scope, $meteor, Engine) {
   }
 
   function executeMove() {
+    cancelMoveHighlights();
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
     $scope.foo.game.move($scope.game.suggested_moves[0].notation);
     $scope.foo.board.position($scope.foo.game.fen());
@@ -63,11 +75,11 @@ function GamesController($scope, $meteor, Engine) {
     logTurn();
   }
 
-  function singleMove(e) {
+  function singleMove(e, from, to) {
     if (!isCurrentUserPlayed()) {
       $scope.game.suggested_moves.push({
         user_id: Meteor.userId(),
-        notation: getNotation($scope.foo.game.pgn()),
+        notation: from+to,
         avg_stars: '4.5',
         created_at: Date.now(),
         fen: $scope.foo.game.fen(),
@@ -83,12 +95,6 @@ function GamesController($scope, $meteor, Engine) {
     $scope.foo.board.position($scope.fen);
   }
 
-  //TODO only highlight
-  function suggestedMovesSelected(e, move) {
-    $scope.selected_move = move;
-    $scope.foo.board.position(move.fen);
-  }
-
   function logTurn(){
     if ($scope.game.turns) {
       $scope.game.turns.push($scope.game.suggested_moves);
@@ -96,10 +102,6 @@ function GamesController($scope, $meteor, Engine) {
       $scope.game.turns = [$scope.game.suggested_moves];
     }
     $scope.game.suggested_moves = [];
-  }
-
-  function getNotation(pgn){
-    return pgn.slice(pgn.lastIndexOf('.')+2, pgn.length);
   }
 
 }
