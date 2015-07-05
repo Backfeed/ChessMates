@@ -1,6 +1,6 @@
-<evaluations-area>
+<div class="evaluations area">
     <md-tabs md-center-tabs md-dynamic-height md-no-bar>
-        <md-tab label="•" ng-repeat="move in moves" md-on-select="selectMove(move)">
+        <md-tab label="•" ng-repeat="move in moves" md-on-select="selectMove(move)" class="evaluations-tab">
             <div class="evaluation text-center">
                 <!--&lt;!&ndash; <p class="text-center">Backfeed me</p> &ndash;&gt; no upper case neede. lower case for position upper case for piece name-->
                 <h2 class="evaluation-step center-block">{{ ::move.notation }}</h2>
@@ -12,12 +12,4 @@
             <comments move="move" comments="move.comments"></comments>
         </md-tab>
     </md-tabs>
-</evaluations-area>
-<!--<div class="rating">-->
-<!--<span>☆</span>-->
-<!--<span>☆</span>-->
-<!--<span>☆</span>-->
-<!--<span>☆</span>-->
-<!--<span>☆</span>-->
-<!--</div>-->
-
+</div>
