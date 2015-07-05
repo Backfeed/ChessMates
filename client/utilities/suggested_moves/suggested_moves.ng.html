@@ -20,7 +20,9 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="move in moves | orderBy : sorting" ng-click="select(move)">
+    <tr ng-repeat="move in moves | orderBy : sorting" 
+        ng-class="{ 'active': selectedMove.notation == move.notation }"
+        ng-click="select(move)">
       <td>{{ ::move.notation }}</td>
       <td>{{ move.avg_stars }}</td>
       <td>{{ move.reputation_sum }}</td>

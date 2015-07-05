@@ -30,8 +30,8 @@ function GamesController($scope, $meteor, Engine) {
   $scope.$watch('foo.selectedMove', selectedMoveChanged);
 
   function selectedMoveChanged(move) {
-    if (!move || !move.notation) { return; }
     cancelMoveHighlights();
+    if (!move || !move.notation) { return; }
     var from = move.notation.substr(0,2);
     var to = move.notation.substr(2);
     $('.square-'+from + ', .square-'+to).addClass('highlight-square');
@@ -77,19 +77,21 @@ function GamesController($scope, $meteor, Engine) {
     logTurn();
   }
 
-  function singleMove(e, from, to) {
-    if (!isCurrentUserPlayed()) {
+  function singleMove(e, notation) {
+    if (isCurrentUserPlayed()) {
+      alert('Can only suggest one move per turn');
+    } else if (suggestedMoveExists(notation)) {
+      alert('move exists');
+      $scope.foo.selectedMove = getMoveFrom(notation);
+    } else {
       $scope.game.suggested_moves.push({
         user_id: Meteor.userId(),
-        notation: from+to,
+        notation: notation,
         avg_stars: '4.5',
         created_at: Date.now(),
         fen: $scope.foo.game.fen(),
         comments: []
       });
-      alert('success on suggesting a move');
-    } else {
-      alert('Can only suggest one move per turn');
     }
 
     //TODO move the piece back in a more elegant way
@@ -97,7 +99,23 @@ function GamesController($scope, $meteor, Engine) {
     $scope.foo.board.position($scope.fen);
   }
 
-  function logTurn(){
+  function getMoveFrom(notation) {
+    var move;
+    $scope.game.suggested_moves.forEach(function(m) {
+      if (m.notation === notation) { move = m; }
+    });
+    return move;
+  }
+
+  function suggestedMoveExists(notation) {
+    var flag = false;
+    $scope.game.suggested_moves.forEach(function(move) {
+      if (move.notation === notation) { flag = true; }
+    });
+    return flag;
+  }
+
+  function logTurn() {
     if ($scope.game.turns) {
       $scope.game.turns.push($scope.game.suggested_moves);
     } else {

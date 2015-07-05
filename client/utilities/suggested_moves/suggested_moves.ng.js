@@ -10,8 +10,12 @@ function suggestedMoves() {
   }
 }
 
-function suggestedMovesController($rootScope, $scope) {
+function suggestedMovesController($scope) {
   $scope.select = function(move) {
-    $scope.selectedMove = move;
+    if ($scope.selectedMove === move) {
+      $scope.selectedMove = {};
+    } else {
+      $scope.selectedMove = move;
+    }
   }
 }

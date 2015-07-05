@@ -39,7 +39,8 @@
 
       // Blockchess addition
       //TODO listen to this event inside the games.js controller
-      $rootScope.$broadcast('singleMove', source, target);
+      var notation = source + target;
+      $rootScope.$broadcast('singleMove', notation);
 
     };
 
