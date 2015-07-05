@@ -4,4 +4,4 @@ angular.module('blockchess.utilities', [
   'blockchess.utilities.suggestedMovesPanel',
   'blockchess.utilities.comments',
   'blockchess.utilities.timer'
-])
+]);
