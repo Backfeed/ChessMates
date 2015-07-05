@@ -30,6 +30,7 @@ function GamesController($scope, $meteor, Engine) {
   $scope.$watch('foo.selectedMove', selectedMoveChanged);
 
   function selectedMoveChanged(move) {
+    if (!move || !move.notation) { return; }
     cancelMoveHighlights();
     var from = move.notation.substr(0,2);
     var to = move.notation.substr(2);

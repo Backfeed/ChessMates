@@ -11,5 +11,18 @@
             <hr />
             <comments move="move" comments="move.comments"></comments>
         </md-tab>
+
+        <!-- Mock -->
+        <md-tab ng-if="!moves.length" label="•" class="evaluations-tab">
+            <div class="evaluation text-center">
+                <!--&lt;!&ndash; <p class="text-center">Backfeed me</p> &ndash;&gt; no upper case neede. lower case for position upper case for piece name-->
+                <h2 class="evaluation-step center-block"></h2>
+                <rating ng-model="dummy.stars" class="rating" readonly="true"></rating>
+                <br>
+                <button type="button" disabled class="btn btn-default choose-favorite-move"><img src="img/favorite.png" />My favorite move</button>
+            </div>
+            <hr />
+            <!-- <comments move="move" comments="move.comments"></comments> -->
+        </md-tab>
     </md-tabs>
 </div>
