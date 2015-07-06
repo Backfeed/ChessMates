@@ -1,10 +1,10 @@
 <div class="evaluations area">
     <md-tabs md-center-tabs md-dynamic-height md-no-bar>
-        <md-tab label="•" ng-repeat="move in moves" md-on-select="selectMove(move)" class="evaluations-tab">
+        <md-tab label="•" ng-repeat="move in ctrl.moves" md-on-select="ctrl.selectedMove = move" class="evaluations-tab">
             <div class="evaluation text-center">
                 <!--&lt;!&ndash; <p class="text-center">Backfeed me</p> &ndash;&gt; no upper case neede. lower case for position upper case for piece name-->
                 <h2 class="evaluation-step center-block">{{ ::move.notation }}</h2>
-                <rating class="rating" ng-model="rating" on-hover="hoveringOver(value)" on-leave="overStar = null" ng-change="evaluateMove(move)"></rating>
+                <rating class="rating" ng-model="ctrl.rating" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" ng-change="ctrl.evaluateMove(move)"></rating>
                 <br>
                 <button type="button" class="btn btn-default choose-favorite-move" data-toggle="move.favorite_move"><img src="img/favorite.png" />My favorite move</button>
             </div>
@@ -13,7 +13,7 @@
         </md-tab>
 
         <!-- Mock -->
-        <md-tab ng-if="!moves.length" label="•" class="evaluations-tab">
+        <md-tab ng-if="!ctrl.moves.length" label="•" class="evaluations-tab">
             <div class="evaluation text-center">
                 <!--&lt;!&ndash; <p class="text-center">Backfeed me</p> &ndash;&gt; no upper case neede. lower case for position upper case for piece name-->
                 <h2 class="evaluation-step center-block"></h2>

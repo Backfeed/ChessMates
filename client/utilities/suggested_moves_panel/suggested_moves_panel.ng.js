@@ -5,34 +5,32 @@ function suggestedMovesPanel() {
   return {
     templateUrl: "client/utilities/suggested_moves_panel/suggested_moves_panel.ng.html",
     controller: suggestedMovesPanelController,
+    controllerAs: 'ctrl',
+    bindToController: true,
     scope: { moves: '=' ,  selectedMove: '=' }
   }
 }
 
 function suggestedMovesPanelController($scope, $rootScope) {
-  angular.extend($scope, {
+  var ctrl = this;
+  angular.extend(ctrl, {
     evaluateMove   : evaluateMove,
-    selectMove     : selectMove,
-    rating         : 3,
+    rating         : 0,
     hoveringOver   : hoveringOver
   });
 
   function evaluateMove(move) {
-    $scope.rating = this.rating;
     var evaluation = getEvaluationByUser(move);
-    if (evaluation)
-    {
-      updateEvaluation(evaluation, this.rating);
+    if (evaluation) {
+      updateEvaluation(evaluation, ctrl.rating);
     } else {
-      addEvaluation(move, this.rating);
+      addEvaluation(move, ctrl.rating);
     }
   }
 
-  function getEvaluationByUser(move)
-  {
-    return _.find(move.evaluations, function(item)
-    {
-      return item.user_id === Meteor.userId()
+  function getEvaluationByUser(move) {
+    return _.find(move.evaluations, function(item) {
+      return item.user_id === Meteor.userId();
     });
   }
 
@@ -53,8 +51,4 @@ function suggestedMovesPanelController($scope, $rootScope) {
     //TODO add tooltip from spec
   }
 
-  function selectMove(move) {
-    //TODO why is this undefind?
-    //$rootScope.$broadcast('suggestedMovesSelected', move);
-  }
 }
