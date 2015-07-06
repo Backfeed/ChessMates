@@ -5,12 +5,15 @@ function timer() {
   return {
     templateUrl: "client/utilities/timer/timer.ng.html",
     controller: timerController,
+    bindToController: true,
+    controllerAs: 'ctrl',
     scope: {}
   }
 }
 
 function timerController($scope, $interval, TIME_PER_MOVE) {
-  angular.extend($scope, {
+  var ctrl = this;
+  angular.extend(ctrl, {
     timeLeft: TIME_PER_MOVE,
     timeLeftPercentage: 100
   });
@@ -19,7 +22,7 @@ function timerController($scope, $interval, TIME_PER_MOVE) {
 
   function init() {
     var timerInterval = $interval(function(){
-      $scope.timeLeft -= 1000;
+      ctrl.timeLeft -= 1000;
     }, 1000);
   }
 
@@ -28,11 +31,12 @@ function timerController($scope, $interval, TIME_PER_MOVE) {
   })
 
   $scope.$watch('timeLeft', function(){
-    $scope.timeLeftPercentage = Math.round( ($scope.timeLeft / TIME_PER_MOVE)  * 100 );
+    ctrl.timeLeftPercentage = Math.round( (ctrl.timeLeft / TIME_PER_MOVE)  * 100 );
   });
 
+  // TODO : Bind to game.turns array and setup watcher to that model
   $scope.$on('moveMade', function(){
-    $scope.timeLeft = TIME_PER_MOVE;
+    ctrl.timeLeft = TIME_PER_MOVE;
   });
 
 }
