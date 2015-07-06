@@ -1,7 +1,7 @@
 angular.module('blockchess.games.controller', [])
 .controller('GamesController', GamesController)
 
-function GamesController($scope, $meteor, Engine) {
+function GamesController($scope, $meteor, CommonService, Engine) {
   var gameId = "1"; // TODO: Get dynamically from current game
   
   angular.extend($scope, {
@@ -70,10 +70,10 @@ function GamesController($scope, $meteor, Engine) {
 
   function singleMove(e, notation) {
     if (getMoveBy('user_id', $scope.currentUser._id)) {
-      alert('Can only suggest one move per turn');
+      CommonService.toast('Can only suggest one move per turn');
       $scope.foo.selectedMove = getMoveBy('user_id', $scope.currentUser._id);
     } else if (getMoveBy('notation', notation)) {
-      alert('move exists');
+      CommonService.toast('move exists');
       $scope.foo.selectedMove = getMoveBy('notation', notation);
     } else {
       $scope.game.suggested_moves.push({
