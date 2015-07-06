@@ -11,7 +11,7 @@ function suggestedMovesPanel() {
   }
 }
 
-function suggestedMovesPanelController($scope, $rootScope) {
+function suggestedMovesPanelController() {
   var ctrl = this;
   angular.extend(ctrl, {
     evaluateMove   : evaluateMove,
