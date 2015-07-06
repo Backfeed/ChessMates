@@ -1,22 +1,22 @@
 <div class="comment" layout="row" layout-align="space-between">
-   <div class="comment-meta"><!-- TODO maybe use a filter for the user name-->
-     <span class="commenter-name">{{ getUserById(move.user_id) | displayName }}</span>
+   <div class="comment-meta">
+     <span class="commenter-name">{{ ctrl.getUserById(move.user_id) | displayName }}</span>
      <span class="comment-type">- suggested this move</span>
    </div>
-   <div class="comment-time pull-right">• {{ move.created_at | date : 'shortTime' }}</div>
+   <div class="comment-time pull-right">• {{ ctrl.move.created_at | date : 'shortTime' }}</div>
 </div>
 
-<form ng-submit="add()">
+<form ng-submit="ctrl.add()">
   <input type="text"
          required
          class="form-control"
-         ng-model="newComment.body"
+         ng-model="ctrl.newComment.body"
          placeholder="What do you think of this move?" />
 </form>
-<div ng-repeat="comment in comments">
+<div ng-repeat="comment in ctrl.comments">
   <div class="comment" layout="row" layout-align="space-between">
      <div class="comment-meta"> <!-- TODO maybe use a filter for the user name + make bind once-->
-       <span class="commenter-name">{{ getUserById(comment.user_id) | displayName }}</span>
+       <span class="commenter-name">{{ ctrl.getUserById(comment.user_id) | displayName }}</span>
        <span class="comment-type" ng-if="comment.type == 'comment'"> - comment</span>
        <span class="comment-type" ng-if="comment.type == 'backfeed'"> - backfeed {{ comment.stars }} stars</span>
      </div><!-- TODO maybe use a filter with momentjs for better parsing -->

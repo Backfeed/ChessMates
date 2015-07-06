@@ -6,6 +6,8 @@ function comments() {
     restrict: 'E',
     templateUrl: "client/utilities/comments/comments.ng.html",
     controller: commentsController,
+    controllerAs: 'ctrl',
+    bindToController: true,
     scope: {
       move: '=',
       comments: '='
@@ -13,21 +15,23 @@ function comments() {
   }
 }
 
-function commentsController($scope, $meteor, $interval, TIME_PER_MOVE) {
-  angular.extend($scope, {
+function commentsController() {
+  var ctrl = this;
+  angular.extend(ctrl, {
+    getUserById: getUserById,
     add: add
   });
 
-  $scope.getUserById = function(userId){
+  function getUserById(userId) {
     return Meteor.users.findOne(userId);
   };
 
   function add() {
-    $scope.comments.push({
+    ctrl.comments.push({
       user_id: Meteor.userId(),
       created_at: Date.now(),
-      text: $scope.newComment.body
+      text: ctrl.newComment.body
     });
-    $scope.newComment.body = ''
+    ctrl.newComment.body = ''
   }
 }
