@@ -3,22 +3,22 @@ angular.module('blockchess.games.controller', [])
 
 function GamesController($scope, $meteor, CommonService, Engine) {
   var gameId = "1"; // TODO: Get dynamically from current game
-  
-  angular.extend($scope, {
-    fen            : 'start',
-    Engine : Engine, // DEV ONLY
-    foo: { selectedMove  : {} },
-    game: $meteor.object(Games, { game_id: gameId }).subscribe('games'),
+  var ctrl = this;
+  angular.extend(ctrl, {
     executeMove: executeMove,
-    restart: restart // DEV ONLY
+    restart: restart, // DEV ONLY
+    Engine : Engine, // DEV ONLY
+    game: $meteor.object(Games, { game_id: gameId }).subscribe('games'),
+    selectedMove  : {},
+    fen            : 'start'
   });
 
-  $scope.$watch('game.fen', function(){
-    if ($scope.game.fen && $scope.fen !== $scope.game.fen)
+  $scope.$watch('ctrl.game.fen', function(){
+    if (ctrl.game.fen && ctrl.fen !== ctrl.game.fen)
     {
-      $scope.foo.game.load($scope.game.fen);
-      $scope.foo.board.position($scope.game.fen);
-      $scope.fen = $scope.game.fen;
+      ctrl.boardGame.load(ctrl.game.fen);
+      ctrl.board.position(ctrl.game.fen);
+      ctrl.fen = ctrl.game.fen;
     }
   });
 
@@ -26,7 +26,7 @@ function GamesController($scope, $meteor, CommonService, Engine) {
   //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
   $scope.$on('singleMove', singleMove);
   $scope.$on('angularStockfish::bestMove', onAIMove);
-  $scope.$watch('foo.selectedMove', selectedMoveChanged);
+  $scope.$watch('ctrl.selectedMove', selectedMoveChanged);
 
   function selectedMoveChanged(move) {
     cancelMoveHighlights();
@@ -43,69 +43,71 @@ function GamesController($scope, $meteor, CommonService, Engine) {
   // For development
   function restart () {
     cancelMoveHighlights();
-    $scope.foo.game.reset();
-    $scope.foo.board.position('start');
-    $scope.game.fen = 'start';
-    $scope.game.pgn = '';
-    $scope.game.turns = [];
-    $scope.game.suggested_moves = [];
+    ctrl.boardGame.reset();
+    ctrl.board.position('start');
+    angular.extend(ctrl.game, {
+      fen: 'start',
+      pgn: '',
+      turns: [],
+      suggested_moves: []
+    });
   }
 
   function executeMove() {
     cancelMoveHighlights();
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
-    $scope.foo.game.move($scope.game.suggested_moves[0].notation);
-    $scope.foo.board.position($scope.foo.game.fen());
-    Engine.getMove($scope.foo.game.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "));
+    ctrl.boardGame.move(ctrl.game.suggested_moves[0].notation);
+    ctrl.board.position(ctrl.boardGame.fen());
+    Engine.getMove(ctrl.boardGame.game.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "));
   }
 
   function onAIMove(e, from, to, promotion) {
-    $scope.foo.game.move({ from: from, to: to, promotion: promotion });
-    $scope.foo.board.position($scope.foo.game.fen());
-    $scope.fen = $scope.foo.game.fen(); // save for returning the piece to before suggestion position
-    $scope.game.fen = $scope.foo.game.fen(); //TODO all users should see the updated position
-    $scope.game.pgn = $scope.foo.game.pgn();
+    ctrl.boardGame.move({ from: from, to: to, promotion: promotion });
+    ctrl.board.position(ctrl.game.fen());
+    ctrl.fen = ctrl.game.fen(); // save for returning the piece to before suggestion position
+    ctrl.game.fen = ctrl.game.fen(); //TODO all users should see the updated position
+    ctrl.game.pgn = ctrl.game.pgn();
     logTurn();
   }
 
   function singleMove(e, notation) {
     if (getMoveBy('user_id', $scope.currentUser._id)) {
       CommonService.toast('Can only suggest one move per turn');
-      $scope.foo.selectedMove = getMoveBy('user_id', $scope.currentUser._id);
+      ctrl.selectedMove = getMoveBy('user_id', $scope.currentUser._id);
     } else if (getMoveBy('notation', notation)) {
       CommonService.toast('move exists');
-      $scope.foo.selectedMove = getMoveBy('notation', notation);
+      ctrl.selectedMove = getMoveBy('notation', notation);
     } else {
-      $scope.game.suggested_moves.push({
+      ctrl.game.suggested_moves.push({
         user_id: Meteor.userId(),
         notation: notation,
         avg_stars: '4.5',
         created_at: Date.now(),
-        fen: $scope.foo.game.fen(),
+        fen: ctrl.boardGame.fen(),
         comments: []
       });
     }
 
     //TODO move the piece back in a more elegant way
-    $scope.foo.game.undo();
-    $scope.foo.board.position($scope.fen);
+    ctrl.boardGame.undo();
+    ctrl.board.position(ctrl.fen);
   }
 
   function getMoveBy(attr, val) {
     var move;
-    $scope.game.suggested_moves.forEach(function(m) {
+    ctrl.game.suggested_moves.forEach(function(m) {
       if (m[attr] === val) { move = m; }
     });
     return move;
   }
 
   function logTurn() {
-    if ($scope.game.turns) {
-      $scope.game.turns.push($scope.game.suggested_moves);
+    if (ctrl.game.turns) {
+      ctrl.game.turns.push(ctrl.game.suggested_moves);
     } else {
-      $scope.game.turns = [$scope.game.suggested_moves];
+      ctrl.game.turns = [ctrl.game.suggested_moves];
     }
-    $scope.game.suggested_moves = [];
+    ctrl.game.suggested_moves = [];
   }
 
 }

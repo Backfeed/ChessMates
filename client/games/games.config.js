@@ -6,6 +6,7 @@ function config($stateProvider){
     .state('games', {
       url: '/games',
       templateUrl: 'client/games/games.ng.html',
-      controller: 'GamesController'
+      controller: 'GamesController',
+      controllerAs: 'ctrl'
     });
 }

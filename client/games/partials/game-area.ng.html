@@ -14,14 +14,14 @@
   </div>
 
   <div flex>
-    <nywton-chessgame data-game="foo.game" data-board="foo.board"></nywton-chessgame>
-    <button ng-click="restart()">Restart</button>
-    <button ng-click="executeMove()">Play AI</button>
+    <nywton-chessgame data-game="ctrl.boardGame" data-board="ctrl.board"></nywton-chessgame>
+    <button ng-click="ctrl.restart()">Restart</button>
+    <button ng-click="ctrl.executeMove()">Play AI</button>
     History: {{ history }}
   </div>
 
   <div flex="40">
-    <suggested-moves moves="game.suggested_moves" selected-move="foo.selectedMove"></suggested-moves>
+    <suggested-moves moves="ctrl.game.suggested_moves" selected-move="ctrl.selectedMove"></suggested-moves>
   </div>
 
 </section>
