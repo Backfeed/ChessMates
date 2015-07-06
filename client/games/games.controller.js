@@ -71,7 +71,11 @@ function GamesController($scope, $meteor, CommonService, Engine) {
   }
 
   function singleMove(e, notation) {
-    if (getMoveBy('user_id', $scope.currentUser._id)) {
+    if (!$scope.currentUser) {
+      CommonService.toast('Must be logged in to suggest a move');
+      ctrl.boardGame.undo();
+      return;
+    } else if (getMoveBy('user_id', $scope.currentUser._id)) {
       CommonService.toast('Can only suggest one move per turn');
       ctrl.selectedMove = getMoveBy('user_id', $scope.currentUser._id);
     } else if (getMoveBy('notation', notation)) {
