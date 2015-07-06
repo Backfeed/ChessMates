@@ -6,16 +6,24 @@ function suggestedMoves() {
     templateUrl: "client/utilities/suggested_moves/suggested_moves.ng.html",
     restrict: 'E',
     controller: suggestedMovesController,
+    controllerAs: 'ctrl',
+    bindToController: true,
     scope: { moves: '=', selectedMove: '=' }
   }
 }
 
 function suggestedMovesController($scope) {
-  $scope.select = function(move) {
-    if ($scope.selectedMove === move) {
-      $scope.selectedMove = {};
+  var ctrl = this;
+  angular.extend(ctrl, {
+    select: select
+  });
+
+  function select(move) {
+    if (ctrl.selectedMove === move) {
+      ctrl.selectedMove = {};
     } else {
-      $scope.selectedMove = move;
+      ctrl.selectedMove = move;
     }
   }
+
 }

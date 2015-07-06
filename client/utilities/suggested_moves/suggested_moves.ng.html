@@ -1,7 +1,7 @@
 <h2>Suggested Moves</h2>
 
 <div id="filter-dropdown">
-  <md-select ng-model="sorting" placeholder="Sort by..." class="pull-right">
+  <md-select ng-model="ctrl.sorting" placeholder="Sort by..." class="pull-right">
       <md-option ng-value="relevance_score">Relevance</md-option>
       <md-option ng-value="reputation_sum">Reputation</md-option>
       <md-option ng-value="avg_stars">Stars</md-option>
@@ -20,9 +20,9 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="move in moves | orderBy : sorting" 
-        ng-class="{ 'active': selectedMove.notation == move.notation }"
-        ng-click="select(move)">
+    <tr ng-repeat="move in ctrl.moves | orderBy : sorting" 
+        ng-class="{ 'active': ctrl.selectedMove.notation == move.notation }"
+        ng-click="ctrl.select(move)">
       <td>{{ ::move.notation }}</td>
       <td>{{ move.avg_stars }}</td>
       <td>{{ move.reputation_sum }}</td>
