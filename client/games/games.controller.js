@@ -58,15 +58,15 @@ function GamesController($scope, $meteor, CommonService, Engine) {
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
     ctrl.boardGame.move(ctrl.game.suggested_moves[0].notation);
     ctrl.board.position(ctrl.boardGame.fen());
-    Engine.getMove(ctrl.boardGame.game.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "));
+    Engine.getMove(ctrl.boardGame.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "));
   }
 
   function onAIMove(e, from, to, promotion) {
     ctrl.boardGame.move({ from: from, to: to, promotion: promotion });
-    ctrl.board.position(ctrl.game.fen());
-    ctrl.fen = ctrl.game.fen(); // save for returning the piece to before suggestion position
-    ctrl.game.fen = ctrl.game.fen(); //TODO all users should see the updated position
-    ctrl.game.pgn = ctrl.game.pgn();
+    ctrl.board.position(ctrl.boardGame.fen());
+    ctrl.fen = ctrl.boardGame.fen(); // save for returning the piece to before suggestion position
+    ctrl.game.fen = ctrl.boardGame.fen(); //TODO all users should see the updated position
+    ctrl.game.pgn = ctrl.boardGame.pgn();
     logTurn();
   }
 
