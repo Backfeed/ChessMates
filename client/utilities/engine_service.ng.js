@@ -1,16 +1,18 @@
 angular.module('blockchess.utilities.engine', [])
 .service('Engine', Engine)
 
-function Engine($rootScope) {
+function Engine($rootScope, $q) {
   var engine = getEngine();
   var evaler = getEvaler();
   var config = { depth: "3" };
+  var deferred = $q.defer();
   uciCmd('ucinewgame');
   uciCmd('isready');
     
   return {
     setPosition: setPosition,
     getMove: getMove,
+    evaluate: evaluate,
     promptMove: promptMove,
     setOptions: setOptions
   }
@@ -29,16 +31,21 @@ function Engine($rootScope) {
       } else {
           line = e;
       }
-    console.log("Angular Stockfish: Engine: " + line);
-    var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbk])?/);
-    if(match) {
-      var from      = match[1]; 
-      var to        = match[2]; 
-      var promotion = match[3]
-      $rootScope.$broadcast('angularStockfish::bestMove', from, to, promotion);
-    } 
+      console.log("Angular Stockfish: Engine: " + line);
+      var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbk])?/);
+      if(match) {
+        var from      = match[1]; 
+        var to        = match[2]; 
+        var promotion = match[3]
+        $rootScope.$broadcast('angularStockfish::bestMove', from, to, promotion);
+      } else if (line.indexOf('Total Evaluation') > -1) {
+        var evaluationScore = parseFloat(line.split('Total Evaluation: ')[1].split('(')[0])
+        // $rootScope.$broadcast('angularStockfish::Evaluation', evaluationScore);
+        console.log(evaluationScore);
+        deferred.resolve(evaluationScore);
+      }
 
-  }
+    }
 
     return eng;
   }
@@ -62,7 +69,13 @@ function Engine($rootScope) {
   function setPosition(moves) {
     uciCmd('position startpos moves ' + moves);
     uciCmd('position startpos moves ' + moves, evaler);
+  }
+
+  function evaluate(moves) {
+    deferred = $q.defer();
+    setPosition(moves);
     uciCmd("eval", evaler);
+    return deferred.promise;
   }
 
   // Prompt the engine for move based on position (call setPosition before this method)

@@ -7,6 +7,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
 
   angular.extend(ctrl, {
     executeMove: executeMove,
+    evaluate: evaluate, // DEV ONLY
     restart: restart, // DEV ONLY
     Engine : Engine, // DEV ONLY
     game: $meteor.object(Games, { game_id: gameId }).subscribe('games'),
@@ -34,6 +35,12 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
     var from = move.notation.substr(0,2);
     var to = move.notation.substr(2);
     $('.square-'+from + ', .square-'+to).addClass('highlight-square');
+  }
+
+  function evaluate(moves) {
+    Engine.evaluate(moves).then(function(score) {
+      console.log('score is ', score);
+    })
   }
 
   function cancelMoveHighlights() {
