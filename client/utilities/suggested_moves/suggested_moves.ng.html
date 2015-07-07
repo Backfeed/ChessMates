@@ -27,7 +27,7 @@
       <td>{{ move.avg_stars }}</td>
       <td>{{ move.reputation_sum }}</td>
       <td>{{ move.relevance_score }}</td>
-      <td>{{ ::move.created_at | date : 'shortTime' }}</td>
+      <td time-ago="move.created_at"></td>
     </tr>
   </tbody>
 </table>

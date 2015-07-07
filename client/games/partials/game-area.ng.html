@@ -8,13 +8,14 @@
         <img src="img/logo.png" alt="">
         <dt>Tal's Score:</dt>
         <dd>59</dd>
-        <dt>Tokens :</dt>
+        <dt>Tokens:</dt>
         <dd>532</dd>
       </dl>
   </div>
 
   <div flex>
     <nywton-chessgame data-game="ctrl.boardGame" data-board="ctrl.board"></nywton-chessgame>
+    <button ng-click="ctrl.evaluate('a4 e5 a5 e6')">Evaluate</button>
       <button ng-click="ctrl.start()">
           <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
       </button>

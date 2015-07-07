@@ -1,11 +1,13 @@
 angular.module('blockchess.games.controller', [])
 .controller('GamesController', GamesController)
 
-function GamesController($scope, $meteor, CommonService, Engine) {
+function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
   var gameId = "1"; // TODO: Get dynamically from current game
   var ctrl = this;
+
   angular.extend(ctrl, {
     executeMove: executeMove,
+    evaluate: evaluate, // DEV ONLY
     start: start, // DEV ONLY
     pause: pause, // DEV ONLY
     stop: stop, // DEV ONLY
@@ -16,9 +18,9 @@ function GamesController($scope, $meteor, CommonService, Engine) {
     fen            : 'start'
   });
 
-  $scope.$watch('ctrl.game.fen', function(){
-    if (ctrl.game.fen && ctrl.fen !== ctrl.game.fen)
-    {
+  // What does this do? Let's saparate between the function and the watcher?
+  $scope.$watch('ctrl.game.fen', function() {
+    if (ctrl.game.fen && ctrl.fen !== ctrl.game.fen) {
       ctrl.boardGame.load(ctrl.game.fen);
       ctrl.board.position(ctrl.game.fen);
       ctrl.fen = ctrl.game.fen;
@@ -38,6 +40,12 @@ function GamesController($scope, $meteor, CommonService, Engine) {
     var from = move.notation.substr(0,2);
     var to = move.notation.substr(2);
     $('.square-'+from + ', .square-'+to).addClass('highlight-square');
+  }
+
+  function evaluate(moves) {
+    Engine.evaluate(moves).then(function(score) {
+      console.log('score is ', score);
+    })
   }
 
   function cancelMoveHighlights() {
@@ -142,21 +150,32 @@ function GamesController($scope, $meteor, CommonService, Engine) {
     } else if (getMoveBy('user_id', $scope.currentUser._id)) {
       CommonService.toast('Can only suggest one move per turn');
       ctrl.selectedMove = getMoveBy('user_id', $scope.currentUser._id);
+      movePieceBack();
     } else if (getMoveBy('notation', notation)) {
       CommonService.toast('move exists');
       ctrl.selectedMove = getMoveBy('notation', notation);
+      movePieceBack();
     } else {
-      ctrl.game.suggested_moves.push({
-        user_id: Meteor.userId(),
-        notation: notation,
-        avg_stars: '4.5',
-        created_at: Date.now(),
-        fen: ctrl.boardGame.fen(),
-        comments: []
+      GamesService.openSuggestMoveModal(notation)
+      .then(function(response) {
+        // TODO Add response to evaluation
+        console.log(response);
+        ctrl.game.suggested_moves.push({
+          user_id: Meteor.userId(),
+          notation: notation,
+          avg_stars: '4.5',
+          created_at: Date.now(),
+          fen: ctrl.boardGame.fen(),
+          comments: []
+        });
+      })
+      .finally(function() {
+        movePieceBack();
       });
     }
+  }
 
-    //TODO move the piece back in a more elegant way
+  function movePieceBack() {
     ctrl.boardGame.undo();
     ctrl.board.position(ctrl.fen);
   }
