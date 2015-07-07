@@ -6,6 +6,9 @@ function GamesController($scope, $meteor, CommonService, Engine) {
   var ctrl = this;
   angular.extend(ctrl, {
     executeMove: executeMove,
+    start: start, // DEV ONLY
+    pause: pause, // DEV ONLY
+    stop: stop, // DEV ONLY
     restart: restart, // DEV ONLY
     Engine : Engine, // DEV ONLY
     game: $meteor.object(Games, { game_id: gameId }).subscribe('games'),
@@ -27,6 +30,7 @@ function GamesController($scope, $meteor, CommonService, Engine) {
   $scope.$on('singleMove', singleMove);
   $scope.$on('angularStockfish::bestMove', onAIMove);
   $scope.$watch('ctrl.selectedMove', selectedMoveChanged);
+  $scope.$watch('ctrl.game.status', executeMoveOnTime);
 
   function selectedMoveChanged(move) {
     cancelMoveHighlights();
@@ -41,6 +45,52 @@ function GamesController($scope, $meteor, CommonService, Engine) {
   }
 
   // For development
+
+  function start() {
+    if (ctrl.game.settings.inPlay)
+      return;
+
+    $meteor.call('startGame', gameId).then(
+      function(data){
+        //$scope.game.settings.inPlay = true;
+        console.log('game started');
+      },
+      function(err){
+        console.log('failed', err);
+      }
+    );
+  };
+
+  function pause() {
+    //if (!ctrl.game.settings.inPlay)
+    //  return;
+
+    $meteor.call('pauseGame', gameId).then(
+      function(data){
+        ctrl.game.settings.inPlay = false;
+        console.log('game paused');
+      },
+      function(err){
+        console.log('failed', err);
+      }
+    );
+  };
+
+  function stop() {
+    //if (!ctrl.game.settings.inPlay)
+    //  return;
+
+    $meteor.call('stopGame', gameId).then(
+      function(data){
+        ctrl.game.settings.inPlay = false;
+        console.log('game stopped');
+      },
+      function(err){
+        console.log('failed', err);
+      }
+    );
+  };
+
   function restart () {
     cancelMoveHighlights();
     ctrl.boardGame.reset();
@@ -53,11 +103,23 @@ function GamesController($scope, $meteor, CommonService, Engine) {
     });
   }
 
+  function executeMoveOnTime(){
+    var status = ctrl.game.status;
+    if(status === 'AI'){
+      executeMove();
+    }
+  }
+
   function executeMove() {
     cancelMoveHighlights();
+    //TODO if no suggested move game over
+   if (ctrl.game.suggested_moves.length === 0){
+     alert('Game Over');
+     return;
+   }
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
     ctrl.boardGame.move(ctrl.game.suggested_moves[0].notation);
-    ctrl.board.position(ctrl.boardGame.fen());
+    ctrl.board.position(ctrl.game.suggested_moves[0].fen);
     Engine.getMove(ctrl.boardGame.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "));
   }
 
@@ -68,12 +130,14 @@ function GamesController($scope, $meteor, CommonService, Engine) {
     ctrl.game.fen = ctrl.boardGame.fen(); //TODO all users should see the updated position
     ctrl.game.pgn = ctrl.boardGame.pgn();
     logTurn();
+    start();
   }
 
   function singleMove(e, notation) {
     if (!$scope.currentUser) {
       CommonService.toast('Must be logged in to suggest a move');
       ctrl.boardGame.undo();
+      ctrl.board.position(ctrl.fen);
       return;
     } else if (getMoveBy('user_id', $scope.currentUser._id)) {
       CommonService.toast('Can only suggest one move per turn');

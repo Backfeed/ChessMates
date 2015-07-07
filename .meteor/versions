@@ -63,6 +63,7 @@ oauth1@1.1.4
 oauth2@1.1.3
 observe-sequence@1.0.6
 ordered-dict@1.0.3
+percolate:synced-cron@1.2.1
 planettraining:material-design-icons@0.0.4
 random@1.0.3
 reactive-dict@1.1.0

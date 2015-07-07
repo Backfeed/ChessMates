@@ -5,6 +5,11 @@ Meteor.startup(function () {
         'game_id': '1',
         'pgn': '1. e4 e5 2. Nf3 Nc6',
         'fen': 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',
+        'settings': {
+          'inPlay': false,
+          'timePerMove': 30000,
+          'timeLeft': 30000
+        },
         'turns': [
           {
             'user_id': '1',
@@ -91,6 +96,11 @@ Meteor.startup(function () {
         'game_id': '1',
         'pgn': '',
         'fen': 'start',
+        'settings': {
+          'inPlay': false,
+          'timePerMove': 30000,
+          'timeLeft': 30000
+        },
         'turns': [],
         'suggested_moves': []
       }

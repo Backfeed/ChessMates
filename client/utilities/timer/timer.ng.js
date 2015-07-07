@@ -1,42 +1,37 @@
 angular.module('blockchess.utilities.timer', [])
-.directive('timer', timer)
+  .directive('timer', timer);
 
 function timer() {
   return {
+    restrict: 'E',
     templateUrl: "client/utilities/timer/timer.ng.html",
     controller: timerController,
     bindToController: true,
     controllerAs: 'ctrl',
-    scope: {}
+    scope: {
+      time: '=',
+      settings: '='
+    }
   }
 }
 
-function timerController($scope, $interval, TIME_PER_MOVE) {
+function timerController($scope) {
   var ctrl = this;
   angular.extend(ctrl, {
-    timeLeft: TIME_PER_MOVE,
+    timeLeft: 0,
     timeLeftPercentage: 100
   });
 
-  init();
-
-  function init() {
-    var timerInterval = $interval(function(){
-      ctrl.timeLeft -= 1000;
-    }, 1000);
-  }
-
-  $scope.$on('destroy', function(){
-    $interval.cancel(timerInterval);
-  })
-
-  $scope.$watch('timeLeft', function(){
-    ctrl.timeLeftPercentage = Math.round( (ctrl.timeLeft / TIME_PER_MOVE)  * 100 );
+  $scope.$watch('ctrl.timeLeft', function(){
+    if (ctrl.settings) {
+      ctrl.timeLeftPercentage = Math.round((ctrl.timeLeft / ctrl.settings.timePerMove) * 100);
+    }
   });
 
-  // TODO : Bind to game.turns array and setup watcher to that model
-  $scope.$on('moveMade', function(){
-    ctrl.timeLeft = TIME_PER_MOVE;
+  $scope.$watch('ctrl.time', function(){
+    if (ctrl.time) {
+      ctrl.timeLeft = ctrl.time;
+    }
   });
 
 }

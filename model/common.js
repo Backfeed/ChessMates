@@ -131,23 +131,98 @@ Meteor.methods({
   favoriteMove: function favoriteMove(moveId) {
     // update users favorite moveId and remove from all others
   },
-  distributeRepution: function distributeRepution(options) {
+  distributeRepution: function distributeRepution(gameId) {
     // Redistribute reputation after move
 
+    console.log('distributeRepution');
 
   },
-  commentOnMove: function commentOnMove(moveId, text) {
+  endTurn: function endTurn(gameId) {
+    console.log('endTurn');
 
-    // Validations
-    // check if move is still active
+    if (Meteor.isServer) {
+      SyncedCron.stop();
+      Games.update(
+        {game_id: gameId},
+        {
+          $set: {
+            'status': 'AI',
+            'settings': {
+              'inPlay': false,
+              'timePerMove': +15000,
+              'timeLeft': +15000
+            }
+          }
+        });
+    }
+  },
+  startGame: function startGame(gameId) {
+    check(gameId, String);
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    var game = Games.findOne({ game_id: gameId });
+    if (! game)
+      throw new Meteor.Error(404, "No such game");
 
-    // belongs_to :suggested_move
+    if (Meteor.isServer) {
+        SyncedCron.add({
+          name: 'Update db to reflect timer',
+          schedule: function(parser) {
+            return parser.recur().every(1).second();
+          },
+          job: function() {
+            game.settings.timeLeft -= 1000;
+            console.log(game.settings.timeLeft);
+            if (game.settings.timeLeft <= 0)
+            {
+              Meteor.call('endTurn', gameId);
+            }
+            Games.update(
+              {game_id: gameId},
+              {
+                $set: {
+                  'status': 'clan',
+                  'settings': {
+                    'inPlay': true,
+                    'timePerMove': +15000,
+                    'timeLeft': +game.settings.timeLeft
+                  }
+                }});
+          }
+        });
+      SyncedCron.start();
+    }
+  },
+  stopGame: function stopGame(gameId) {
+    check(gameId, String);
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    var game = Games.findOne({ game_id: gameId });
+    if (! game)
+      throw new Meteor.Error(404, "No such game");
 
-    // suggested_move_id
-    // user_id
-    // text
-    // created_at
+    if (Meteor.isServer) {
+      SyncedCron.stop();
+      Games.update(
+        {game_id: gameId},
+        {$set: {"settings": {
+          'inPlay': false,
+          'timePerMove': +15000,
+          'timeLeft': +15000
+        }
+        }});
+    }
+  },
+  pauseGame: function pauseGame(gameId) {
+    check(gameId, String);
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    var game = Games.findOne({ game_id: gameId });
+    if (! game)
+      throw new Meteor.Error(404, "No such game");
 
-
+    if (Meteor.isServer) {
+      SyncedCron.pause();
+    }
   }
 });
