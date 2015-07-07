@@ -7,6 +7,7 @@ angular.module('blockchess.utilities', [
   'blockchess.utilities.suggestedMovesPanel',
   'blockchess.utilities.comments',
   'blockchess.utilities.timer',
+  'blockchess.utilities.timeAgo',
   // Modals
   'blockchess.utilities.suggestMoveModal'
 ]);
