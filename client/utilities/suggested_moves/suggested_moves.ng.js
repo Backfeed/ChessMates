@@ -15,10 +15,10 @@ function suggestedMoves() {
 function suggestedMovesController($scope) {
   var ctrl = this;
   angular.extend(ctrl, {
-    select: select
+    toggle: toggle
   });
 
-  function select(move) {
+  function toggle(move) {
     if (ctrl.selectedMove === move) {
       ctrl.selectedMove = {};
     } else {

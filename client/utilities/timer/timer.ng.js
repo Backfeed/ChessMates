@@ -1,5 +1,5 @@
 angular.module('blockchess.utilities.timer', [])
-  .directive('timer', timer);
+.directive('timer', timer);
 
 function timer() {
   return {
@@ -22,16 +22,19 @@ function timerController($scope) {
     timeLeftPercentage: 100
   });
 
-  $scope.$watch('ctrl.timeLeft', function(){
-    if (ctrl.settings) {
-      ctrl.timeLeftPercentage = Math.round((ctrl.timeLeft / ctrl.settings.timePerMove) * 100);
-    }
-  });
+  $scope.$watch('ctrl.timeLeft', timeLeftChanged);
+  $scope.$watch('ctrl.time', timeChanged);
 
-  $scope.$watch('ctrl.time', function(){
+  function timeChanged() {
     if (ctrl.time) {
       ctrl.timeLeft = ctrl.time;
     }
-  });
+  }
+
+  function timeLeftChanged() {
+    if (ctrl.settings) {
+      ctrl.timeLeftPercentage = Math.round((ctrl.timeLeft / ctrl.settings.timePerMove) * 100);
+    }
+  }
 
 }

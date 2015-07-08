@@ -5,7 +5,9 @@ function Engine($rootScope, $q) {
   var engine = getEngine();
   var evaler = getEvaler();
   var config = { depth: "3" };
-  var deferred = $q.defer();
+  var deferredMove;
+  var deferredEval;
+  uciCmd('uci');
   uciCmd('ucinewgame');
   uciCmd('isready');
     
@@ -38,12 +40,7 @@ function Engine($rootScope, $q) {
         var to        = match[2]; 
         var promotion = match[3]
         $rootScope.$broadcast('angularStockfish::bestMove', from, to, promotion);
-      } else if (line.indexOf('Total Evaluation') > -1) {
-        var evaluationScore = parseFloat(line.split('Total Evaluation: ')[1].split('(')[0])
-        // $rootScope.$broadcast('angularStockfish::Evaluation', evaluationScore);
-        console.log(evaluationScore);
-        deferred.resolve(evaluationScore);
-      }
+      } 
 
     }
 
@@ -60,6 +57,12 @@ function Engine($rootScope, $q) {
           line = e;
       }
       console.log("Angular Stockfish: Evaler: " + line);
+      if (line.indexOf('Total Evaluation') > -1) {
+        var evaluationScore = parseFloat(line.split('Total Evaluation: ')[1].split('(')[0])
+        // $rootScope.$broadcast('angularStockfish::Evaluation', evaluationScore);
+        console.log(evaluationScore);
+        deferredEval.resolve(evaluationScore);
+      }
     }
     return ev;
   }
@@ -72,10 +75,10 @@ function Engine($rootScope, $q) {
   }
 
   function evaluate(moves) {
-    deferred = $q.defer();
+    deferredEval = $q.defer();
     setPosition(moves);
     uciCmd("eval", evaler);
-    return deferred.promise;
+    return deferredEval.promise;
   }
 
   // Prompt the engine for move based on position (call setPosition before this method)

@@ -22,7 +22,7 @@
   <tbody>
     <tr ng-repeat="move in ctrl.moves | orderBy : sorting" 
         ng-class="{ 'active': ctrl.selectedMove.notation == move.notation }"
-        ng-click="ctrl.select(move)">
+        ng-click="ctrl.toggle(move)">
       <td>{{ ::move.notation }}</td>
       <td>{{ move.avg_stars }}</td>
       <td>{{ move.reputation_sum }}</td>
