@@ -22,19 +22,18 @@ function timerController($scope) {
     timeLeftPercentage: 100
   });
 
-  $scope.$watch('ctrl.timeLeft', timeLeftChanged);
-  $scope.$watch('ctrl.time', timeChanged);
+  timerStream = new Meteor.Stream('timer');
+  timerStream.on('timer', function(timeLeft) {
+    console.log('angular counter changed', timeLeft);
+    ctrl.timeLeft = timeLeft;
+    ctrl.timeLeftPercentage = Math.round((ctrl.timeLeft / ctrl.settings.timePerMove) * 100);
+  });
 
-  function timeChanged() {
-    if (ctrl.time) {
-      ctrl.timeLeft = ctrl.time;
-    }
-  }
-
-  function timeLeftChanged() {
-    if (ctrl.settings) {
-      ctrl.timeLeftPercentage = Math.round((ctrl.timeLeft / ctrl.settings.timePerMove) * 100);
-    }
-  }
+  //$scope.$watch('ctrl.timeLeft', timeLeftChanged);
+  //function timeLeftChanged() {
+  //  if (ctrl.settings) {
+  //    ctrl.timeLeftPercentage = Math.round((ctrl.timeLeft / ctrl.settings.timePerMove) * 100);
+  //  }
+  //}
 
 }
