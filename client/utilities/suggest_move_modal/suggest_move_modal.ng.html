@@ -2,9 +2,11 @@
    <md-dialog-content>
     Move: {{ ::ctrl.notation }}
     <form name="ctrl.form" ng-submit="ctrl.submit()">
-      <label for="move-bid">Bid</label>
-      <input type="number" required min="0" ng-model="ctrl.evaluation.bid" id="move-bid">
+      <!-- for now bid comes automatically from protocol: 10% of user's reputation -->
+      <!-- <label for="move-bid">Bid</label> -->
+      <!-- <input type="number" required min="0" ng-model="ctrl.evaluation.bid" id="move-bid"> -->
       <rating ng-model="ctrl.evaluation.stars" required class="rating"></rating>
+      <br>
       <label for="move-comment">Comment (optional)</label>
       <textarea type="text" maxlength="300" ng-model="ctrl.evaluation.commentBody" id="move-bid"></textarea>
       <div ng-if="ctrl.evaluation.commentBody">
