@@ -21,7 +21,7 @@ function Engine($rootScope, $q) {
 
   function getMove(moves) {
     setPosition(moves);
-    promptMove();
+    return promptMove();
   }
 
   function getEngine() {
@@ -39,7 +39,7 @@ function Engine($rootScope, $q) {
         var from      = match[1]; 
         var to        = match[2]; 
         var promotion = match[3]
-        $rootScope.$broadcast('angularStockfish::bestMove', from, to, promotion);
+        deferredMove.resolve({ from: from, to: to, promotion: promotion });
       } 
 
     }
@@ -83,11 +83,13 @@ function Engine($rootScope, $q) {
 
   // Prompt the engine for move based on position (call setPosition before this method)
   function promptMove() {
+    deferredMove = $q.defer();
     if (config.time && config.time.wtime) {
       uciCmd("go depth " + config.depth + " wtime " + config.time.wtime + " winc " + config.time.winc + " btime " + config.time.btime + " binc " + config.time.binc);
     } else {
       uciCmd("go depth " + config.depth);
     }
+    return deferredMove.promise;
   }
 
   // Send commands to the engine

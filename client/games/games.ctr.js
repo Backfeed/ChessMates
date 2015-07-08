@@ -30,7 +30,6 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
 
   //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
   $scope.$on('singleMove', singleMove);
-  $scope.$on('angularStockfish::bestMove', onAIMove);
   $scope.$watch('ctrl.selectedMove', selectedMoveChanged);
   $scope.$watch('ctrl.game.status', executeMoveOnTime);
 
@@ -128,7 +127,10 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
     ctrl.boardGame.move(getMoveFrom(ctrl.game.suggested_moves[0].notation));
     ctrl.board.position(ctrl.game.suggested_moves[0].fen);
-    Engine.getMove(ctrl.boardGame.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "));
+    Engine.getMove(ctrl.boardGame.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "))
+    .then(function(move) {
+      moveAI(move);
+    });
   }
 
   function getMoveFrom(notation) {
@@ -138,8 +140,8 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
     }
   }
 
-  function onAIMove(e, from, to, promotion) {
-    ctrl.boardGame.move({ from: from, to: to, promotion: promotion });
+  function moveAI(move) {
+    ctrl.boardGame.move({ from: move.from, to: move.to, promotion: move.promotion });
     ctrl.board.position(ctrl.boardGame.fen());
     ctrl.fen = ctrl.boardGame.fen(); // save for returning the piece to before suggestion position
     ctrl.game.fen = ctrl.boardGame.fen(); //TODO all users should see the updated position
