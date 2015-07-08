@@ -172,7 +172,7 @@ Meteor.methods({
   startGame: function startGame(gameId) {
 
   },
-  stopGame: function stopGame(gameId) {
+  endGame: function endGame(gameId) {
     check(gameId, String);
     if (! this.userId)
       throw new Meteor.Error(403, "You must be logged in");
@@ -181,15 +181,7 @@ Meteor.methods({
       throw new Meteor.Error(404, "No such game");
 
     if (Meteor.isServer) {
-      SyncedCron.stop();
-      Games.update(
-        {game_id: gameId},
-        {$set: {"settings": {
-          'inPlay': false,
-          'timePerMove': +15000,
-          'timeLeft': +15000
-        }
-        }});
+      Meteor.clearInterval(GameInterval);
     }
   },
   pauseGame: function pauseGame(gameId) {

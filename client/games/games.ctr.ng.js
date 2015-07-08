@@ -8,10 +8,10 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   angular.extend(ctrl, {
     executeMove: executeMove,
     evaluate: evaluate, // DEV ONLY
-    start: start, // DEV ONLY
     GamesModel: GamesModel, // DEV ONLY
+    startTurn: startTurn, // DEV ONLY
     pause: pause, // DEV ONLY
-    stop: stop, // DEV ONLY
+    endGame: endGame, // DEV ONLY
     restart: restart, // DEV ONLY
     Engine : Engine, // DEV ONLY
     game: {},
@@ -19,24 +19,25 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     fen            : 'start'
   });
 
-  // What does this do? Let's saparate between the function and the watcher?
-  $scope.$watch('ctrl.game.fen', function() {
-    if (ctrl.game.fen && ctrl.fen !== ctrl.game.fen) {
-      ctrl.boardGame.load(ctrl.game.fen);
-      ctrl.board.position(ctrl.game.fen);
-      ctrl.fen = ctrl.game.fen;
-    }
-  });
 
   //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
+  $scope.$watch('ctrl.game.fen', updateBoard);
 
   init();
 
   function init() {
     GamesModel.set(gameId);
     ctrl.game = GamesModel.game;
+  }
+
+  function updateBoard() {
+    if (ctrl.game.fen && ctrl.fen !== ctrl.game.fen) {
+      ctrl.boardGame.load(ctrl.game.fen);
+      ctrl.board.position(ctrl.game.fen);
+      ctrl.fen = ctrl.game.fen;
+    }
   }
 
   function evaluate(moves) {
@@ -48,11 +49,8 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   // For development
 
   function startTurn() {
-    if (ctrl.game.settings.inPlay)
-      return;
-
     $meteor.call('startTurn', gameId).then(
-      function(data){
+      function(){
         console.log('turn started');
       },
       function(err){
@@ -61,27 +59,10 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     );
   };
 
-  function start() {
-    if (ctrl.game.settings.inPlay)
-      return;
-
-    $meteor.call('startTurn', gameId).then(
-      function(data){
-        //$scope.game.settings.inPlay = true;
-        console.log('game started');
-      },
-      function(err){
-        console.log('failed', err);
-      }
-    );
-  };
   function pause() {
-    //if (!ctrl.game.settings.inPlay)
-    //  return;
-
     $meteor.call('pauseGame', gameId).then(
-      function(data){
-        ctrl.game.settings.inPlay = false;
+      function(){
+        ctrl.game.settings.inPlay = !ctrl.game.settings.inPlay;
         console.log('game paused');
       },
       function(err){
@@ -90,13 +71,9 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     );
   };
 
-  function stop() {
-    //if (!ctrl.game.settings.inPlay)
-    //  return;
-
-    $meteor.call('stopGame', gameId).then(
-      function(data){
-        ctrl.game.settings.inPlay = false;
+  function endGame() {
+    $meteor.call('endGame', gameId).then(
+      function(){
         console.log('game stopped');
       },
       function(err){
@@ -115,7 +92,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
 
   whosTurnStream = new Meteor.Stream('whosTurn');
   whosTurnStream.on('whosTurn', function(turn) {
-    console.log('it is ', turn, ' turn to play');
+    CommonService.toast('It Is ' + turn + ' Turn To Play');
     if(turn === 'AI'){
       executeMove();
     }
@@ -125,7 +102,8 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     GamesService.cancelMoveHighlights();
     //TODO if no suggested move game over
    if (ctrl.game.suggested_moves.length === 0){
-     console.log('Timer neded with no suggested moves!');
+     endGame();
+     CommonService.toast('No Move Suggested. Game Over!!');
      return;
    }
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
@@ -144,7 +122,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     ctrl.game.fen = ctrl.boardGame.fen(); //TODO all users should see the updated position
     ctrl.game.pgn = ctrl.boardGame.pgn();
     GamesModel.logTurn();
-    start();
+    startTurn();
   }
 
   function singleMove(e, notation) {
