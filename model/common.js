@@ -140,27 +140,13 @@ Meteor.methods({
   endTurn: function endTurn(gameId) {
     console.log('endTurn');
     Meteor.clearInterval(GameInterval);
-    if (Meteor.isServer) {
-      //SyncedCron.stop();
-      //Games.update(
-      //  {game_id: gameId},
-      //  {
-      //    $set: {
-      //      'status': 'AI',
-      //      'settings': {
-      //        'inPlay': false,
-      //        'timePerMove': +15000,
-      //        'timeLeft': +15000
-      //      }
-      //    }
-      //  });
-    }
+    whosTurnStream.emit('whosTurn', 'AI');
   },
   updateTimer: function updateTimer(gameId, timeLeft) {
-    console.log('updateTimer');
+    //console.log('updateTimer', timeLeft);
     timerStream.emit('timer', timeLeft);
   },
-  startGame: function startGame(gameId) {
+  startTurn: function startTurn(gameId) {
     check(gameId, String);
     if (! this.userId)
       throw new Meteor.Error(403, "You must be logged in");
@@ -168,8 +154,10 @@ Meteor.methods({
     if (! game)
       throw new Meteor.Error(404, "No such game");
 
+    whosTurnStream.emit('whosTurn', 'Clan');
     if (Meteor.isServer) {
       var timeLeft = 30000;
+      Meteor.clearInterval(GameInterval);
       GameInterval = Meteor.setInterval(function(){
         timeLeft -= 1000;
         if (timeLeft <= 0)
@@ -180,6 +168,9 @@ Meteor.methods({
         }
       }, 1000);
     }
+  },
+  startGame: function startGame(gameId) {
+
   },
   stopGame: function stopGame(gameId) {
     check(gameId, String);
@@ -217,5 +208,4 @@ Meteor.methods({
 
 if (Meteor.isServer) {
   GameInterval = {};
-  //Session.setDefault('counter', 'office');
 }

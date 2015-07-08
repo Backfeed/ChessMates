@@ -13,3 +13,14 @@ timerStream.permissions.write(function() {
 timerStream.permissions.read(function() {
   return true;
 });
+
+
+whosTurnStream = new Meteor.Stream('whosTurn');
+
+whosTurnStream.permissions.write(function() {
+  return true;
+});
+
+whosTurnStream.permissions.read(function() {
+  return true;
+});

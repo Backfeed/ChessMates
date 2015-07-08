@@ -31,7 +31,6 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
-  $scope.$watch('ctrl.game.status', executeMoveOnTime);
 
   init();
 
@@ -48,11 +47,25 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
 
   // For development
 
+  function startTurn() {
+    if (ctrl.game.settings.inPlay)
+      return;
+
+    $meteor.call('startTurn', gameId).then(
+      function(data){
+        console.log('turn started');
+      },
+      function(err){
+        console.log('failed', err);
+      }
+    );
+  };
+
   function start() {
     if (ctrl.game.settings.inPlay)
       return;
 
-    $meteor.call('startGame', gameId).then(
+    $meteor.call('startTurn', gameId).then(
       function(data){
         //$scope.game.settings.inPlay = true;
         console.log('game started');
@@ -62,7 +75,6 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
       }
     );
   };
-
   function pause() {
     //if (!ctrl.game.settings.inPlay)
     //  return;
@@ -98,14 +110,16 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     ctrl.boardGame.reset();
     ctrl.board.position('start');
     GamesModel.restart();
+    startTurn();
   }
 
-  function executeMoveOnTime(){
-    var status = ctrl.game.status;
-    if(status === 'AI'){
+  whosTurnStream = new Meteor.Stream('whosTurn');
+  whosTurnStream.on('whosTurn', function(turn) {
+    console.log('it is ', turn, ' turn to play');
+    if(turn === 'AI'){
       executeMove();
     }
-  }
+  });
 
   function executeMove() {
     GamesService.cancelMoveHighlights();
