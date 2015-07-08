@@ -1,7 +1,7 @@
 angular.module('blockchess.games.controller', [])
 .controller('GamesController', GamesController)
 
-function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
+function GamesController($scope, $meteor, CommonService, Engine, GamesService, GamesModel) {
   var gameId = "1"; // TODO: Get dynamically from current game
   var ctrl = this;
 
@@ -9,11 +9,12 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
     executeMove: executeMove,
     evaluate: evaluate, // DEV ONLY
     start: start, // DEV ONLY
+    GamesModel: GamesModel, // DEV ONLY
     pause: pause, // DEV ONLY
     stop: stop, // DEV ONLY
     restart: restart, // DEV ONLY
     Engine : Engine, // DEV ONLY
-    game: $meteor.object(Games, { game_id: gameId }).subscribe('games'),
+    game: {},
     selectedMove  : {},
     fen            : 'start'
   });
@@ -27,28 +28,22 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
     }
   });
 
-
   //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
   $scope.$on('singleMove', singleMove);
-  $scope.$watch('ctrl.selectedMove', selectedMoveChanged);
+  $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
   $scope.$watch('ctrl.game.status', executeMoveOnTime);
 
-  function selectedMoveChanged(move) {
-    cancelMoveHighlights();
-    if (!move || !move.notation) { return; }
-    var from = move.notation.substr(0,2);
-    var to = move.notation.substr(2);
-    $('.square-'+from + ', .square-'+to).addClass('highlight-square');
+  init();
+
+  function init() {
+    GamesModel.set(gameId);
+    ctrl.game = GamesModel.game;
   }
 
   function evaluate(moves) {
     Engine.evaluate(moves).then(function(score) {
       console.log('score is ', score);
     })
-  }
-
-  function cancelMoveHighlights() {
-    $('.highlight-square').removeClass('highlight-square');
   }
 
   // For development
@@ -99,15 +94,10 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
   };
 
   function restart () {
-    cancelMoveHighlights();
+    GamesService.cancelMoveHighlights();
     ctrl.boardGame.reset();
     ctrl.board.position('start');
-    angular.extend(ctrl.game, {
-      fen: 'start',
-      pgn: '',
-      turns: [],
-      suggested_moves: []
-    });
+    GamesModel.restart();
   }
 
   function executeMoveOnTime(){
@@ -118,26 +108,19 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
   }
 
   function executeMove() {
-    cancelMoveHighlights();
+    GamesService.cancelMoveHighlights();
     //TODO if no suggested move game over
    if (ctrl.game.suggested_moves.length === 0){
-     alert('Game Over');
+     console.log('Timer neded with no suggested moves!');
      return;
    }
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
-    ctrl.boardGame.move(getMoveFrom(ctrl.game.suggested_moves[0].notation));
+    ctrl.boardGame.move(GamesService.formatMoveFrom(ctrl.game.suggested_moves[0].notation));
     ctrl.board.position(ctrl.game.suggested_moves[0].fen);
     Engine.getMove(ctrl.boardGame.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "))
     .then(function(move) {
       moveAI(move);
     });
-  }
-
-  function getMoveFrom(notation) {
-    return {
-      from: notation.substr(0,2),
-      to: notation.substr(2)
-    }
   }
 
   function moveAI(move) {
@@ -146,7 +129,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
     ctrl.fen = ctrl.boardGame.fen(); // save for returning the piece to before suggestion position
     ctrl.game.fen = ctrl.boardGame.fen(); //TODO all users should see the updated position
     ctrl.game.pgn = ctrl.boardGame.pgn();
-    logTurn();
+    GamesModel.logTurn();
     start();
   }
 
@@ -156,13 +139,13 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
       ctrl.boardGame.undo();
       ctrl.board.position(ctrl.fen);
       return;
-    } else if (getMoveBy('user_id', $scope.currentUser._id)) {
+    } else if (GamesService.getMoveBy('user_id', $scope.currentUser._id)) {
       CommonService.toast('Can only suggest one move per turn');
-      ctrl.selectedMove = getMoveBy('user_id', $scope.currentUser._id);
+      ctrl.selectedMove = GamesService.getMoveBy('user_id', $scope.currentUser._id);
       movePieceBack();
-    } else if (getMoveBy('notation', notation)) {
+    } else if (GamesService.getMoveBy('notation', notation)) {
       CommonService.toast('move exists');
-      ctrl.selectedMove = getMoveBy('notation', notation);
+      ctrl.selectedMove = GamesService.getMoveBy('notation', notation);
       movePieceBack();
     } else {
       GamesService.openSuggestMoveModal(notation)
@@ -187,23 +170,6 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService) {
   function movePieceBack() {
     ctrl.boardGame.undo();
     ctrl.board.position(ctrl.fen);
-  }
-
-  function getMoveBy(attr, val) {
-    var move;
-    ctrl.game.suggested_moves.forEach(function(m) {
-      if (m[attr] === val) { move = m; }
-    });
-    return move;
-  }
-
-  function logTurn() {
-    if (ctrl.game.turns) {
-      ctrl.game.turns.push(ctrl.game.suggested_moves);
-    } else {
-      ctrl.game.turns = [ctrl.game.suggested_moves];
-    }
-    ctrl.game.suggested_moves = [];
   }
 
 }

@@ -149,8 +149,8 @@ Meteor.methods({
             'status': 'AI',
             'settings': {
               'inPlay': false,
-              'timePerMove': +15000,
-              'timeLeft': +15000
+              'timePerMove': +1000 * 60 * 5,
+              'timeLeft': +1000 * 60 * 5
             }
           }
         });
@@ -184,7 +184,7 @@ Meteor.methods({
                   'status': 'clan',
                   'settings': {
                     'inPlay': true,
-                    'timePerMove': +15000,
+                    'timePerMove': +1000 * 60 * 5,
                     'timeLeft': +game.settings.timeLeft
                   }
                 }});
@@ -207,8 +207,8 @@ Meteor.methods({
         {game_id: gameId},
         {$set: {"settings": {
           'inPlay': false,
-          'timePerMove': +15000,
-          'timeLeft': +15000
+          'timePerMove': +1000 * 60 * 5,
+          'timeLeft': +1000 * 60 * 5
         }
         }});
     }

@@ -27,7 +27,8 @@
       </button>
     <button ng-click="ctrl.restart()">Restart</button>
     <button ng-click="ctrl.executeMove()">Play AI</button>
-    History: {{ history }}
+    <br>
+    History: {{ ctrl.game.pgn }}
   </div>
 
   <div flex="40">
