@@ -94,12 +94,10 @@ Meteor.startup(function () {
     var new_game = [
       {
         'game_id': '1',
-        'pgn': '',
+        'pgn': [],
         'fen': 'start',
         'settings': {
-          'inPlay': false,
-          'timePerMove': 300000,
-          'timeLeft': 300000
+          'timePerMove': 300000
         },
         'turns': [],
         'suggested_moves': []

@@ -158,7 +158,7 @@ Meteor.methods({
 
     whosTurnStream.emit('turnChanged', 'Clan');
     if (Meteor.isServer) {
-      var timeLeft = 300000;
+      var timeLeft = game.settings.timePerMove;
       Meteor.clearInterval(GameInterval);
       GameInterval = Meteor.setInterval(function(){
         timeLeft -= 1000;

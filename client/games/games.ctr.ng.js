@@ -119,7 +119,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
     // BoardService.board.position(GameBoardService.game.fen());
     ctrl.game.fen = GameBoardService.game.fen(); //TODO all users should see the updated position
-    ctrl.game.pgn = GameBoardService.game.pgn();
+    ctrl.game.pgn.push(move.from + ' ' + move.to);
     GamesModel.logTurn();
     startTurn();
   }

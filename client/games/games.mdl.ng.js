@@ -28,13 +28,11 @@ function GamesModel($meteor) {
   function restart() {
     angular.extend(model.game, {
       fen: 'start',
-      pgn: '',
+      pgn: [],
       turns: [],
       suggested_moves: [],
       settings: {
-        inPlay: false,
-        timePerMove: 300000,
-        timeLeft: 300000
+        timePerMove: 300000
       }
     });
   }
