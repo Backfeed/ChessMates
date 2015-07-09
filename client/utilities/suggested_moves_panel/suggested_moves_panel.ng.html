@@ -4,7 +4,7 @@
             <div class="evaluation text-center">
                 <!--&lt;!&ndash; <p class="text-center">Backfeed me</p> &ndash;&gt; no upper case neede. lower case for position upper case for piece name-->
                 <h2 class="evaluation-step center-block">{{ ::move.notation }}</h2>
-                <rating class="rating" ng-model="ctrl.stars" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" ng-change="ctrl.evaluate()"></rating>
+                <rating readonly="!$root.currentUser" class="rating" ng-model="ctrl.stars" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" ng-change="ctrl.evaluate()"></rating>
                 <br>
                 <button type="button" class="btn btn-default choose-favorite-move" data-toggle="move.favorite_move"><img src="img/favorite.png" />My favorite move</button>
             </div>

@@ -33,7 +33,7 @@ function Engine($rootScope, $q) {
       } else {
           line = e;
       }
-      console.log("Angular Stockfish: Engine: " + line);
+      // console.log("Angular Stockfish: Engine: " + line);
       var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbk])?/);
       if(match) {
         var from      = match[1]; 
@@ -56,11 +56,9 @@ function Engine($rootScope, $q) {
       } else {
           line = e;
       }
-      console.log("Angular Stockfish: Evaler: " + line);
+      // console.log("Angular Stockfish: Evaler: " + line);
       if (line.indexOf('Total Evaluation') > -1) {
         var evaluationScore = parseFloat(line.split('Total Evaluation: ')[1].split('(')[0])
-        // $rootScope.$broadcast('angularStockfish::Evaluation', evaluationScore);
-        console.log(evaluationScore);
         deferredEval.resolve(evaluationScore);
       }
     }
@@ -94,7 +92,7 @@ function Engine($rootScope, $q) {
 
   // Send commands to the engine
   function uciCmd(cmd, evlr) {
-    console.log("Angular Stockfish: UCI: " + cmd);
+    // console.log("Angular Stockfish: UCI: " + cmd);
     (evlr || engine).postMessage(cmd);
   }
 

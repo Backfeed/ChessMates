@@ -1,7 +1,7 @@
 angular.module('blockchess.games.controller', [])
 .controller('GamesController', GamesController)
 
-function GamesController($scope, $meteor, CommonService, Engine, GamesService, GamesModel, EvaluationModel, BoardService) {
+function GamesController($scope, $meteor, CommonService, Engine, GamesService, GamesModel, EvaluationModel, BoardService, GameBoardService) {
   var gameId = "1"; // TODO: Get dynamically from current game
   var ctrl = this;
 
@@ -35,9 +35,11 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   }
 
   function updateBoard() {
-    if (ctrl.boardGame && ctrl.boardGame.fen() !== ctrl.game.fen) {
-      ctrl.boardGame.load(ctrl.game.fen);
-      ctrl.board.position(ctrl.game.fen);
+    if (ctrl.game.fen && 
+        GameBoardService.game && 
+        GameBoardService.game.fen() !== ctrl.game.fen) {
+      GameBoardService.game.load(ctrl.game.fen);
+      BoardService.board.position(ctrl.game.fen);
     }
   }
 
@@ -85,8 +87,8 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
 
   function restart () {
     GamesService.cancelMoveHighlights();
-    ctrl.boardGame.reset();
-    ctrl.board.position('start');
+    GameBoardService.game.reset();
+    BoardService.board.position('start');
     GamesModel.restart();
     startTurn();
   }
@@ -107,19 +109,19 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
      return;
    }
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
-    ctrl.boardGame.move(GamesService.formatMoveFrom(ctrl.game.suggested_moves[0].notation));
-    ctrl.board.position(ctrl.game.suggested_moves[0].fen);
-    Engine.getMove(ctrl.boardGame.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "))
+    GameBoardService.game.move(GamesService.formatMoveFrom(ctrl.game.suggested_moves[0].notation));
+    BoardService.board.position(ctrl.game.suggested_moves[0].fen);
+    Engine.getMove(GameBoardService.game.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "))
     .then(function(move) {
       moveAI(move);
     });
   }
 
   function moveAI(move) {
-    ctrl.boardGame.move({ from: move.from, to: move.to, promotion: move.promotion });
-    ctrl.board.position(ctrl.boardGame.fen());
-    ctrl.game.fen = ctrl.boardGame.fen(); //TODO all users should see the updated position
-    ctrl.game.pgn = ctrl.boardGame.pgn();
+    GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
+    BoardService.board.position(GameBoardService.game.fen());
+    ctrl.game.fen = GameBoardService.game.fen(); //TODO all users should see the updated position
+    ctrl.game.pgn = GameBoardService.game.pgn();
     GamesModel.logTurn();
     startTurn();
   }
@@ -140,17 +142,17 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     } else {
       GamesService.openSuggestMoveModal(notation)
       .then(function(stars) {
-          var move = {
-            user_id: Meteor.userId(),
-            notation: notation,
-            avg_stars: '4.5',
-            created_at: Date.now(),
-            fen: ctrl.boardGame.fen(),
-            evaluations: [],
-            comments: []
-          };
-          EvaluationModel.evaluate(move, stars);
-          ctrl.game.suggested_moves.push(move);
+        var move = {
+          user_id: Meteor.userId(),
+          notation: notation,
+          avg_stars: '4.5',
+          created_at: Date.now(),
+          fen: GameBoardService.game.fen(),
+          evaluations: [],
+          comments: []
+        };
+        EvaluationModel.evaluate(move, stars);
+        ctrl.game.suggested_moves.push(move);
       })
       .finally(function() {
         movePieceBack();
@@ -159,8 +161,8 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   }
 
   function movePieceBack() {
-    ctrl.boardGame.undo();
-    ctrl.board.position(ctrl.boardGame.fen());
+    GameBoardService.game.undo();
+    BoardService.board.position(GameBoardService.game.fen());
   }
 
 }

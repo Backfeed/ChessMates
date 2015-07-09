@@ -1,11 +1,11 @@
 angular.module('blockchess.games.gameBoardService', [])
-.service('GameBoardService', GameBoardService)
+.service('GameBoardService', GameBoardService);
 
-function GameBoardService() {
-  var gameBoard = {
-
+function GameBoardService($window) {
+  var GameBoard = {
+    game: new $window.Chess()
   }
 
-  return gameBoard;
+  return GameBoard;
 
 }

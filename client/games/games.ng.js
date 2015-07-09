@@ -5,5 +5,6 @@ angular.module('blockchess.games', [
   'blockchess.games.boardService',
   'blockchess.games.gameBoardService',
   'blockchess.games.service',
+  'blockchess.games.board',
   'blockchess.games.controller'
 ])

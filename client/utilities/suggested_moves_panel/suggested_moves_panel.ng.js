@@ -11,7 +11,7 @@ function suggestedMovesPanel() {
   }
 }
 
-function suggestedMovesPanelController($scope, EvaluationModel) {
+function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
   var ctrl = this;
   angular.extend(ctrl, {
     evaluate   : evaluate,
@@ -22,7 +22,6 @@ function suggestedMovesPanelController($scope, EvaluationModel) {
   $scope.$watch('ctrl.selectedMove', selectedMoveChanged);
 
   function selectedMoveChanged(move) {
-    console.log(move)
     if (!move) { return; }
     var myEvaluation = EvaluationModel.getEvaluationByUser(move);
     if (myEvaluation) {

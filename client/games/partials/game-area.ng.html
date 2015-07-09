@@ -14,7 +14,8 @@
   </div>
 
   <div flex>
-    <nywton-chessgame data-game="ctrl.boardGame" data-board="ctrl.board"></nywton-chessgame>
+    <div board="{{ ctrl.gameId }}"></div>
+    <!-- <nywton-chessgame data-game="ctrl.boardGame" data-board="ctrl.board"></nywton-chessgame> -->
     <button ng-click="ctrl.evaluate('a4 e5 a5 e6')">Evaluate</button>
       <button ng-click="ctrl.startTurn()">
           <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
