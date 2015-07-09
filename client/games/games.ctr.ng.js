@@ -1,7 +1,7 @@
 angular.module('blockchess.games.controller', [])
 .controller('GamesController', GamesController)
 
-function GamesController($scope, $meteor, CommonService, Engine, GamesService, GamesModel) {
+function GamesController($scope, $meteor, CommonService, Engine, GamesService, GamesModel, EvaluationModel) {
   var gameId = "1"; // TODO: Get dynamically from current game
   var ctrl = this;
 
@@ -137,17 +137,17 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
       movePieceBack();
     } else {
       GamesService.openSuggestMoveModal(notation)
-      .then(function(response) {
-        // TODO Add response to evaluation
-        console.log(response);
-        ctrl.game.suggested_moves.push({
-          user_id: Meteor.userId(),
-          notation: notation,
-          avg_stars: '4.5',
-          created_at: Date.now(),
-          fen: ctrl.boardGame.fen(),
-          comments: []
-        });
+      .then(function(stars) {
+          var move = {
+            user_id: Meteor.userId(),
+            notation: notation,
+            avg_stars: '4.5',
+            created_at: Date.now(),
+            fen: ctrl.boardGame.fen(),
+            comments: []
+          };
+          EvaluationModel.evaluate(move, stars);
+          ctrl.game.suggested_moves.push(move);
       })
       .finally(function() {
         movePieceBack();

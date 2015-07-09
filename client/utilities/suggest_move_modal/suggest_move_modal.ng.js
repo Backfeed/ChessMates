@@ -8,9 +8,8 @@ function suggestMoveModalController($mdDialog) {
     cancel: cancel
   });
 
-  function submit() { 
-    if (ctrl.form.$valid) { $mdDialog.hide(ctrl.evaluation); } 
-    else                  { ctrl.form.$setSubmitted();       }
+  function submit() {
+    $mdDialog.hide(ctrl.stars);
   }
 
   function cancel() {
