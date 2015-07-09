@@ -4,6 +4,7 @@ angular.module('blockchess.games.evaluationModel', [])
 function EvaluationModel() {
 
   var model = {
+    getEvaluationByUser: getEvaluationByUser,
     evaluate: evaluate
   };
 
@@ -25,7 +26,6 @@ function EvaluationModel() {
   }
 
   function addEvaluation(move, stars) {
-    move.evaluations = [];
     move.evaluations.push({
       user_id: Meteor.userId(),
       created_at: Date.now(),

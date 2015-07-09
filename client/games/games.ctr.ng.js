@@ -146,6 +146,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
             avg_stars: '4.5',
             created_at: Date.now(),
             fen: ctrl.boardGame.fen(),
+            evaluations: [],
             comments: []
           };
           EvaluationModel.evaluate(move, stars);
