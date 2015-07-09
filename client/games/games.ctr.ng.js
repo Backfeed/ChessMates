@@ -30,11 +30,10 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     GamesModel.set(gameId);
     ctrl.game = GamesModel.game;
     whosTurnStream.on('whosTurn', makeTurn);
-
   }
 
   function updateBoard() {
-    if (ctrl.boardGame.fen() !== ctrl.game.fen) {
+    if (ctrl.boardGame && ctrl.boardGame.fen() !== ctrl.game.fen) {
       ctrl.boardGame.load(ctrl.game.fen);
       ctrl.board.position(ctrl.game.fen);
     }
