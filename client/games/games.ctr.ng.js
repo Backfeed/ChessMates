@@ -34,21 +34,6 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     whosTurnStream.on('whosTurn', makeTurn);
   }
 
-  function updateBoard() {
-    if (ctrl.game.fen && 
-        GameBoardService.game && 
-        GameBoardService.game.fen() !== ctrl.game.fen) {
-      GameBoardService.game.load(ctrl.game.fen);
-      BoardService.board.position(ctrl.game.fen);
-    }
-  }
-
-  function evaluate(moves) {
-    Engine.evaluate(moves).then(function(score) {
-      console.log('score is ', score);
-    })
-  }
-
   // For development
 
   function startTurn() {
@@ -93,21 +78,36 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     startTurn();
   }
 
+  function updateBoard() {
+    if (ctrl.game.fen &&
+      GameBoardService.game &&
+      GameBoardService.game.fen() !== ctrl.game.fen) {
+      GameBoardService.game.load(ctrl.game.fen);
+      BoardService.board.position(ctrl.game.fen);
+    }
+  }
+
+  function evaluate(moves) {
+    Engine.evaluate(moves).then(function(score) {
+      console.log('score is ', score);
+    })
+  }
+
   function makeTurn(turn) {
     CommonService.toast('It Is ' + turn + ' Turn To Play');
     if(turn === 'AI'){
-      executeMove();
+      //TODO if no suggested move game over
+      if (ctrl.game.suggested_moves.length === 0){
+        endGame();
+        CommonService.toast('No Move Suggested. Game Over!!');
+      } else {
+        executeMove();
+      }
     }
   }
 
   function executeMove() {
     GamesService.cancelMoveHighlights();
-    //TODO if no suggested move game over
-   if (ctrl.game.suggested_moves.length === 0){
-     endGame();
-     CommonService.toast('No Move Suggested. Game Over!!');
-     return;
-   }
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
     GameBoardService.game.move(GamesService.formatMoveFrom(ctrl.game.suggested_moves[0].notation));
     BoardService.board.position(ctrl.game.suggested_moves[0].fen);
