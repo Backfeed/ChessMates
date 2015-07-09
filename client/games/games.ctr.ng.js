@@ -6,12 +6,13 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   var ctrl = this;
 
   angular.extend(ctrl, {
-    executeMove: executeMove,
+    iamDone: iamDone,
     evaluate: evaluate, // DEV ONLY
     GamesModel: GamesModel, // DEV ONLY
     startTurn: startTurn, // DEV ONLY
     pause: pause, // DEV ONLY
     BoardService: BoardService, // DEV ONLY
+    GameBoardService: GameBoardService, // DEV ONLY
     endGame: endGame, // DEV ONLY
     restart: restart, // DEV ONLY
     Engine : Engine, // DEV ONLY
@@ -31,19 +32,15 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   function init() {
     GamesModel.set(gameId);
     ctrl.game = GamesModel.game;
-    whosTurnStream.on('whosTurn', makeTurn);
+    whosTurnStream.on('turnChanged', startTurnCB);
   }
 
   // For development
 
   function startTurn() {
     $meteor.call('startTurn', gameId).then(
-      function(){
-        console.log('turn started');
-      },
-      function(err){
-        console.log('failed', err);
-      }
+      function()    { CommonService.toast('turn started'); },
+      function(err) { console.log('failed', err); }
     );
   };
 
@@ -51,7 +48,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     $meteor.call('pauseGame', gameId).then(
       function(){
         ctrl.game.settings.inPlay = !ctrl.game.settings.inPlay;
-        console.log('game paused');
+        CommonService.toast('game paused');
       },
       function(err){
         console.log('failed', err);
@@ -61,16 +58,12 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
 
   function endGame() {
     $meteor.call('endGame', gameId).then(
-      function(){
-        console.log('game stopped');
-      },
-      function(err){
-        console.log('failed', err);
-      }
+      function()    { CommonService.toast('No Move Suggested. Game Over!!'); },
+      function(err) { console.log('failed', err); }
     );
   };
 
-  function restart () {
+  function restart() {
     GamesService.cancelMoveHighlights();
     GameBoardService.game.reset();
     BoardService.board.position('start');
@@ -78,10 +71,16 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     startTurn();
   }
 
+  function iamDone() {
+    $meteor.call('clientDone', gameId).then(
+      function()    { CommonService.toast('Waitin fo the gang, ya'); },
+      function(err) { console.log('failed', err); }
+    );
+  };
+
   function updateBoard() {
     if (ctrl.game.fen &&
-      GameBoardService.game &&
-      GameBoardService.game.fen() !== ctrl.game.fen) {
+      GameBoardService.game) {
       GameBoardService.game.load(ctrl.game.fen);
       BoardService.board.position(ctrl.game.fen);
     }
@@ -93,24 +92,23 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     })
   }
 
-  function makeTurn(turn) {
+  function startTurnCB(turn) {
+    GamesService.cancelMoveHighlights();
     CommonService.toast('It Is ' + turn + ' Turn To Play');
     if(turn === 'AI'){
       //TODO if no suggested move game over
       if (ctrl.game.suggested_moves.length === 0){
         endGame();
-        CommonService.toast('No Move Suggested. Game Over!!');
       } else {
         executeMove();
       }
     }
   }
 
-  function executeMove() {
-    GamesService.cancelMoveHighlights();
+  function executeMove() {    
     //TODO fix this. For now pressing the button will play the first selected move(for dev)
     GameBoardService.game.move(GamesService.formatMoveFrom(ctrl.game.suggested_moves[0].notation));
-    BoardService.board.position(ctrl.game.suggested_moves[0].fen);
+    // BoardService.board.position(ctrl.game.suggested_moves[0].fen);
     Engine.getMove(GameBoardService.game.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "))
     .then(function(move) {
       moveAI(move);
@@ -119,7 +117,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
 
   function moveAI(move) {
     GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
-    BoardService.board.position(GameBoardService.game.fen());
+    // BoardService.board.position(GameBoardService.game.fen());
     ctrl.game.fen = GameBoardService.game.fen(); //TODO all users should see the updated position
     ctrl.game.pgn = GameBoardService.game.pgn();
     GamesModel.logTurn();

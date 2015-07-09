@@ -1,5 +1,5 @@
 Games = new Mongo.Collection('games');
-whosTurnStream = new Meteor.Stream('whosTurn');
+whosTurnStream = new Meteor.Stream('turnChanged');
 timerStream = new Meteor.Stream('timer');
 
 Games.allow({
@@ -142,7 +142,7 @@ Meteor.methods({
   endTurn: function endTurn(gameId) {
     console.log('endTurn');
     Meteor.clearInterval(GameInterval);
-    whosTurnStream.emit('whosTurn', 'AI');
+    whosTurnStream.emit('turnChanged', 'AI');
   },
   updateTimer: function updateTimer(gameId, timeLeft) {
     //console.log('updateTimer', timeLeft);
@@ -156,9 +156,9 @@ Meteor.methods({
     if (! game)
       throw new Meteor.Error(404, "No such game");
 
-    whosTurnStream.emit('whosTurn', 'Clan');
+    whosTurnStream.emit('turnChanged', 'Clan');
     if (Meteor.isServer) {
-      var timeLeft = 30000;
+      var timeLeft = 300000;
       Meteor.clearInterval(GameInterval);
       GameInterval = Meteor.setInterval(function(){
         timeLeft -= 1000;
@@ -195,11 +195,29 @@ Meteor.methods({
       throw new Meteor.Error(404, "No such game");
 
     if (Meteor.isServer) {
-      SyncedCron.pause();
+
+    }
+  },
+  clientDone: function clientDone(gameId) {
+    check(gameId, String);
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    var game = Games.findOne({ game_id: gameId });
+    if (! game)
+      throw new Meteor.Error(404, "No such game");
+
+    if (Meteor.isServer) {
+      ClientsDone.push(this.userId);
+      if (Meteor.users.find({ "status.online": true }).count() === ClientsDone.length){
+        // emit done to clients
+        whosTurnStream.emit('turnChanged', 'AI');
+        ClientsDone = [];
+      }
     }
   }
 });
 
 if (Meteor.isServer) {
   GameInterval = {};
+  ClientsDone = [];
 }

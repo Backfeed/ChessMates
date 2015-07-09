@@ -7,8 +7,8 @@ Meteor.startup(function () {
         'fen': 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',
         'settings': {
           'inPlay': false,
-          'timePerMove': 30000,
-          'timeLeft': 30000
+          'timePerMove': 300000,
+          'timeLeft': 300000
         },
         'turns': [
           [{
@@ -98,8 +98,8 @@ Meteor.startup(function () {
         'fen': 'start',
         'settings': {
           'inPlay': false,
-          'timePerMove': 30000,
-          'timeLeft': 30000
+          'timePerMove': 300000,
+          'timeLeft': 300000
         },
         'turns': [],
         'suggested_moves': []

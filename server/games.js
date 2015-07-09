@@ -1,9 +1,9 @@
 Meteor.publish('games', function (options, gameId) {
   return Games.find({});
 });
-//Games.helpers({
-//  game:  function() { return Games.findOne({ 'game_id': this.game_id }); }
-//});
+// Meteor.publish("userStatus", function() {
+//   return Meteor.users.find({ "status.online": true });
+// });
 
 timerStream.permissions.write(function() {
   return true;

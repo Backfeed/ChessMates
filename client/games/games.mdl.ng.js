@@ -33,8 +33,8 @@ function GamesModel($meteor) {
       suggested_moves: [],
       settings: {
         inPlay: false,
-        timePerMove: 30000,
-        timeLeft: 30000
+        timePerMove: 300000,
+        timeLeft: 300000
       }
     });
   }
