@@ -1,11 +1,15 @@
 angular.module('blockchess.games.boardService', [])
 .service('BoardService', BoardService)
 
-function BoardService() {
-  var board = {
-
+function BoardService($window) {
+  var Board = {
+    init: init,
+    board: {}
   }
 
-  return board;
+  return Board;
 
+  function init() {
+    Board.board = new $window.ChessBoard('board');
+  }
 }

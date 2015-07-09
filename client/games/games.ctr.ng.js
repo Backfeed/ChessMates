@@ -1,7 +1,7 @@
 angular.module('blockchess.games.controller', [])
 .controller('GamesController', GamesController)
 
-function GamesController($scope, $meteor, CommonService, Engine, GamesService, GamesModel, EvaluationModel) {
+function GamesController($scope, $meteor, CommonService, Engine, GamesService, GamesModel, EvaluationModel, BoardService) {
   var gameId = "1"; // TODO: Get dynamically from current game
   var ctrl = this;
 
@@ -11,9 +11,11 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     GamesModel: GamesModel, // DEV ONLY
     startTurn: startTurn, // DEV ONLY
     pause: pause, // DEV ONLY
+    BoardService: BoardService, // DEV ONLY
     endGame: endGame, // DEV ONLY
     restart: restart, // DEV ONLY
     Engine : Engine, // DEV ONLY
+    gameId : gameId, // DEV ONLY
     game: {},
     selectedMove  : {}
   });
