@@ -15,8 +15,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     restart: restart, // DEV ONLY
     Engine : Engine, // DEV ONLY
     game: {},
-    selectedMove  : {},
-    fen            : 'start'
+    selectedMove  : {}
   });
 
 
@@ -30,13 +29,14 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   function init() {
     GamesModel.set(gameId);
     ctrl.game = GamesModel.game;
+    whosTurnStream.on('whosTurn', makeTurn);
+
   }
 
   function updateBoard() {
-    if (ctrl.game.fen && ctrl.fen !== ctrl.game.fen) {
+    if (ctrl.boardGame.fen() !== ctrl.game.fen) {
       ctrl.boardGame.load(ctrl.game.fen);
       ctrl.board.position(ctrl.game.fen);
-      ctrl.fen = ctrl.game.fen;
     }
   }
 
@@ -90,13 +90,12 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     startTurn();
   }
 
-  whosTurnStream = new Meteor.Stream('whosTurn');
-  whosTurnStream.on('whosTurn', function(turn) {
+  function makeTurn(turn) {
     CommonService.toast('It Is ' + turn + ' Turn To Play');
     if(turn === 'AI'){
       executeMove();
     }
-  });
+  }
 
   function executeMove() {
     GamesService.cancelMoveHighlights();
@@ -118,7 +117,6 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   function moveAI(move) {
     ctrl.boardGame.move({ from: move.from, to: move.to, promotion: move.promotion });
     ctrl.board.position(ctrl.boardGame.fen());
-    ctrl.fen = ctrl.boardGame.fen(); // save for returning the piece to before suggestion position
     ctrl.game.fen = ctrl.boardGame.fen(); //TODO all users should see the updated position
     ctrl.game.pgn = ctrl.boardGame.pgn();
     GamesModel.logTurn();
@@ -128,8 +126,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   function singleMove(e, notation) {
     if (!$scope.currentUser) {
       CommonService.toast('Must be logged in to suggest a move');
-      ctrl.boardGame.undo();
-      ctrl.board.position(ctrl.fen);
+      movePieceBack();
       return;
     } else if (GamesService.getMoveBy('user_id', $scope.currentUser._id)) {
       CommonService.toast('Can only suggest one move per turn');
@@ -161,7 +158,7 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
 
   function movePieceBack() {
     ctrl.boardGame.undo();
-    ctrl.board.position(ctrl.fen);
+    ctrl.board.position(ctrl.boardGame.fen());
   }
 
 }

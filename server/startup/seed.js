@@ -11,7 +11,7 @@ Meteor.startup(function () {
           'timeLeft': 30000
         },
         'turns': [
-          {
+          [{
             'user_id': '1',
             'created_at': '1435857130718',
             'updated_at': '1435857152171',
@@ -47,7 +47,7 @@ Meteor.startup(function () {
                 'favorite_move': false
               }
             ]
-          }
+          }]
         ],
         'suggested_moves': [
           {

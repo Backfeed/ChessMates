@@ -21,7 +21,6 @@ function timerController($scope) {
     timeLeftPercentage: 100
   });
 
-  timerStream = new Meteor.Stream('timer');
   timerStream.on('timer', function(timeLeft) {
     //console.log('timeLeft - ', timeLeft/1000);
     ctrl.timeLeft = timeLeft;
