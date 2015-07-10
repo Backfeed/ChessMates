@@ -5,8 +5,10 @@
                 <h2 class="evaluation-step center-block">{{ ::move.notation }}</h2>
                 <rating readonly="!$root.currentUser" class="rating" ng-model="ctrl.stars" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" ng-change="ctrl.evaluate()"></rating>
                 <br>
-                <button ng-change="ctrl.flagFavorite()" 
+                ctrl.isFavorite: {{ ctrl.isFavorite }}
+                <button ng-change="ctrl.flagFavorite()"
                         ng-model="ctrl.isFavorite"
+                        ng-checked="ctrl.isFavorite"
                         btn-checkbox
                         type="button" 
                         class="btn btn-default choose-favorite-move" 

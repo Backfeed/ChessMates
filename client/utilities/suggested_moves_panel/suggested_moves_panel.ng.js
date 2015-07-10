@@ -13,11 +13,12 @@ function suggestedMovesPanel() {
 
 function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
   var ctrl = this;
+  
   angular.extend(ctrl, {
     flagFavorite: flagFavorite,
     hoveringOver: hoveringOver,
-    isFavorite: false,
     evaluate: evaluate,
+    isFavorite: false,
     stars: 0
   });
 
@@ -28,7 +29,7 @@ function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
     var myEvaluation = EvaluationModel.getEvaluationByUser(move);
     if (myEvaluation) {
       ctrl.stars = myEvaluation.stars;
-      ctrl.isFavorite = move.notation === myEvaluation.favorite_move;
+      ctrl.isFavorite = myEvaluation.favorite_move;
     } else {
       ctrl.stars = 0;
       ctrl.isFavorite = false;
@@ -36,7 +37,11 @@ function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
   }
 
   function flagFavorite() {
-    if (!ctrl.stars) { return CommonService.toast('Please rate the move before choosing it as your favorite'); }
+    if (!ctrl.stars) { 
+      CommonService.toast('Please rate the move before choosing it as your favorite'); 
+      ctrl.isFavorite = false;
+      return;
+    }
     EvaluationModel.flagFavorite(ctrl.selectedMove, ctrl.isFavorite);
   }
 
