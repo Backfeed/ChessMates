@@ -6,7 +6,6 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
   var ctrl = this;
 
   angular.extend(ctrl, {
-    iamDone: iamDone,
     evaluate: evaluate, // DEV ONLY
     GamesModel: GamesModel, // DEV ONLY
     startTurn: startTurn, // DEV ONLY
@@ -15,10 +14,10 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     GameBoardService: GameBoardService, // DEV ONLY
     endGame: endGame, // DEV ONLY
     restart: restart, // DEV ONLY
-    Engine : Engine, // DEV ONLY
     gameId : gameId, // DEV ONLY
-    game: {},
-    selectedMove  : {}
+    imDone: imDone,
+    selectedMove  : {},
+    game: {}
   });
 
 
@@ -35,33 +34,11 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     whosTurnStream.on('turnChanged', startTurnCB);
   }
 
-  // For development
-
-  function startTurn() {
-    $meteor.call('startTurn', gameId).then(
-      function()    { CommonService.toast('turn started'); },
-      function(err) { console.log('failed', err); }
-    );
-  };
-
-  function pause() {
-    $meteor.call('pauseGame', gameId).then(
-      function(){
-        ctrl.game.settings.inPlay = !ctrl.game.settings.inPlay;
-        CommonService.toast('game paused');
-      },
-      function(err){
-        console.log('failed', err);
-      }
-    );
-  };
-
-  function endGame() {
-    $meteor.call('endGame', gameId).then(
-      function()    { CommonService.toast('No Move Suggested. Game Over!!'); },
-      function(err) { console.log('failed', err); }
-    );
-  };
+  function startTurn() { GamesService.startTurn(gameId); };
+  function pause() { GamesService.pause(gameId); };
+  function endGame() { GamesService.endGame(gameId); };
+  function imDone() { GamesService.imDone(gameId); };
+  function startTurnCB(turn) { GamesService.startTurnCB(turn); }
 
   function restart() {
     GamesService.cancelMoveHighlights();
@@ -71,96 +48,24 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     startTurn();
   }
 
-  function iamDone() {
-    $meteor.call('clientDone', gameId).then(
-      function()    { CommonService.toast('Waitin fo the gang, ya'); },
-      function(err) { console.log('failed', err); }
-    );
-  };
 
   function updateBoard() {
-    if (ctrl.game.fen &&
-      GameBoardService.game) {
-      GameBoardService.game.load(ctrl.game.fen);
-      BoardService.board.position(ctrl.game.fen);
+    if (ctrl.game.fen && GameBoardService.game) {
+      GamesService.updateBoard();
     }
   }
 
-  function evaluate(moves) {
-    Engine.evaluate(moves).then(function(score) {
+  function evaluate() {
+    Engine.evaluate(GameBoardService.getHistory()).then(function(score) {
       console.log('score is ', score);
     })
   }
 
-  function startTurnCB(turn) {
-    GamesService.cancelMoveHighlights();
-    CommonService.toast('It Is ' + turn + ' Turn To Play');
-    if(turn === 'AI'){
-      //TODO if no suggested move game over
-      if (ctrl.game.suggested_moves.length === 0){
-        endGame();
-      } else {
-        executeMove();
-      }
-    }
-  }
-
-  function executeMove() {    
-    //TODO fix this. For now pressing the button will play the first selected move(for dev)
-    GameBoardService.game.move(GamesService.formatMoveFrom(ctrl.game.suggested_moves[0].notation));
-    // BoardService.board.position(ctrl.game.suggested_moves[0].fen);
-    Engine.getMove(GameBoardService.game.history({ verbose: true }).map(function(move){ return move.from + move.to }).join(" "))
-    .then(function(move) {
-      moveAI(move);
-    });
-  }
-
-  function moveAI(move) {
-    GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
-    // BoardService.board.position(GameBoardService.game.fen());
-    ctrl.game.fen = GameBoardService.game.fen(); //TODO all users should see the updated position
-    ctrl.game.pgn.push(move.from + ' ' + move.to);
-    GamesModel.logTurn();
-    startTurn();
-  }
-
   function singleMove(e, notation) {
-    if (!$scope.currentUser) {
-      CommonService.toast('Must be logged in to suggest a move');
-      movePieceBack();
-      return;
-    } else if (GamesService.getMoveBy('user_id', $scope.currentUser._id)) {
-      CommonService.toast('Can only suggest one move per turn');
-      ctrl.selectedMove = GamesService.getMoveBy('user_id', $scope.currentUser._id);
-      movePieceBack();
-    } else if (GamesService.getMoveBy('notation', notation)) {
-      CommonService.toast('move exists');
-      ctrl.selectedMove = GamesService.getMoveBy('notation', notation);
-      movePieceBack();
-    } else {
-      GamesService.openSuggestMoveModal(notation)
-      .then(function(stars) {
-        var move = {
-          user_id: Meteor.userId(),
-          notation: notation,
-          avg_stars: '4.5',
-          created_at: Date.now(),
-          fen: GameBoardService.game.fen(),
-          evaluations: [],
-          comments: []
-        };
-        EvaluationModel.evaluate(move, stars);
-        ctrl.game.suggested_moves.push(move);
-      })
-      .finally(function() {
-        movePieceBack();
-      });
-    }
-  }
-
-  function movePieceBack() {
-    GameBoardService.game.undo();
-    BoardService.board.position(GameBoardService.game.fen());
+    GamesService.singleMove(e, notation)
+    .then(function(selectedMove) {
+      ctrl.selectedMove = selectedMove;
+    });
   }
 
 }
