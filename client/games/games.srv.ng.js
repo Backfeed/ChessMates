@@ -16,7 +16,7 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
     endGame: endGame,
     imDone: imDone,
     pause: pause
-  }
+  };
 
 
   function imDone(gameId) {
@@ -24,7 +24,7 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
       function()    { CommonService.toast('Waitin fo the gang, ya'); },
       function(err) { console.log('failed', err); }
     );
-  };
+  }
 
   function pause(gameId) {
     $meteor.call('pauseGame', gameId).then(
@@ -36,7 +36,7 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
         console.log('failed', err);
       }
     );
-  };
+  }
 
   function moveAI(move) {
     GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
@@ -53,7 +53,7 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
     );
   }
 
-  function executeMove() {    
+  function executeMove() {
     //TODO get move from protocol
     GameBoardService.game.move(formatMoveFrom(GamesModel.game.suggested_moves[0].notation));
     Engine.getMove(GameBoardService.getHistory())
@@ -136,14 +136,14 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
       movePieceBack();
       deferred.resolve({});
       return deferred.promise;
-    } 
+    }
 
     if (getMoveBy('user_id', $rootScope.currentUser._id)) {
       CommonService.toast('Can only suggest one move per turn');
       deferred.resolve(getMoveBy('user_id', $rootScope.currentUser._id));
       movePieceBack();
       return deferred.promise;
-    } 
+    }
 
     if (getMoveBy('notation', notation)) {
       CommonService.toast('move exists');
@@ -151,7 +151,7 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
       movePieceBack();
       return deferred.promise;
     }
-    
+
     openSuggestMoveModal(notation)
     .then(function(stars) {
       var move = {

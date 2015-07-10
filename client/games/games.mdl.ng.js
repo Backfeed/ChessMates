@@ -8,7 +8,7 @@ function GamesModel($meteor) {
     game: {},
     logTurn: logTurn,
     restart: restart
-  }
+  };
 
   return model;
 
