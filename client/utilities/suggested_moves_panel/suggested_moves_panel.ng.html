@@ -2,11 +2,17 @@
     <md-tabs md-center-tabs md-dynamic-height md-no-bar>
         <md-tab label="•" ng-repeat="move in ctrl.moves" md-on-select="ctrl.selectedMove = move" class="evaluations-tab">
             <div class="evaluation text-center">
-                <!--&lt;!&ndash; <p class="text-center">Backfeed me</p> &ndash;&gt; no upper case neede. lower case for position upper case for piece name-->
                 <h2 class="evaluation-step center-block">{{ ::move.notation }}</h2>
                 <rating readonly="!$root.currentUser" class="rating" ng-model="ctrl.stars" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" ng-change="ctrl.evaluate()"></rating>
                 <br>
-                <button type="button" class="btn btn-default choose-favorite-move" data-toggle="move.favorite_move"><img src="img/favorite.png" />My favorite move</button>
+                <button ng-change="ctrl.flagFavorite()" 
+                        ng-model="ctrl.isFavorite"
+                        btn-checkbox
+                        type="button" 
+                        class="btn btn-default choose-favorite-move" 
+                        ng-disabled="!$root.currentUser">
+                        <img src="img/favorite.png" />
+                        My favorite move</button>
             </div>
             <hr />
             <comments move="move" comments="move.comments"></comments>
