@@ -37,6 +37,9 @@ function EvaluationModel(GamesModel) {
 
   function update(evaluation, fields) {
     angular.extend(evaluation, fields);
+    GamesModel.gameNotAuto.save().then(function(){
+      console.log('cii senior');
+    })
   }
 
   function flagFavorite(move, flag) {
@@ -57,7 +60,7 @@ function EvaluationModel(GamesModel) {
 
   function getFavoriteMoveByUser() {
     var move;
-    GamesModel.game.suggested_moves.forEach(function(sug_move) {
+    GamesModel.gameNotAuto.suggested_moves.forEach(function(sug_move) {
       sug_move.evaluations.forEach(function(eval) {
         if (eval.favorite_move && eval.user_id === Meteor.userId()) {
           move = sug_move;

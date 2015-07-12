@@ -21,6 +21,12 @@ Games.allow({
     }
 });
 
+
+
+Games.after.update(function(userId, doc, fieldNames, modifier, options){
+  console.log('game collection updated');
+});
+
 Meteor.methods({
   distributeReputation: function distributeReputation(gameId) {
     validateGame(gameId);

@@ -23,6 +23,7 @@ function GamesModel($meteor) {
 
   function set(id) {
     model.game = $meteor.object(Games, { game_id: id }).subscribe('games');
+    model.gameNotAuto = $meteor.object(Games, { game_id: id }, false).subscribe('games');
   }
 
   function restart() {
