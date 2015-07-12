@@ -64,11 +64,13 @@ function EvaluationModel(GamesModel) {
 
   function getFavoriteMoveByUser() {
     var move;
-    GamesModel.gameNotAuto.suggested_moves.forEach(function(sug_move) {
-      sug_move.evaluations.forEach(function(eval) {
-        if (eval.favorite_move && eval.user_id === Meteor.userId()) {
-          move = sug_move;
-        }
+    GamesModel.game.suggested_moves.forEach(function(sug_move) {
+      sug_move.evaluations.forEach(function(evalArr) {
+        evalArr.forEach(function(eval) {
+          if (eval.favorite_move && eval.user_id === Meteor.userId()) {
+            move = sug_move;
+          }
+        });
       });
     });
     return move;

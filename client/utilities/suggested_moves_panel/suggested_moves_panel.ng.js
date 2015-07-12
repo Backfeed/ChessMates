@@ -38,7 +38,7 @@ function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
 
   function flagFavorite() {
     if (!ctrl.stars) { 
-      CommonService.toast('Please rate the move before choosing it as your favorite'); 
+      CommonService.toast('Please rate the move before favoriting it'); 
       ctrl.isFavorite = false;
       return;
     }
