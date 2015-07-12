@@ -36,12 +36,9 @@ function EvaluationModel(GamesModel) {
       favorite_move: false,
       stars: stars
     });
-  }
-
-  function update(evaluation, fields) {
-    angular.extend(evaluation, fields);
+    
     GamesModel.gameNotAuto.save().then(function(){
-      console.log('cii senior');
+      console.log('Evalution Updated');
     });
   }
 

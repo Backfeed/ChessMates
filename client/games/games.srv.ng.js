@@ -164,8 +164,8 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
         comments: []
       };
       deferred.resolve(move);
+      GamesModel.gameNotAuto.suggested_moves.push(move);
       EvaluationModel.evaluate(move, stars);
-      GamesModel.game.suggested_moves.push(move);
     })
     .finally(function() {
       movePieceBack();
