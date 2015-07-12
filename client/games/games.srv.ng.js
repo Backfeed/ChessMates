@@ -160,7 +160,7 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
         avg_stars: '4.5',
         created_at: Date.now(),
         fen: GameBoardService.game.fen(),
-        evaluations: [],
+        evaluations: [[],[],[],[],[]],
         comments: []
       };
       deferred.resolve(move);

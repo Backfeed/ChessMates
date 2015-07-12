@@ -25,7 +25,7 @@ function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
   $scope.$watch('ctrl.selectedMove', selectedMoveChanged);
 
   function selectedMoveChanged(move) {
-    if (!move) { return; }
+    if (!move || !move.evaluations) { return; }
     var myEvaluation = EvaluationModel.getEvaluationByUser(move);
     if (myEvaluation) {
       ctrl.stars = myEvaluation.stars;

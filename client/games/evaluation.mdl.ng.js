@@ -13,21 +13,24 @@ function EvaluationModel(GamesModel) {
 
   function evaluate(move, stars) {
     var evaluation = getEvaluationByUser(move);
-    if (evaluation) {
-      update(evaluation, { stars: stars });
-    } else {
-      create(move, stars);
-    }
+    if (evaluation) { destroy(evaluation, move.evaluations[evaluation.stars-1]); }
+    create(move, stars);
   }
 
   function getEvaluationByUser(move) {
-    return _.find(move.evaluations, function(item) {
-      return item.user_id === Meteor.userId();
+    var evaluation = false;
+    move.evaluations.forEach(function(evaluationArray) {
+      evaluationArray.forEach(function(evl) {
+        if (evl.user_id === Meteor.userId()) {
+          evaluation = evl;
+        }
+      });
     });
+    return evaluation;
   }
 
   function create(move, stars) {
-    move.evaluations.push({
+    move.evaluations[stars-1].push({
       user_id: Meteor.userId(),
       created_at: Date.now(),
       favorite_move: false,
@@ -39,22 +42,26 @@ function EvaluationModel(GamesModel) {
     angular.extend(evaluation, fields);
     GamesModel.gameNotAuto.save().then(function(){
       console.log('cii senior');
-    })
+    });
+  }
+
+  function destroy(evaluation, evaluations) {
+    evaluations = _.reject(evaluations, function(evl) {
+      return evl.user_id === Meteor.userId()
+    });
   }
 
   function flagFavorite(move, flag) {
-    console.log("flag: ", flag);
     if (flag) { unFlagFavorite(); } // In case another move is already flagged
     var evaluation = getEvaluationByUser(move);
-    update(evaluation, { favorite_move: flag });
+    evaluation.favorite_move = flag;
   }
 
   function unFlagFavorite() {
     var move = getFavoriteMoveByUser();
-    console.log("move: ", move);
     if (move) {
       var evaluation = getEvaluationByUser(move);
-      update(evaluation, { favorite_move: false });
+      evaluation.favorite_move = false;
     }
   }
 

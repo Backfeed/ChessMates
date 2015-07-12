@@ -4,10 +4,10 @@ angular.module('blockchess.games.model', [])
 function GamesModel($meteor) {
 
   var model = {
-    set: set,
-    game: {},
     logTurn: logTurn,
-    restart: restart
+    restart: restart,
+    game: {},
+    set: set
   };
 
   return model;
