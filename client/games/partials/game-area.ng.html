@@ -32,6 +32,16 @@
     <button ng-click="ctrl.restart()">Restart</button>
     <button ng-click="ctrl.imDone()">I'm Done</button>
     <br>
+    Players: 
+    <ul>
+      <li ng-repeat="user in ctrl.usersList">
+        {{ user.emails[0].address }}
+        <span ng-if="ctrl.userIsDone(user._id)"> - Done</span>
+      </li>
+    </ul>
+
+    <br>
+
     History: {{ ctrl.game.pgn }}
   </div>
 

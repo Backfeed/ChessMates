@@ -1,7 +1,7 @@
 angular.module('blockchess.games.controller', [])
 .controller('GamesController', GamesController)
 
-function GamesController($scope, $meteor, CommonService, Engine, GamesService, GamesModel, EvaluationModel, BoardService, GameBoardService) {
+function GamesController($scope, $window, $meteor, CommonService, Engine, GamesService, GamesModel, EvaluationModel, BoardService, GameBoardService) {
   var gameId = "1"; // TODO: Get dynamically from current game
   var ctrl = this;
 
@@ -16,22 +16,41 @@ function GamesController($scope, $meteor, CommonService, Engine, GamesService, G
     restart: restart, // DEV ONLY
     gameId : gameId, // DEV ONLY
     imDone: imDone,
+    users: [],
+    userIsDone: userIsDone,
+    usersList: [],
     selectedMove  : {},
     game: {}
   });
-
 
   //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard);
+  $scope.$watch('ctrl.users', updateUsers);
 
   init();
 
   function init() {
     GamesModel.set(gameId);
     ctrl.game = GamesModel.game;
+    ctrl.users = Meteor.users.find({ "status.online": true });
     whosTurnStream.on('turnChanged', startTurnCB);
+  }
+
+  function userIsDone(id) {
+    var bool = false;
+    $window.ClientsDone.forEach(function(userId) {
+      if (userId === id) { return bool = true; }
+    });
+    return bool;
+  }
+
+  function updateUsers() {
+    ctrl.usersList = [];
+    ctrl.users.forEach(function(user) {
+      ctrl.usersList.push(user);
+    });
   }
 
   function startTurn() { GamesService.startTurn(gameId); };

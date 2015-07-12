@@ -1,7 +1,7 @@
 angular.module('blockchess.games.service', [])
 .service('GamesService', GamesService);
 
-function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine, EvaluationModel, GamesModel, GameBoardService, BoardService) {
+function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, EvaluationModel, GamesModel, GameBoardService, BoardService) {
   var gameId = "1"; // Dev
 
   return {
@@ -131,16 +131,16 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
     var deferred = $q.defer();
 
     // TODO :: Delete this check
-    if (!$rootScope.currentUser) {
+    if (!Meteor.userId()) {
       CommonService.toast('Must be logged in to suggest a move');
       movePieceBack();
       deferred.resolve({});
       return deferred.promise;
     }
 
-    if (getMoveBy('user_id', $rootScope.currentUser._id)) {
+    if (getMoveBy('user_id', Meteor.userId())) {
       CommonService.toast('Can only suggest one move per turn');
-      deferred.resolve(getMoveBy('user_id', $rootScope.currentUser._id));
+      deferred.resolve(getMoveBy('user_id', Meteor.userId()));
       movePieceBack();
       return deferred.promise;
     }
@@ -179,6 +179,7 @@ function GamesService($rootScope, $q, $meteor, $mdDialog, CommonService, Engine,
     GameBoardService.game.reset();
     BoardService.board.position('start');
     GamesModel.restart();
+    $window.ClientsDone = [];
     startTurn(gameId);
   }
 
