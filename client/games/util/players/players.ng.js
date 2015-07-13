@@ -21,7 +21,6 @@ function playersController($meteor, GamesService) {
 
   $meteor.subscribe('userStatus');
   connectionStream.on('connections', updateUsers);
-  // whosTurnStream.on('turnChanged', startTurnCB);
 
   init();
 

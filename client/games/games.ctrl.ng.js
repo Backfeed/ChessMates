@@ -35,16 +35,9 @@ function GamesController($scope, $window, $meteor, CommonService, Engine, GamesS
   function startTurnCB(turn) { GamesService.startTurnCB(turn); }
   function startTurn()       { GamesService.startTurn(gameId); }
   function endGame()         { GamesService.endGame(gameId);   }
+  function restart()         { GamesService.restart();         }
   function imDone()          { GamesService.imDone(gameId);    }
   function pause()           { GamesService.pause(gameId);     }
-
-  function restart() {
-    GamesService.cancelMoveHighlights();
-    GameBoardService.game.reset();
-    BoardService.board.position('start');
-    GamesModel.restart();
-    startTurn();
-  }
 
   function updateBoard() {
     if (ctrl.game.fen && GameBoardService.game) {

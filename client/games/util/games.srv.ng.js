@@ -15,6 +15,7 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, Ev
     getMoveBy: getMoveBy,
     startTurn: startTurn,
     endGame: endGame,
+    restart: restart,
     imDone: imDone,
     pause: pause
   };
