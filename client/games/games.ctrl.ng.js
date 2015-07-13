@@ -6,15 +6,15 @@ function GamesController($scope, $window, $meteor, CommonService, Engine, GamesS
   var ctrl = this;
 
   angular.extend(ctrl, {
-    evaluate: evaluate, // DEV ONLY
-    GamesModel: GamesModel, // DEV ONLY
-    startTurn: startTurn, // DEV ONLY
-    pause: pause, // DEV ONLY
-    BoardService: BoardService, // DEV ONLY
-    GameBoardService: GameBoardService, // DEV ONLY
-    endGame: endGame, // DEV ONLY
-    restart: restart, // DEV ONLY
-    gameId : gameId, // DEV ONLY
+    evaluate: evaluate, // DEV
+    GamesModel: GamesModel, // DEV
+    startTurn: startTurn, // DEV
+    pause: pause, // DEV
+    BoardService: BoardService, // DEV
+    GameBoardService: GameBoardService, // DEV
+    endGame: endGame, // DEV
+    restart: restart, // DEV
+    gameId : gameId, // DEV
     userIsDone: userIsDone,
     imDone: imDone,
     users: [],
@@ -54,11 +54,11 @@ function GamesController($scope, $window, $meteor, CommonService, Engine, GamesS
     });
   }
 
-  function startTurn() { GamesService.startTurn(gameId); };
-  function pause() { GamesService.pause(gameId); };
-  function endGame() { GamesService.endGame(gameId); };
-  function imDone() { GamesService.imDone(gameId); };
   function startTurnCB(turn) { GamesService.startTurnCB(turn); }
+  function startTurn()       { GamesService.startTurn(gameId); }
+  function endGame()         { GamesService.endGame(gameId);   }
+  function imDone()          { GamesService.imDone(gameId);    }
+  function pause()           { GamesService.pause(gameId);     }
 
   function restart() {
     GamesService.cancelMoveHighlights();
@@ -68,13 +68,13 @@ function GamesController($scope, $window, $meteor, CommonService, Engine, GamesS
     startTurn();
   }
 
-
   function updateBoard() {
     if (ctrl.game.fen && GameBoardService.game) {
       GamesService.updateBoard();
     }
   }
 
+  // DEV
   function evaluate() {
     Engine.evaluate(GameBoardService.getHistory()).then(function(score) {
       console.log('score is ', score);

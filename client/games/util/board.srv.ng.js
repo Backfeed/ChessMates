@@ -1,4 +1,4 @@
-angular.module('blockchess.games.boardService', [])
+angular.module('blockchess.games.util.boardService', [])
 .service('BoardService', BoardService)
 
 function BoardService($rootScope, $window, GamesModel, GameBoardService) {

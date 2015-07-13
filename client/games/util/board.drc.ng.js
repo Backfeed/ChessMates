@@ -1,4 +1,4 @@
-angular.module('blockchess.games.board', [])
+angular.module('blockchess.games.util.board', [])
 .directive('board', board)
 
 function board(BoardService) {

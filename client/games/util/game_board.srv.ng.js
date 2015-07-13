@@ -1,4 +1,4 @@
-angular.module('blockchess.games.gameBoardService', [])
+angular.module('blockchess.games.util.gameBoardService', [])
 .service('GameBoardService', GameBoardService);
 
 function GameBoardService($window) {

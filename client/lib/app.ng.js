@@ -1,10 +1,11 @@
-angular.module('blockchess',[
+angular.module('blockchess', [
     'angular-meteor',
     'ui.router',
     'angularUtils.directives.dirPagination',
     'ngMaterial',
     'ui.bootstrap',
-    'blockchess.utilities',
+    'blockchess.routes',
+    'blockchess.util',
     'blockchess.games'
 ]);
 

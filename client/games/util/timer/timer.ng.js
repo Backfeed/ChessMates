@@ -1,16 +1,14 @@
-angular.module('blockchess.utilities.timer', [])
+angular.module('blockchess.games.util.timer', [])
 .directive('timer', timer);
 
 function timer() {
   return {
-    restrict: 'E',
-    templateUrl: "client/utilities/timer/timer.ng.html",
-    controller: timerController,
     bindToController: true,
     controllerAs: 'ctrl',
-    scope: {
-      settings: '='
-    }
+    templateUrl: "client/games/util/timer/timer.ng.html",
+    controller: timerController,
+    restrict: 'E',
+    scope: { settings: '=' }
   }
 }
 

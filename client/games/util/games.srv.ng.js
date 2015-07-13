@@ -1,4 +1,4 @@
-angular.module('blockchess.games.service', [])
+angular.module('blockchess.games.util.service', [])
 .service('GamesService', GamesService);
 
 function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, EvaluationModel, GamesModel, GameBoardService, BoardService) {
@@ -83,10 +83,10 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, Ev
 
   function openSuggestMoveModal(notation) {
     return $mdDialog.show({
-      templateUrl: "client/utilities/suggest_move_modal/suggest_move_modal.ng.html",
-      controller: 'suggestMoveModalController',
-      controllerAs: 'ctrl',
       bindToController: true,
+      controllerAs: 'ctrl',
+      templateUrl: "client/games/util/suggest_move_modal/suggest_move_modal.ng.html",
+      controller: 'suggestMoveModalController',
       locals: { notation: notation }
     });
   }

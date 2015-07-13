@@ -1,32 +1,29 @@
-angular.module('blockchess.utilities.comments', [])
+angular.module('blockchess.games.util.comments', [])
 .directive('comments', comments);
 
 function comments() {
   return {
-    restrict: 'E',
-    templateUrl: "client/utilities/comments/comments.ng.html",
-    controller: commentsController,
-    controllerAs: 'ctrl',
     bindToController: true,
-    scope: {
-      move: '=',
-      comments: '='
-    }
-  }
+    controllerAs: 'ctrl',
+    templateUrl: "client/games/util/comments/comments.ng.html",
+    controller: commentsController,
+    restrict: 'E',
+    scope: { comments: '=', move: '=' }
+  };
 }
 
 function commentsController() {
   var ctrl = this;
   angular.extend(ctrl, {
     getUserById: getUserById,
-    add: add
+    create: create
   });
 
   function getUserById(userId) {
     return Meteor.users.findOne(userId);
   };
 
-  function add() {
+  function create() {
     ctrl.comments.push({
       user_id: Meteor.userId(),
       created_at: Date.now(),

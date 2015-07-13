@@ -1,12 +1,12 @@
-angular.module('blockchess.utilities.suggestedMovesPanel', [])
+angular.module('blockchess.games.util.suggestedMovesPanel', [])
 .directive('suggestedMovesPanel', suggestedMovesPanel);
 
 function suggestedMovesPanel() {
   return {
-    templateUrl: "client/utilities/suggested_moves_panel/suggested_moves_panel.ng.html",
-    controller: suggestedMovesPanelController,
-    controllerAs: 'ctrl',
     bindToController: true,
+    controllerAs: 'ctrl',
+    templateUrl: "client/games/util/suggested_moves_panel/suggested_moves_panel.ng.html",
+    controller: suggestedMovesPanelController,
     scope: { moves: '=' ,  selectedMove: '=' }
   }
 }

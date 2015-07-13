@@ -8,24 +8,10 @@ angular.module("blockchess").run(["$rootScope", "$location", function($rootScope
       });
 }]);
 
-angular.module("blockchess").config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
-  function($urlRouterProvider, $stateProvider, $locationProvider){
-    $locationProvider.html5Mode(true);
+angular.module("blockchess.routes", [])
+.config(routes);
 
-
-    $stateProvider
-    .state('game', {
-      url: '/game/:game_id',
-      templateUrl: 'client/games/game.ng.html',
-      controller: 'GameCtrl',
-      resolve: {
-        "currentUser": ["$meteor", function($meteor){
-          return $meteor.requireUser();
-        }]
-      }
-    });
-
-
-    $urlRouterProvider.otherwise("/games");
-
-  }]);
+function routes($urlRouterProvider, $locationProvider) {
+  $locationProvider.html5Mode(true);
+  $urlRouterProvider.otherwise("/games");
+}

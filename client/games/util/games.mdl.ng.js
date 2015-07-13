@@ -1,4 +1,4 @@
-angular.module('blockchess.games.model', [])
+angular.module('blockchess.games.util.model', [])
 .service('GamesModel', GamesModel)
 
 function GamesModel($meteor) {

@@ -1,7 +1,7 @@
-angular.module('blockchess.games.config', [])
-.config(config)
+angular.module('blockchess.games.routes', [])
+.config(gamesRoutes)
 
-function config($stateProvider){
+function gamesRoutes($stateProvider) {
   $stateProvider
     .state('games', {
       url: '/games',

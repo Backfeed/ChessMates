@@ -1,4 +1,4 @@
-angular.module('blockchess.utilities.common', [])
+angular.module('blockchess.util.common', [])
 .service('CommonService', CommonService)
 
 function CommonService($mdToast) {

@@ -1,4 +1,4 @@
-angular.module('blockchess.utilities.engine', [])
+angular.module('blockchess.games.util.engine', [])
 .service('Engine', Engine)
 
 function Engine($rootScope, $q) {

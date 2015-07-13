@@ -1,4 +1,4 @@
-angular.module('blockchess.utilities.suggestMoveModal', [])
+angular.module('blockchess.games.util.suggestMoveModal', [])
 .controller('suggestMoveModalController', suggestMoveModalController);
 
 function suggestMoveModalController($mdDialog, CommonService) {
