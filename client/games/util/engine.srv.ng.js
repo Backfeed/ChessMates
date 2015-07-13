@@ -92,7 +92,7 @@ function Engine($rootScope, $q) {
 
   // Send commands to the engine
   function uciCmd(cmd, evlr) {
-    // console.log("Angular Stockfish: UCI: " + cmd);
+    console.log("Angular Stockfish: UCI: " + cmd);
     (evlr || engine).postMessage(cmd);
   }
 

@@ -30,18 +30,18 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, Ev
 
   function pause(gameId) {
     $meteor.call('pauseGame', gameId).then(
-      function(){
+      function() {
         GamesModel.game.settings.inPlay = !GamesModel.game.settings.inPlay;
         CommonService.toast('game paused');
       },
-      function(err){
-        console.log('failed', err);
-      }
+      function(err) { console.log('failed', err); }
     );
   }
 
   function moveAI(move) {
+    console.log("moveAI: ", move);
     GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
+    console.log("history moveAI: ", GameBoardService.getHistory())
     GamesModel.game.fen = GameBoardService.game.fen();
     GamesModel.game.pgn.push(move.from + ' ' + move.to);
     GamesModel.logTurn();
@@ -56,8 +56,10 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, Ev
   }
 
   function executeMove() {
+    console.log("history: executeMove: ", GameBoardService.getHistory())
     //TODO get move from protocol
     GameBoardService.game.move(formatMoveFrom(GamesModel.game.suggested_moves[0].notation));
+    console.log("history: executeMove: ", GameBoardService.getHistory())
     Engine.getMove(GameBoardService.getHistory())
     .then(function(move) {
       moveAI(move);
@@ -72,6 +74,7 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, Ev
   }
 
   function startTurnCB(turn) {
+    console.log("history: startTurnCB: ", GameBoardService.getHistory())
     cancelMoveHighlights();
     CommonService.toast('It Is ' + turn + ' Turn To Play');
     if (turn === 'AI') {
@@ -94,7 +97,7 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, Ev
   }
 
   function updateBoard() {
-    GameBoardService.game.load(GamesModel.game.fen);
+    console.log("history: updateBoard: ", GameBoardService.getHistory())
     BoardService.board.position(GamesModel.game.fen);
   }
 
