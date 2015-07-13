@@ -1,0 +1,6 @@
+<ul>
+  <li ng-repeat="user in ctrl.usersList">
+    {{ user | displayName }}
+    <span ng-if="ctrl.userIsDone(user._id)"> - Done</span>
+  </li>
+</ul>

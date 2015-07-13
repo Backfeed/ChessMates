@@ -79,12 +79,10 @@ Meteor.methods({
     validateGame(gameId);
 
     ClientsDone.push(this.userId);
-    if (Meteor.isServer) {
-      // check if all online users pressed the I'm Done button
-      if (Meteor.users.find({ "status.online": true }).count() === ClientsDone.length){
-        whosTurnStream.emit('turnChanged', 'AI');
-        ClientsDone = [];
-      }
+    // check if all online users pressed the I'm Done button
+    if (Meteor.users.find({ "status.online": true }).count() === ClientsDone.length){
+      whosTurnStream.emit('turnChanged', 'AI');
+      ClientsDone = [];
     }
   }
 });

@@ -32,12 +32,7 @@
     <button ng-click="ctrl.imDone()">I'm Done</button>
     <br>
     Players: 
-    <ul>
-      <li ng-repeat="user in ctrl.usersList">
-        {{ user | displayName }}
-        <span ng-if="ctrl.userIsDone(user._id)"> - Done</span>
-      </li>
-    </ul>
+    <players></players>
 
     <br>
 
