@@ -1,6 +1,7 @@
 Games = new Mongo.Collection('games');
 whosTurnStream = new Meteor.Stream('turnChanged');
 timerStream = new Meteor.Stream('timer');
+connectionStream = new Meteor.Stream('connection');
 
 Games.allow({
     insert: function (userId) {
@@ -102,3 +103,15 @@ if (Meteor.isServer) {
 }
 
 ClientsDone = [];
+
+
+Meteor.users.find({ "status.online": true }).observe({
+  added: function(user) {
+    console.log('added user', user);
+    connectionStream.emit('connections');
+  },
+  removed: function(user) {
+    console.log('removed user', user);
+    connectionStream.emit('connections');
+  }
+});

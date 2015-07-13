@@ -35,7 +35,7 @@
     Players: 
     <ul>
       <li ng-repeat="user in ctrl.usersList">
-        {{ user.emails[0].address }}
+        {{ user | displayName }}
         <span ng-if="ctrl.userIsDone(user._id)"> - Done</span>
       </li>
     </ul>

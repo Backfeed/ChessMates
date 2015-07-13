@@ -20,3 +20,11 @@ whosTurnStream.permissions.write(function() {
 whosTurnStream.permissions.read(function() {
   return true;
 });
+
+connectionStream.permissions.write(function() {
+  return true;
+});
+
+connectionStream.permissions.read(function() {
+  return true;
+});

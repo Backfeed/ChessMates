@@ -15,27 +15,27 @@ function GamesController($scope, $window, $meteor, CommonService, Engine, GamesS
     endGame: endGame, // DEV ONLY
     restart: restart, // DEV ONLY
     gameId : gameId, // DEV ONLY
+    userIsDone: userIsDone,
     imDone: imDone,
     users: [],
-    userIsDone: userIsDone,
+    selectedMove: {},
     usersList: [],
-    selectedMove  : {},
     game: {}
   });
 
-  //TODO why not inject a service here? could we avoid broadcasting data to the whole app?
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard);
-  $scope.$watch('ctrl.users', updateUsers);
+  $meteor.subscribe('userStatus');
+  whosTurnStream.on('turnChanged', startTurnCB);
+  connectionStream.on('connections', updateUsers);
 
   init();
 
   function init() {
     GamesModel.set(gameId);
     ctrl.game = GamesModel.game;
-    ctrl.users = Meteor.users.find({ "status.online": true });
-    whosTurnStream.on('turnChanged', startTurnCB);
+    updateUsers();
   }
 
   function userIsDone(id) {
@@ -48,6 +48,7 @@ function GamesController($scope, $window, $meteor, CommonService, Engine, GamesS
 
   function updateUsers() {
     ctrl.usersList = [];
+    ctrl.users = Meteor.users.find({ "status.online": true });
     ctrl.users.forEach(function(user) {
       ctrl.usersList.push(user);
     });
