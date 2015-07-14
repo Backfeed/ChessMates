@@ -22,17 +22,28 @@ Games.allow({
     }
 });
 
-
-
-Games.after.update(function(userId, doc, fieldNames, modifier, options){
-  console.log('game collection updated');
-});
+//Games.after.update(function(userId, doc, fieldNames, modifier, options){
+//  console.log('game collection updated');
+//});
 
 Meteor.methods({
   distributeReputation: function distributeReputation(gameId) {
     validateGame(gameId);
     // Redistribute reputation after move
     console.log('distributeReputation');
+  },
+  executeMove: function executeMove(history) {
+    console.log('executeMove');
+    if (Meteor.isServer) {
+      console.log('my history ', history);
+      //var promise = Engine.getMove(history);
+      //promise.then(function(data) {
+      //  console.log(data);
+      //});
+        Meteor.wrapAsync(Engine.getMove(history), function(data) {
+          console.log(data);
+        });
+    }
   },
   endTurn: function endTurn(gameId) {
     console.log('endTurn');
@@ -82,6 +93,7 @@ Meteor.methods({
     // check if all online users pressed the I'm Done button
     if (Meteor.users.find({ "status.online": true }).count() === ClientsDone.length){
       whosTurnStream.emit('turnChanged', 'AI');
+      Meteor.call('executeMove', 'e2e4');
       ClientsDone = [];
     }
   }
@@ -105,11 +117,11 @@ ClientsDone = [];
 
 Meteor.users.find({ "status.online": true }).observe({
   added: function(user) {
-    console.log('added user', user);
+    //console.log('added user', user);
     connectionStream.emit('connections');
   },
   removed: function(user) {
-    console.log('removed user', user);
+    //console.log('removed user', user);
     connectionStream.emit('connections');
   }
 });

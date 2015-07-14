@@ -6,7 +6,6 @@ angular.module('blockchess.games.util', [
   'blockchess.games.util.gameBoardService',
   'blockchess.games.util.boardService',
   'blockchess.games.util.service',
-  'blockchess.games.util.engine',
   // Directives
   'blockchess.games.util.suggestedMovesPanel',
   'blockchess.games.util.suggestedMoves',

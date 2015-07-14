@@ -1,4 +1,4 @@
-console.log('Hello World');
+//console.log('Hello World');
 
 var A = {id:"Primavera",reputation:20, tokens:100};
 var B = {id:"Yanik",	reputation:30, tokens:200};
@@ -40,12 +40,12 @@ function starClick(move, user, star, contributor) {
   for(i=0; i < moves[move][star].length; i++) {
     var u = moves[move][star][i].user;
     var s = moves[move][star][i].stake;
-    console.log(u);
+    //console.log(u);
     u.reputation += Math.round( stake * s / fullstake );
   }
 
   for(i=0; i < moves[move][star].length; i++) {
-    console.log(moves[move][star][i].user);
+    //console.log(moves[move][star][i].user);
   }
 }
 
@@ -59,7 +59,7 @@ function endTurn() {
 
   //iterate through each move
   for (move in moves) {
-    console.log("checking out move: " + move);
+    //console.log("checking out move: " + move);
     var score = 0; var totalrep = 0;
 
     //iterate through each star
@@ -70,7 +70,7 @@ function endTurn() {
 
       //re-allocate the Funds to all players
       var funds = moves[move][star][0].user.reputation;
-      console.log("Total amount of funds collected for Star " + star + " = " + funds);
+      //console.log("Total amount of funds collected for Star " + star + " = " + funds);
 
       //redistribute the stake to other evaluators of the same move/star
       var j; var fullstake = 0;
@@ -80,9 +80,9 @@ function endTurn() {
       for(j=1; j < moves[move][star].length; j++) {
         var u = moves[move][star][j].user;
         var s = moves[move][star][j].stake;
-        console.log("before......."); console.log(u);
+        //console.log("before......."); console.log(u);
         u.reputation += Math.round( funds * s / fullstake );
-        console.log("after................"); console.log(u);
+        //console.log("after................"); console.log(u);
       }
 
 
@@ -103,7 +103,7 @@ function endTurn() {
     //calculate the average value of the move
     turn[move] = { reputation: totalrep, credits: score/totalrep, value: score   }
 
-    console.log("move " + move + " = " + score + " ( " + score/totalrep + " ) with " + totalrep + " reputation");
+    //console.log("move " + move + " = " + score + " ( " + score/totalrep + " ) with " + totalrep + " reputation");
 
     //distribute tokens to the contributor of that move
     //moves[move][0].tokens += Math.round(average);
@@ -111,7 +111,7 @@ function endTurn() {
 
   //select the move to be played
 
-  console.log(turn);
+  //console.log(turn);
 
   /*
    //first sort the move by the amount of reputation engaged
@@ -140,7 +140,7 @@ function endTurn() {
     sorted.push( [ move, turn[move].value ] );
   }
   sorted.sort(function(a, b) { return b[1] - a[1]; });
-  console.log(sorted);
+  //console.log(sorted);
 
   //then identify the one with the highest overall score * rep || highest score || highest reputation
   var winner = {value: sorted[0][1], move: sorted[0][0]}; //get the highest score
@@ -158,7 +158,7 @@ function endTurn() {
   }
 
 
-  console.log("AND THE WINNER IS: " + winner.move);
+  //console.log("AND THE WINNER IS: " + winner.move);
   console.log("winning user = " + moves[winner.move][0].id);
 
   //distribute  tokens to the contributor who picked the winning move !
@@ -193,5 +193,5 @@ starClick("C3C2", D, 5, C);
 endTurn();
 
 
-console.log(A, B, C, D);
+//console.log(A, B, C, D);
 

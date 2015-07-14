@@ -1,7 +1,7 @@
 angular.module('blockchess.games.controller', [])
 .controller('GamesController', GamesController)
 
-function GamesController($scope, $window, $meteor, CommonService, Engine, GamesService, GamesModel, EvaluationModel, BoardService, GameBoardService) {
+function GamesController($scope, GamesService, GamesModel, BoardService, GameBoardService) {
   var gameId = "1"; // TODO: Get dynamically from current game
   var ctrl = this;
 
@@ -10,7 +10,6 @@ function GamesController($scope, $window, $meteor, CommonService, Engine, GamesS
     BoardService: BoardService, // DEV
     GamesModel: GamesModel, // DEV
     startTurn: startTurn, // DEV
-    evaluate: evaluate, // DEV
     endGame: endGame, // DEV
     restart: restart, // DEV
     gameId: gameId, // DEV
@@ -46,11 +45,11 @@ function GamesController($scope, $window, $meteor, CommonService, Engine, GamesS
   }
 
   // DEV
-  function evaluate() {
-    Engine.evaluate(GameBoardService.getHistory()).then(function(score) {
-      console.log('score is ', score);
-    })
-  }
+  //function evaluate() {
+  //  Engine.evaluate(GameBoardService.getHistory()).then(function(score) {
+  //    console.log('score is ', score);
+  //  })
+  //}
 
   function singleMove(e, notation) {
     GamesService.singleMove(e, notation)

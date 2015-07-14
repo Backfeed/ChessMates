@@ -1,7 +1,7 @@
 angular.module('blockchess.games.util.service', [])
 .service('GamesService', GamesService);
 
-function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, EvaluationModel, GamesModel, GameBoardService, BoardService) {
+function GamesService($q, $window, $meteor, $mdDialog, CommonService, EvaluationModel, GamesModel, GameBoardService, BoardService) {
   var gameId = "1"; // Dev
 
   return {
@@ -57,13 +57,18 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, Ev
 
   function executeMove() {
     console.log("history: executeMove: ", GameBoardService.getHistory())
+    //TODO have history field in the db and call execute from server
+    $meteor.call('executeMove', GameBoardService.getHistory()).then(
+      function()    { CommonService.toast('Execute Move Done'); },
+      function(err) { console.log('failed', err); }
+    );
     //TODO get move from protocol
-    GameBoardService.game.move(formatMoveFrom(GamesModel.game.suggested_moves[0].notation));
-    console.log("history: executeMove: ", GameBoardService.getHistory())
-    Engine.getMove(GameBoardService.getHistory())
-    .then(function(move) {
-      moveAI(move);
-    });
+    //GameBoardService.game.move(formatMoveFrom(GamesModel.game.suggested_moves[0].notation));
+    //console.log("history: executeMove: ", GameBoardService.getHistory())
+    //Engine.getMove(GameBoardService.getHistory())
+    //.then(function(move) {
+    //  moveAI(move);
+    //});
   }
 
   function endGame(gameId) {
@@ -74,16 +79,16 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Engine, Ev
   }
 
   function startTurnCB(turn) {
-    console.log("history: startTurnCB: ", GameBoardService.getHistory())
+    //console.log("history: startTurnCB: ", GameBoardService.getHistory())
     cancelMoveHighlights();
     CommonService.toast('It Is ' + turn + ' Turn To Play');
-    if (turn === 'AI') {
-      if (GamesModel.game.suggested_moves.length === 0) {
-        endGame();
-      } else {
-        executeMove();
-      }
-    }
+    //if (turn === 'AI') {
+    //  if (GamesModel.game.suggested_moves.length === 0) {
+    //    endGame();
+    //  } else {
+    //    executeMove();
+    //  }
+    //}
   }
 
   function openSuggestMoveModal(notation) {
