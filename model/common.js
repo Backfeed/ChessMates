@@ -40,9 +40,14 @@ Meteor.methods({
       //promise.then(function(data) {
       //  console.log(data);
       //});
-        Meteor.wrapAsync(Engine.getMove(history), function(data) {
+        var promise = Meteor.wrapAsync(Engine.getMove, function(data) {
+
           console.log(data);
         });
+      var result = promise(history)
+      //  .then(function(data) {
+      //  console.log(data, ' from promise');
+      //})
     }
   },
   endTurn: function endTurn(gameId) {
@@ -91,7 +96,7 @@ Meteor.methods({
 
     ClientsDone.push(this.userId);
     // check if all online users pressed the I'm Done button
-    if (Meteor.users.find({ "status.online": true }).count() === ClientsDone.length){
+    if (ClientsDone.length !== 0 && Meteor.users.find({ "status.online": true }).count() === ClientsDone.length){
       whosTurnStream.emit('turnChanged', 'AI');
       Meteor.call('executeMove', 'e2e4');
       ClientsDone = [];

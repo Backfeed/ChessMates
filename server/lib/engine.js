@@ -85,7 +85,6 @@ Engine = (function Engine() {
     } else {
       uciCmd("go depth " + config.depth);
     }
-    deferredMove.resolve('start');
     return deferredMove.promise;
   }
 

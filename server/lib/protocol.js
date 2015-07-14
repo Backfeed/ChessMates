@@ -159,7 +159,7 @@ function endTurn() {
 
 
   //console.log("AND THE WINNER IS: " + winner.move);
-  console.log("winning user = " + moves[winner.move][0].id);
+  //console.log("winning user = " + moves[winner.move][0].id);
 
   //distribute  tokens to the contributor who picked the winning move !
   moves[winner.move][0].tokens += turn[winner.move].credits;
