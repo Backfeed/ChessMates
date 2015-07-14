@@ -1,4 +1,3 @@
 {
-  "stockfish": "6.0.1",
-  "node-promise": "0.5.12"
+  "stockfish": "6.0.1"
 }
