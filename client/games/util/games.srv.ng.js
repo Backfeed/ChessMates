@@ -13,6 +13,8 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     singleMove: singleMove,
     getMoveBy: getMoveBy,
     startTurn: startTurn,
+    moveAI: moveAI,
+    moveClan: moveClan,
     endGame: endGame,
     restart: restart,
     imDone: imDone,
@@ -37,14 +39,19 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     );
   }
 
+  function moveClan(move) {
+    console.log("moveClan: ", move);
+    GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
+  }
+
   function moveAI(move) {
     console.log("moveAI: ", move);
     GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
-    console.log("history moveAI: ", GameBoardService.getHistory())
-    GamesModel.game.fen = GameBoardService.game.fen();
-    GamesModel.game.pgn.push(move.from + ' ' + move.to);
-    GamesModel.logTurn();
-    startTurn(gameId);
+    //console.log("history moveAI: ", GameBoardService.getHistory())
+    //GamesModel.game.fen = GameBoardService.game.fen();
+    //GamesModel.game.pgn.push(move.from + ' ' + move.to);
+    //GamesModel.logTurn();
+    //startTurn(gameId);
   }
 
   function startTurn(gameId) {

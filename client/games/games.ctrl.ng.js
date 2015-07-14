@@ -32,6 +32,8 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
   }
 
   function startTurnCB(turn) { GamesService.startTurnCB(turn); }
+  function moveAI(move)      { GamesService.moveAI(move); }
+  function moveClan(move)    { GamesService.moveClan(move); }
   function startTurn()       { GamesService.startTurn(gameId); }
   function endGame()         { GamesService.endGame(gameId);   }
   function restart()         { GamesService.restart();         }
