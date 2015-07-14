@@ -2,6 +2,8 @@ Games = new Mongo.Collection('games');
 whosTurnStream = new Meteor.Stream('turnChanged');
 timerStream = new Meteor.Stream('timer');
 connectionStream = new Meteor.Stream('connection');
+engineMoveStream = new Meteor.Stream('engineMove');
+engineEvalStream = new Meteor.Stream('engineEval');
 
 Games.allow({
     insert: function (userId) {
