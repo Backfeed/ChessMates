@@ -56,7 +56,7 @@ Engine = (function Engine() {
       // console.log("Angular Stockfish: Evaler: " + line);
       if (line.indexOf('Total Evaluation') > -1) {
         var evaluationScore = parseFloat(line.split('Total Evaluation: ')[1].split('(')[0])
-        engineEvalStream.emit('evaluationScore');
+        engineEvalStream.emit('evaluationScore', evaluationScore);
       }
     }
     return ev;
