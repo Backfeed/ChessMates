@@ -1,9 +1,12 @@
-Games = new Mongo.Collection('games');
-whosTurnStream = new Meteor.Stream('turnChanged');
-timerStream = new Meteor.Stream('timer');
+Games            = new Mongo.Collection('games');
+timerStream      = new Meteor.Stream('timer');
+whosTurnStream   = new Meteor.Stream('turnChanged');
 connectionStream = new Meteor.Stream('connection');
 engineMoveStream = new Meteor.Stream('engineMove');
 engineEvalStream = new Meteor.Stream('engineEval');
+
+engineMoveStream.on('engineMove', engineResponse);
+engineEvalStream.on('engineEval', evalResponse);
 
 Games.allow({
     insert: function (userId)                         { return true; },
@@ -20,6 +23,11 @@ Meteor.methods({
   pauseGame: pauseGame,
   endTurn: endTurn,
   endGame: endGame
+});
+
+Meteor.users.find({ "status.online": true }).observe({
+  added: function(user) { connectionStream.emit('connections'); },
+  removed: function(user) { connectionStream.emit('connections'); }
 });
 
 if (Meteor.isServer) {
@@ -90,7 +98,7 @@ function clientDone(gameId) {
 
   function allClientsDone() {
     whosTurnStream.emit('turnChanged', 'AI');
-    executeMove('executeMove', 'e2e4');
+    executeMove('e2e4');
     ClientsDone = [];
   }
 
@@ -109,7 +117,10 @@ function validateGame(gameId) {
     throw new Meteor.Error(404, "No such game");
 }
 
-Meteor.users.find({ "status.online": true }).observe({
-  added: function(user) { connectionStream.emit('connections'); },
-  removed: function(user) { connectionStream.emit('connections'); }
-});
+function engineResponse(move) {
+  console.log('engineResponse', move);
+}
+
+function evalResponse(score) {
+  console.log('engineResponse', score);
+}
