@@ -6,105 +6,99 @@ engineMoveStream = new Meteor.Stream('engineMove');
 engineEvalStream = new Meteor.Stream('engineEval');
 
 Games.allow({
-    insert: function (userId) {
-        //return userId && game.owner === userId;
-      return true;
-    },
-    update: function (userId, game, fields, modifier) {
-        //if (userId !== game.owner)
-        //    return false;
-
-        return true;
-    },
-    remove: function (userId, game) {
-        //if (userId !== game.owner)
-        //    return false;
-
-        return true;
-    }
+    insert: function (userId)                         { return true; },
+    update: function (userId, game, fields, modifier) { return true; },
+    remove: function (userId, game)                   { return true; }
 });
-
-//Games.after.update(function(userId, doc, fieldNames, modifier, options){
-//  console.log('game collection updated');
-//});
 
 Meteor.methods({
-  distributeReputation: function distributeReputation(gameId) {
-    validateGame(gameId);
-    // Redistribute reputation after move
-    console.log('distributeReputation');
-  },
-  executeMove: function executeMove(history) {
-    console.log('executeMove');
-    if (Meteor.isServer) {
-      console.log('my history ', history);
-      //var promise = Engine.getMove(history);
-      //promise.then(function(data) {
-      //  console.log(data);
-      //});
-        var promise = Meteor.wrapAsync(Engine.getMove, function(data) {
-
-          console.log(data);
-        });
-      var result = promise(history)
-      //  .then(function(data) {
-      //  console.log(data, ' from promise');
-      //})
-    }
-  },
-  endTurn: function endTurn(gameId) {
-    console.log('endTurn');
-    Meteor.clearInterval(GameInterval);
-    whosTurnStream.emit('turnChanged', 'AI');
-  },
-  updateTimer: function updateTimer(gameId, timeLeft) {
-    timerStream.emit('timer', timeLeft);
-  },
-  startTurn: function startTurn(gameId) {
-    validateGame(gameId);
-
-    whosTurnStream.emit('turnChanged', 'Clan');
-    if (Meteor.isServer) {
-      var game = Games.findOne({ game_id: gameId });
-      var timeLeft = game.settings.timePerMove;
-      Meteor.clearInterval(GameInterval);
-      GameInterval = Meteor.setInterval(function(){
-        timeLeft -= 1000;
-        if (timeLeft <= 0)
-        {
-          Meteor.call('endTurn', gameId);
-        } else {
-          Meteor.call('updateTimer', gameId, timeLeft);
-        }
-      }, 1000);
-    }
-  },
-  endGame: function endGame(gameId) {
-    validateGame(gameId);
-
-    if (Meteor.isServer) {
-      Meteor.clearInterval(GameInterval);
-    }
-  },
-  pauseGame: function pauseGame(gameId) {
-    validateGame(gameId);
-
-    if (Meteor.isServer) {
-
-    }
-  },
-  clientDone: function clientDone(gameId) {
-    validateGame(gameId);
-
-    ClientsDone.push(this.userId);
-    // check if all online users pressed the I'm Done button
-    if (ClientsDone.length !== 0 && Meteor.users.find({ "status.online": true }).count() === ClientsDone.length){
-      whosTurnStream.emit('turnChanged', 'AI');
-      Meteor.call('executeMove', 'e2e4');
-      ClientsDone = [];
-    }
-  }
+  distributeReputation: distributeReputation,
+  executeMove: executeMove,
+  updateTimer: updateTimer,
+  clientDone: clientDone,
+  startTurn: startTurn,
+  pauseGame: pauseGame,
+  endTurn: endTurn,
+  endGame: endGame
 });
+
+if (Meteor.isServer) {
+  GameInterval = {};
+  ClientsDone = [];
+}
+
+function distributeReputation(gameId) {
+  validateGame(gameId);
+  // Redistribute reputation after move
+  console.log('distributeReputation');
+}
+
+function executeMove(history) {
+  console.log('executeMove', history);
+  if (Meteor.isServer) { Engine.getMove(history) }
+}
+
+function endTurn(gameId) {
+  console.log('endTurn');
+  Meteor.clearInterval(GameInterval);
+  whosTurnStream.emit('turnChanged', 'AI');
+}
+
+function updateTimer(gameId, timeLeft) {
+  timerStream.emit('timer', timeLeft);
+}
+
+function startTurn(gameId) {
+  validateGame(gameId);
+
+  whosTurnStream.emit('turnChanged', 'Clan');
+  if (Meteor.isServer) {
+    var game = Games.findOne({ game_id: gameId });
+    var timeLeft = game.settings.timePerMove;
+    Meteor.clearInterval(GameInterval);
+    GameInterval = Meteor.setInterval(function() {
+      timeLeft -= 1000;
+      if (timeLeft <= 0) { Meteor.call('endTurn', gameId); } 
+      else               { Meteor.call('updateTimer', gameId, timeLeft); }
+    }, 1000);
+  }
+}
+
+function endGame(gameId) {
+  validateGame(gameId);
+
+  if (Meteor.isServer) {
+    Meteor.clearInterval(GameInterval);
+  }
+}
+
+function pauseGame(gameId) {
+  validateGame(gameId);
+
+  if (Meteor.isServer) {
+
+  }
+}
+
+function clientDone(gameId) {
+  validateGame(gameId);
+
+  ClientsDone.push(this.userId);
+  if (isAllClientsFinished()){
+    allClientsDone()
+  }
+
+  function allClientsDone() {
+    whosTurnStream.emit('turnChanged', 'AI');
+    executeMove('executeMove', 'e2e4');
+    ClientsDone = [];
+  }
+
+  function isAllClientsFinished() {
+    return ClientsDone.length !== 0 && 
+           Meteor.users.find({ "status.online": true }).count() === ClientsDone.length;
+  }
+}
 
 function validateGame(gameId) {
   check(gameId, String);
@@ -115,20 +109,7 @@ function validateGame(gameId) {
     throw new Meteor.Error(404, "No such game");
 }
 
-if (Meteor.isServer) {
-  GameInterval = {};
-}
-
-ClientsDone = [];
-
-
 Meteor.users.find({ "status.online": true }).observe({
-  added: function(user) {
-    //console.log('added user', user);
-    connectionStream.emit('connections');
-  },
-  removed: function(user) {
-    //console.log('removed user', user);
-    connectionStream.emit('connections');
-  }
+  added: function(user) { connectionStream.emit('connections'); },
+  removed: function(user) { connectionStream.emit('connections'); }
 });

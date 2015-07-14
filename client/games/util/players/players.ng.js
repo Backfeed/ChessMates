@@ -37,6 +37,6 @@ function playersController($meteor, GamesService) {
   }
 
   function userIsDone(id) {
-    return GamesService.userIsDone(id);
+    return false; // TODO
   }
 }

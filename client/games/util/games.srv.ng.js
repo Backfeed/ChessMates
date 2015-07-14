@@ -11,7 +11,6 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     updateBoard: updateBoard,
     startTurnCB: startTurnCB,
     singleMove: singleMove,
-    userIsDone: userIsDone,
     getMoveBy: getMoveBy,
     startTurn: startTurn,
     endGame: endGame,
@@ -191,14 +190,6 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     GamesModel.restart();
     $window.ClientsDone = [];
     startTurn(gameId);
-  }
-
-  function userIsDone(id) {
-    var bool = false;
-    $window.ClientsDone.forEach(function(userId) {
-      if (userId === id) { return bool = true; }
-    });
-    return bool;
   }
 
 }
