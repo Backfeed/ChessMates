@@ -1,12 +1,7 @@
 Games            = new Mongo.Collection('games');
 timerStream      = new Meteor.Stream('timer');
-whosTurnStream   = new Meteor.Stream('turnChanged');
 connectionStream = new Meteor.Stream('connection');
-engineMoveStream = new Meteor.Stream('engineMove');
-engineEvalStream = new Meteor.Stream('engineEval');
-
-engineMoveStream.on('engineMove', engineResponse);
-engineEvalStream.on('engineEval', evalResponse);
+movesStream      = new Meteor.Stream('engineMove');
 
 Games.allow({
     insert: function (userId)                         { return true; },
@@ -14,8 +9,13 @@ Games.allow({
     remove: function (userId, game)                   { return true; }
 });
 
+function foo(msg){ console.log('foo', msg);}
+
 Meteor.methods({
+  foo: foo,
   distributeReputation: distributeReputation,
+  AIEvaluationCB: AIEvaluationCB,
+  AIGetMoveCb: AIGetMoveCb,
   executeMove: executeMove,
   updateTimer: updateTimer,
   clientDone: clientDone,
@@ -35,21 +35,36 @@ if (Meteor.isServer) {
   ClientsDone = [];
 }
 
+function AIEvaluationCB(score) {
+  console.log("score is: ", score);
+}
+
+function AIGetMoveCb(move) {
+  console.log('AI Move: ', move);
+}
+
 function distributeReputation(gameId) {
   validateGame(gameId);
   // Redistribute reputation after move
   console.log('distributeReputation');
 }
 
-function executeMove(history) {
-  console.log('executeMove', history);
-  if (Meteor.isServer) { Engine.getMove(history) }
+function executeMove(gameId, move, turn) {
+  console.log(turn, ": ", move);
+  if (Meteor.isClient) {
+    movesStream.emit('move', move, turn);
+  } 
+  else if (Meteor.isServer) {
+    var prevFen = Games.findOne({ game_id: gameId }).fen;
+    Games.update(gameId , { $push: { moves: move.from+move.to     } });
+    Games.update(gameId , { $set:  { fen:   getFen(prevFen, move) } });
+    if (turn === 'clan') { Engine.getMove('e2e4'); }
+  }
 }
 
 function endTurn(gameId) {
   console.log('endTurn');
   Meteor.clearInterval(GameInterval);
-  whosTurnStream.emit('turnChanged', 'AI');
 }
 
 function updateTimer(gameId, timeLeft) {
@@ -58,8 +73,6 @@ function updateTimer(gameId, timeLeft) {
 
 function startTurn(gameId) {
   validateGame(gameId);
-
-  whosTurnStream.emit('turnChanged', 'Clan');
   if (Meteor.isServer) {
     var game = Games.findOne({ game_id: gameId });
     var timeLeft = game.settings.timePerMove;
@@ -90,21 +103,29 @@ function pauseGame(gameId) {
 
 function clientDone(gameId) {
   validateGame(gameId);
+  console.log('client Done!')
 
-  ClientsDone.push(this.userId);
-  if (isAllClientsFinished()){
-    allClientsDone()
-  }
+  if (Meteor.isServer) {
+    ClientsDone.push(this.userId);
+    console.log('client pushed')
 
-  function allClientsDone() {
-    whosTurnStream.emit('turnChanged', 'AI');
-    executeMove('e2e4');
-    ClientsDone = [];
-  }
+    if (isAllClientsFinished()) {
+      allClientsDone()
+    }
 
-  function isAllClientsFinished() {
-    return ClientsDone.length !== 0 && 
-           Meteor.users.find({ "status.online": true }).count() === ClientsDone.length;
+    function allClientsDone() {
+      console.log('All clients done')
+      move = { from: 'e2', to: 'e4' }; // TODO :: Getfrom protocol
+      executeMove(gameId, move, 'clan');
+      ClientsDone = [];
+    }
+
+    function isAllClientsFinished() {
+      console.log("Users Online: ", Meteor.users.find({ "status.online": true }).count())
+      console.log("Users Done: ", ClientsDone.length)
+      return ClientsDone.length !== 0 && 
+             Meteor.users.find({ "status.online": true }).count() === ClientsDone.length;
+    }
   }
 }
 
@@ -117,10 +138,10 @@ function validateGame(gameId) {
     throw new Meteor.Error(404, "No such game");
 }
 
-function engineResponse(move) {
-  console.log('engineResponse', move);
-}
-
-function evalResponse(score) {
-  console.log('engineResponse', score);
+function getFen(prevFen, move) {
+  if (Meteor.isServer) {
+    Chess.load(prevFen);
+    Chess.move(move);
+    return Chess.fen();
+  }
 }

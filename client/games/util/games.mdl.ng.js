@@ -31,6 +31,7 @@ function GamesModel($meteor) {
       fen: 'start',
       pgn: [],
       turns: [],
+      moves: [],
       suggested_moves: [],
       settings: {
         timePerMove: 300000

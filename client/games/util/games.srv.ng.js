@@ -3,18 +3,16 @@ angular.module('blockchess.games.util.service', [])
 
 function GamesService($q, $window, $meteor, $mdDialog, CommonService, EvaluationModel, GamesModel, GameBoardService, BoardService) {
   var gameId = "1"; // Dev
-
+  movesStream.on('move', onMove);
+  
   return {
     cancelMoveHighlights: cancelMoveHighlights,
     selectedMoveChanged: selectedMoveChanged,
     formatMoveFrom: formatMoveFrom,
     updateBoard: updateBoard,
-    startTurnCB: startTurnCB,
     singleMove: singleMove,
     getMoveBy: getMoveBy,
     startTurn: startTurn,
-    moveAI: moveAI,
-    moveClan: moveClan,
     endGame: endGame,
     restart: restart,
     imDone: imDone,
@@ -39,21 +37,6 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     );
   }
 
-  function moveClan(move) {
-    console.log("moveClan: ", move);
-    GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
-  }
-
-  function moveAI(move) {
-    console.log("moveAI: ", move);
-    GameBoardService.game.move({ from: move.from, to: move.to, promotion: move.promotion });
-    //console.log("history moveAI: ", GameBoardService.getHistory())
-    //GamesModel.game.fen = GameBoardService.game.fen();
-    //GamesModel.game.pgn.push(move.from + ' ' + move.to);
-    //GamesModel.logTurn();
-    //startTurn(gameId);
-  }
-
   function startTurn(gameId) {
     $meteor.call('startTurn', gameId).then(
       function()    { CommonService.toast('turn started'); },
@@ -61,40 +44,11 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     );
   }
 
-  function executeMove() {
-    console.log("history: executeMove: ", GameBoardService.getHistory())
-    //TODO have history field in the db and call execute from server
-    $meteor.call('executeMove', GameBoardService.getHistory()).then(
-      function()    { CommonService.toast('Execute Move Done'); },
-      function(err) { console.log('failed', err); }
-    );
-    //TODO get move from protocol
-    //GameBoardService.game.move(formatMoveFrom(GamesModel.game.suggested_moves[0].notation));
-    //console.log("history: executeMove: ", GameBoardService.getHistory())
-    //Engine.getMove(GameBoardService.getHistory())
-    //.then(function(move) {
-    //  moveAI(move);
-    //});
-  }
-
   function endGame(gameId) {
     $meteor.call('endGame', gameId).then(
       function()    { CommonService.toast('No Move Suggested. Game Over!!'); },
       function(err) { console.log('failed', err); }
     );
-  }
-
-  function startTurnCB(turn) {
-    //console.log("history: startTurnCB: ", GameBoardService.getHistory())
-    cancelMoveHighlights();
-    CommonService.toast('It Is ' + turn + ' Turn To Play');
-    //if (turn === 'AI') {
-    //  if (GamesModel.game.suggested_moves.length === 0) {
-    //    endGame();
-    //  } else {
-    //    executeMove();
-    //  }
-    //}
   }
 
   function openSuggestMoveModal(notation) {
@@ -195,8 +149,14 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     GameBoardService.game.reset();
     BoardService.board.position('start');
     GamesModel.restart();
-    $window.ClientsDone = [];
     startTurn(gameId);
+  }
+
+  function onMove(move, turn) {
+    console.log('Gameboard Moved! ', move, turn);
+    cancelMoveHighlights();
+    CommonService.toast('Turn changed');
+    GameBoardService.game.move(move);
   }
 
 }

@@ -21,8 +21,7 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
 
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
-  $scope.$watch('ctrl.game.fen', updateBoard);
-  whosTurnStream.on('turnChanged', startTurnCB);
+  $scope.$watch('ctrl.game.moves', updateBoard, true);
 
   init();
 
@@ -31,9 +30,6 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
     ctrl.game = GamesModel.game;
   }
 
-  function startTurnCB(turn) { GamesService.startTurnCB(turn); }
-  function moveAI(move)      { GamesService.moveAI(move); }
-  function moveClan(move)    { GamesService.moveClan(move); }
   function startTurn()       { GamesService.startTurn(gameId); }
   function endGame()         { GamesService.endGame(gameId);   }
   function restart()         { GamesService.restart();         }
@@ -41,7 +37,7 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
   function pause()           { GamesService.pause(gameId);     }
 
   function updateBoard() {
-    if (ctrl.game.fen && GameBoardService.game) {
+    if (ctrl.game.moves && ctrl.game.moves.length && GameBoardService.game) {
       GamesService.updateBoard();
     }
   }

@@ -9,7 +9,7 @@ function suggestMoveModalController($mdDialog, CommonService) {
     cancel: cancel
   });
 
-  whosTurnStream.on('turnChanged', turnChanged);
+  movesStream.on('move', turnChanged);
 
   function submit() {
     $mdDialog.hide(ctrl.stars);
@@ -20,8 +20,8 @@ function suggestMoveModalController($mdDialog, CommonService) {
     $mdDialog.cancel(msg);
   }
 
-  function turnChanged() {
+  function turnChanged(move, turn) {
     CommonService.toast("Time's up!");
-    cancel("time ended");
+    cancel("time ended for this turn!");
   }
 }
