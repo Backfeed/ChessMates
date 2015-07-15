@@ -1,8 +1,10 @@
 Meteor.startup(function () {
+  console.log('==========\n\n\n\n\n\n');
   if (Games.find().count() === 0) {
     var games = [
       {
         'game_id': '1',
+        'moves': ['e2e4', 'e7e5', 'g1f3'],
         'pgn': '1. e4 e5 2. Nf3 Nc6',
         'fen': 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',
         'settings': {
