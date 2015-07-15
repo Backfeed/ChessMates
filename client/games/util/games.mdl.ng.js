@@ -4,22 +4,12 @@ angular.module('blockchess.games.util.model', [])
 function GamesModel($meteor) {
 
   var model = {
-    logTurn: logTurn,
     restart: restart,
     game: {},
     set: set
   };
 
   return model;
-
-  function logTurn() {
-    if (model.game.turns) {
-      model.game.turns.push(model.game.suggested_moves);
-    } else {
-      model.game.turns = [model.game.suggested_moves];
-    }
-    model.game.suggested_moves = [];
-  }
 
   function set(id) {
     model.game = $meteor.object(Games, { game_id: id }).subscribe('games');

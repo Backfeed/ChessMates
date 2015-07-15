@@ -51,14 +51,25 @@ function distributeReputation(gameId) {
 
 function executeMove(gameId, move, turn) {
   console.log(turn, ": ", move);
-  if (Meteor.isClient) {
+  // if (Meteor.isClient) {
+  // } 
+  if (Meteor.isServer) {
+    var moves;
     movesStream.emit('move', move, turn);
-  } 
-  else if (Meteor.isServer) {
-    var prevFen = Games.findOne({ game_id: gameId }).fen;
-    Games.update({ game_id: gameId } , { $push: { moves: move.from+move.to     } });
-    Games.update({ game_id: gameId } , { $set:  { fen:   getFen(prevFen, move) } });
-    if (turn === 'clan') { Engine.getMove('e2e4'); } // TODO get history
+    logTurn(gameId, move, turn);
+    moves = Games.findOne({ game_id: gameId }).moves.join(" ");
+    console.log(moves);
+    if (turn === 'clan') { Engine.getMove(moves); } // TODO get history
+  }
+}
+
+function logTurn(gameId, move, turn) {
+  var game = Games.findOne({ game_id: gameId });
+  Games.update({ game_id: gameId }, { $push: { moves: move.from+move.to      } });
+  Games.update({ game_id: gameId }, { $set:  { fen:   getFen(game.fen, move) } });
+  if (turn === "clan") {
+    Games.update({ game_id: gameId }, { $push: { turns: game.suggested_moves   } });
+    Games.update({ game_id: gameId }, { $set:  { suggested_moves: []           } });
   }
 }
 
@@ -115,7 +126,9 @@ function clientDone(gameId) {
 
     function allClientsDone() {
       console.log('All clients done')
-      move = { from: 'e2', to: 'e4' }; // TODO :: Getfrom protocol
+
+      var notation = Games.findOne({ game_id: gameId }).suggested_moves[0].notation; // TODO :: Getfrom protocol
+      var move = { from: notation.substr(0,2), to: notation.substr(2) };
       executeMove(gameId, move, 'clan');
       ClientsDone = [];
     }
@@ -140,8 +153,10 @@ function validateGame(gameId) {
 
 function getFen(prevFen, move) {
   if (Meteor.isServer) {
+    console.log('prevFen ', prevFen);
     Chess.load(prevFen);
     Chess.move(move);
+    console.log('Chess.fen() ', Chess.fen());
     return Chess.fen();
   }
 }
