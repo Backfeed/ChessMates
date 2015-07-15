@@ -2,6 +2,7 @@ Games            = new Mongo.Collection('games');
 timerStream      = new Meteor.Stream('timer');
 connectionStream = new Meteor.Stream('connection');
 movesStream      = new Meteor.Stream('engineMove');
+restartStream    = new Meteor.Stream('restart');
 
 Games.allow({
     insert: function (userId)                         { return true; },
@@ -20,7 +21,7 @@ Meteor.methods({
   updateTimer: updateTimer,
   clientDone: clientDone,
   startTurn: startTurn,
-  pauseGame: pauseGame,
+  restart: restart,
   endTurn: endTurn,
   endGame: endGame
 });
@@ -43,6 +44,35 @@ function AIGetMoveCb(move) {
   if (Meteor.isServer) { executeMove("1", move, "AI"); }
 }
 
+function restart(gameId) {
+  if (Meteor.isServer) { 
+    ClientsDone = [];
+    resetGameData(gameId);
+  }
+}
+
+function resetGameData(gameId) {
+  Games.update(
+    { game_id: gameId }, 
+    { $set: { 
+        fen: 'start',
+        pgn: [],
+        turns: [],
+        moves: [],
+        suggested_moves: []
+      } 
+    },
+    CB
+  );
+
+  function CB(err, result) {
+    console.log('Reset Game Data CB Error: ', err);
+    console.log('Reset Game Data CB result: ', result);
+    startTurn(gameId);
+    restartStream.emit('restart');
+  }
+}
+
 function distributeReputation(gameId) {
   validateGame(gameId);
   // Redistribute reputation after move
@@ -54,20 +84,38 @@ function executeMove(gameId, move, turn) {
     var moves;
     console.log(turn, ": ", move);
     movesStream.emit('move', move, turn);
-    logTurn(gameId, move, turn);
-    moves = Games.findOne({ game_id: gameId }).moves.join(" "); // IMPORTANT: this comes AFTER logTurn
-    console.log(moves);
+    logTurn(gameId, move, turn, logTurnCB);
+  }
+
+  function logTurnCB() {
+    moves = Games.findOne({ game_id: gameId }).moves.join(" ");
+    console.log("logTurnCB: ", moves);
     if (turn === 'clan') { Engine.getMove(moves); }
   }
 }
 
-function logTurn(gameId, move, turn) {
+function logTurn(gameId, move, turn, logTurnCB) {
   var game = Games.findOne({ game_id: gameId });
-  Games.update({ game_id: gameId }, { $push: { moves: move.from+move.to      } });
-  Games.update({ game_id: gameId }, { $set:  { fen:   getFen(game.fen, move) } });
+
+  if (turn === "AI") { 
+    Games.update(
+      { game_id: gameId }, 
+      { 
+        $push: { moves: move.from+move.to },
+        $set:  { fen:   getFen(game.fen, move) }
+      }, 
+      logTurnCB
+    );
+  }
   if (turn === "clan") {
-    Games.update({ game_id: gameId }, { $push: { turns: game.suggested_moves   } });
-    Games.update({ game_id: gameId }, { $set:  { suggested_moves: []           } });
+    Games.update(
+      { game_id: gameId }, 
+      { 
+        $push: { moves: move.from+move.to,      turns: game.suggested_moves },
+        $set:  { fen:   getFen(game.fen, move), suggested_moves: [] }
+      }, 
+      logTurnCB
+    );
   }
 }
 
@@ -85,6 +133,7 @@ function startTurn(gameId) {
   if (Meteor.isServer) {
     var game = Games.findOne({ game_id: gameId });
     var timeLeft = game.settings.timePerMove;
+    console.log
     Meteor.clearInterval(GameInterval);
     GameInterval = Meteor.setInterval(function() {
       timeLeft -= 1000;
@@ -99,14 +148,6 @@ function endGame(gameId) {
 
   if (Meteor.isServer) {
     Meteor.clearInterval(GameInterval);
-  }
-}
-
-function pauseGame(gameId) {
-  validateGame(gameId);
-
-  if (Meteor.isServer) {
-
   }
 }
 

@@ -7,3 +7,6 @@ movesStream.permissions.read(function()  { return true; });
 
 timerStream.permissions.write(function() { return true; });
 timerStream.permissions.read(function()  { return true; });
+
+restartStream.permissions.write(function() { return true; });
+restartStream.permissions.read(function()  { return true; });

@@ -4,6 +4,7 @@ angular.module('blockchess.games.util.service', [])
 function GamesService($q, $window, $meteor, $mdDialog, CommonService, EvaluationModel, GamesModel, GameBoardService, BoardService) {
   var gameId = "1"; // Dev
   movesStream.on('move', onMove);
+  restartStream.on('restart', onRestart);
   
   return {
     cancelMoveHighlights: cancelMoveHighlights,
@@ -62,8 +63,9 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
   }
 
   function updateBoard() {
-    console.log("history: updateBoard: ", GameBoardService.getHistory())
+    console.log("history: updateBoard: ", GameBoardService.getHistory());
     BoardService.board.position(GamesModel.game.fen);
+    cancelMoveHighlights();
   }
 
   function getMoveBy(attr, val) {
@@ -145,11 +147,7 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
   }
 
   function restart() {
-    cancelMoveHighlights();
-    GameBoardService.game.reset();
-    BoardService.board.position('start');
-    GamesModel.restart();
-    startTurn(gameId);
+    Meteor.call('restart', gameId);
   }
 
   function onMove(move, turn) {
@@ -157,6 +155,12 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     cancelMoveHighlights();
     CommonService.toast('Turn changed');
     GameBoardService.game.move(move);
+  }
+
+  function onRestart() {
+    console.log('onRestart called!');
+    cancelMoveHighlights();
+    GameBoardService.game.reset();
   }
 
 }
