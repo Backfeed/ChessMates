@@ -25,14 +25,14 @@ Meteor.methods({
   endGame: endGame
 });
 
-Meteor.users.find({ "status.online": true }).observe({
-  added: function(user) { connectionStream.emit('connections'); },
-  removed: function(user) { connectionStream.emit('connections'); }
-});
-
 if (Meteor.isServer) {
   GameInterval = {};
   ClientsDone = [];
+
+  Meteor.users.find({ "status.online": true }).observe({
+    added: function(user) { connectionStream.emit('connections'); },
+    removed: function(user) { connectionStream.emit('connections'); }
+  });
 }
 function AIEvaluationCB(score) {
   console.log("score is: ", score);
@@ -88,7 +88,7 @@ function startTurn(gameId) {
     Meteor.clearInterval(GameInterval);
     GameInterval = Meteor.setInterval(function() {
       timeLeft -= 1000;
-      if (timeLeft <= 0) { Meteor.call('endTurn', gameId); } 
+      if (timeLeft <= 0) { Meteor.call('endTurn', gameId); }
       else               { Meteor.call('updateTimer', gameId, timeLeft); }
     }, 1000);
   }
@@ -134,7 +134,7 @@ function clientDone(gameId) {
     function isAllClientsFinished() {
       console.log("Users Online: ", Meteor.users.find({ "status.online": true }).count())
       console.log("Users Done: ", ClientsDone.length)
-      return ClientsDone.length !== 0 && 
+      return ClientsDone.length !== 0 &&
              Meteor.users.find({ "status.online": true }).count() === ClientsDone.length;
     }
   }
