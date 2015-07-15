@@ -93,7 +93,11 @@ function executeMove(gameId, move, turn) {
     console.log("logTurnCB: result", result);
     moves = Games.findOne({ game_id: gameId }).moves.join(" ");
     console.log("logTurnCB: moves", moves);
-    if (turn === 'clan') { Engine.getMove(moves); }
+    if (turn === 'clan') { 
+      Meteor.setTimeout(function() {
+        Engine.getMove(moves);
+      }, 5000);
+    }
   }
 }
 
@@ -198,7 +202,6 @@ function getFen(prevFen, move) {
   if (Meteor.isServer) {
     console.log('prevFen ', prevFen);
     console.log('Chess.fen() BEFORE MOVE ', Chess.fen());
-    Chess.load(prevFen);
     Chess.move(move);
     console.log('Chess.fen() AFTER MOVE', Chess.fen());
     return Chess.fen();
