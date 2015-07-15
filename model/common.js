@@ -47,6 +47,7 @@ function AIGetMoveCb(move) {
 function restart(gameId) {
   if (Meteor.isServer) { 
     ClientsDone = [];
+    Chess.reset();
     resetGameData(gameId);
   }
 }
@@ -55,7 +56,7 @@ function resetGameData(gameId) {
   Games.update(
     { game_id: gameId }, 
     { $set: { 
-        fen: 'start',
+        fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
         pgn: [],
         turns: [],
         moves: [],
@@ -87,9 +88,11 @@ function executeMove(gameId, move, turn) {
     logTurn(gameId, move, turn, logTurnCB);
   }
 
-  function logTurnCB() {
+  function logTurnCB(err, result) {
+    console.log("logTurnCB: err", err);
+    console.log("logTurnCB: result", result);
     moves = Games.findOne({ game_id: gameId }).moves.join(" ");
-    console.log("logTurnCB: ", moves);
+    console.log("logTurnCB: moves", moves);
     if (turn === 'clan') { Engine.getMove(moves); }
   }
 }
@@ -193,9 +196,10 @@ function validateGame(gameId) {
 function getFen(prevFen, move) {
   if (Meteor.isServer) {
     console.log('prevFen ', prevFen);
+    console.log('Chess.fen() BEFORE MOVE ', Chess.fen());
     Chess.load(prevFen);
     Chess.move(move);
-    console.log('Chess.fen() ', Chess.fen());
+    console.log('Chess.fen() AFTER MOVE', Chess.fen());
     return Chess.fen();
   }
 }

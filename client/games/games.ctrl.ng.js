@@ -37,6 +37,7 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
   function pause()           { GamesService.pause(gameId);     }
 
   function updateBoard() {
+    console.log('game fen changed!', ctrl.game.fen, GameBoardService.game)
     if (ctrl.game.fen && GameBoardService.game) {
       GamesService.updateBoard();
     }
