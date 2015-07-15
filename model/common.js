@@ -64,7 +64,7 @@ function resetGameData(gameId) {
       } 
     },
     CB
-  );
+  );    
 
   function CB(err, result) {
     console.log('Reset Game Data CB Error: ', err);
@@ -99,13 +99,14 @@ function executeMove(gameId, move, turn) {
 
 function logTurn(gameId, move, turn, logTurnCB) {
   var game = Games.findOne({ game_id: gameId });
-
+  var newFen = getFen(game.fen, move);
+  console.log("logTurn: newFen: ", newFen)
   if (turn === "AI") { 
     Games.update(
       { game_id: gameId }, 
       { 
         $push: { moves: move.from+move.to },
-        $set:  { fen:   getFen(game.fen, move) }
+        $set:  { fen:   newFen }
       }, 
       logTurnCB
     );
@@ -115,7 +116,7 @@ function logTurn(gameId, move, turn, logTurnCB) {
       { game_id: gameId }, 
       { 
         $push: { moves: move.from+move.to,      turns: game.suggested_moves },
-        $set:  { fen:   getFen(game.fen, move), suggested_moves: [] }
+        $set:  { fen:   newFen, suggested_moves: [] }
       }, 
       logTurnCB
     );
