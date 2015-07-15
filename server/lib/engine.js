@@ -21,8 +21,8 @@ Engine = (function Engine() {
 
   function getEngine() {
     var line;
-    var eng = Meteor.npmRequire('stockfish')();//typeof STOCKFISH === "function" ? STOCKFISH() : new Worker(config.stockfishjs || 'stockfish.js');
-    eng.onmessage = function(e) {
+    var eng = Meteor.npmRequire('stockfish')();
+    eng.onmessage = Meteor.bindEnvironment(function(e) {
       if (e && typeof e === "object") {
           line = e.data;
       } else {
@@ -30,23 +30,24 @@ Engine = (function Engine() {
       }
       // console.log("Angular Stockfish: Engine: " + line);
       var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbk])?/);
-      if(match) {
+      if (match) {
+        console.log('AI move Match');
         var move = {
-          from: match[1], 
-          to: match[2], 
+          from: match[1],
+          to: match[2],
           promotion: match[3]
-        }
-        engineMoveStream.emit('engineMove', move);
+        };
+        Meteor.call('AIGetMoveCb', move);
       }
 
-    }
+    });
 
     return eng;
   }
 
   function getEvaler() {
     var line;
-    var ev = Meteor.npmRequire('stockfish')();//typeof STOCKFISH === "function" ? STOCKFISH() : new Worker(config.stockfishjs || 'stockfish.js');
+    var ev = Meteor.npmRequire('stockfish')();
     ev.onmessage = function(e) {
       if (e && typeof e === "object") {
           line = e.data;
@@ -55,8 +56,8 @@ Engine = (function Engine() {
       }
       // console.log("Angular Stockfish: Evaler: " + line);
       if (line.indexOf('Total Evaluation') > -1) {
-        var evaluationScore = parseFloat(line.split('Total Evaluation: ')[1].split('(')[0])
-        engineEvalStream.emit('evaluationScore', evaluationScore);
+        var score = parseFloat(line.split('Total Evaluation: ')[1].split('(')[0])
+        Meteor.call('AIEvaluationCB', score);
       }
     }
     return ev;

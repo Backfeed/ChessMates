@@ -34,13 +34,13 @@ if (Meteor.isServer) {
   GameInterval = {};
   ClientsDone = [];
 }
-
 function AIEvaluationCB(score) {
   console.log("score is: ", score);
 }
 
 function AIGetMoveCb(move) {
   console.log('AI Move: ', move);
+  if (Meteor.isServer) { executeMove("1", move, "AI"); }
 }
 
 function distributeReputation(gameId) {
@@ -56,9 +56,9 @@ function executeMove(gameId, move, turn) {
   } 
   else if (Meteor.isServer) {
     var prevFen = Games.findOne({ game_id: gameId }).fen;
-    Games.update(gameId , { $push: { moves: move.from+move.to     } });
-    Games.update(gameId , { $set:  { fen:   getFen(prevFen, move) } });
-    if (turn === 'clan') { Engine.getMove('e2e4'); }
+    Games.update({ game_id: gameId } , { $push: { moves: move.from+move.to     } });
+    Games.update({ game_id: gameId } , { $set:  { fen:   getFen(prevFen, move) } });
+    if (turn === 'clan') { Engine.getMove('e2e4'); } // TODO get history
   }
 }
 

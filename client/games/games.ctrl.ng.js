@@ -21,7 +21,7 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
 
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
-  $scope.$watch('ctrl.game.moves', updateBoard, true);
+  $scope.$watch('ctrl.game.fen', updateBoard, true);
 
   init();
 
@@ -37,7 +37,7 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
   function pause()           { GamesService.pause(gameId);     }
 
   function updateBoard() {
-    if (ctrl.game.moves && ctrl.game.moves.length && GameBoardService.game) {
+    if (ctrl.game.fen && GameBoardService.game) {
       GamesService.updateBoard();
     }
   }
