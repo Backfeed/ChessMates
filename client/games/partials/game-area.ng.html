@@ -14,8 +14,14 @@
   </div>
 
   <div flex>
-
-    Turn: {{ ctrl.GameBoardService.game.turn() }}
+    
+    <strong>DB:</strong> <br>
+    History: {{ ctrl.game.moves.join(" ") }} <br />
+    FEN: {{ ctrl.game.fen }} <br />
+    <strong>LOCAL:</strong> <br>
+    History: {{ ctrl.GameBoardService.game.moves().join(" ") }} <br />
+    Turn: {{ ctrl.GameBoardService.game.turn() }} <br />
+    FEN: {{ ctrl.GameBoardService.game.fen() }} <br />
 
     <div board="{{ ctrl.gameId }}"></div>
     <button ng-click="ctrl.evaluate('a4 e5 a5 e6')">Evaluate</button>
