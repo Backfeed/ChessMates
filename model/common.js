@@ -50,16 +50,14 @@ function distributeReputation(gameId) {
 }
 
 function executeMove(gameId, move, turn) {
-  console.log(turn, ": ", move);
-  // if (Meteor.isClient) {
-  // } 
   if (Meteor.isServer) {
     var moves;
+    console.log(turn, ": ", move);
     movesStream.emit('move', move, turn);
     logTurn(gameId, move, turn);
-    moves = Games.findOne({ game_id: gameId }).moves.join(" ");
+    moves = Games.findOne({ game_id: gameId }).moves.join(" "); // IMPORTANT: this comes AFTER logTurn
     console.log(moves);
-    if (turn === 'clan') { Engine.getMove(moves); } // TODO get history
+    if (turn === 'clan') { Engine.getMove(moves); }
   }
 }
 
