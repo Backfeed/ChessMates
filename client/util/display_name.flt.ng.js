@@ -8,7 +8,7 @@ function displayName() {
     if (user.profile && user.profile.name)
       return user.profile.name;
     else if (user.emails)
-      return user.emails[0].address;
+      return user.emails[0].address.split('@')[0];
     else
       return "Anonymous user";
   }
