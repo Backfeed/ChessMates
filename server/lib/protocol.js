@@ -173,7 +173,9 @@ Meteor.methods({
     win.tokens += turn[winner.move].credits;
     Meteor.users.update( { _id: win._id}, { $set: { 'tokens': win.tokens }} );
 
-    return winner.move;
+    var move = { from: winner.move.substr(0,2), to: winner.move.substr(2) };
+    Meteor.call('executeMove',gameId, move, 'clan');
+    //return winner.move;
 
     stupidarray = [];
 
