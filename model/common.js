@@ -141,7 +141,6 @@ function updateTimer(timeLeft) {
 }
 
 function startTurn(gameId) {
-  validateGame(gameId);
   if (Meteor.isServer) {
     var game = Games.findOne({ game_id: gameId });
     var timeLeft = game.settings.timePerMove;
@@ -155,8 +154,6 @@ function startTurn(gameId) {
 }
 
 function endGame(gameId) {
-  validateGame(gameId);
-
   if (Meteor.isServer) {
     Meteor.clearInterval(GameInterval);
   }

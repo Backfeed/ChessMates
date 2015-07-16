@@ -113,7 +113,6 @@ Meteor.startup(function () {
 
     var users = [
       {
-        "_id" : "gs2b3gR4v6ipXuMyC",
         "reputation" : 20,
         "tokens" : 50,
         "createdAt" : Date.now(),
@@ -130,18 +129,9 @@ Meteor.startup(function () {
             "address" : "tal@backfeed.cc",
             "verified" : false
           }
-        ],
-        "status" : {
-          "online" : false,
-          "lastLogin" : {
-            "date" : Date.now(),
-            "ipAddr" : "127.0.0.1",
-            "userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36"
-          }
-        }
+        ]
       },
       {
-        "_id" : "TCLKcrCbmfzu4XCtm",
         "reputation" : 30,
         "tokens" : 200,
         "createdAt" : Date.now(),
@@ -158,18 +148,9 @@ Meteor.startup(function () {
             "address" : "yaniv@backfeed.cc",
             "verified" : false
           }
-        ],
-        "status" : {
-          "online" : false,
-          "lastLogin" : {
-            "date" : Date.now(),
-            "ipAddr" : "127.0.0.1",
-            "userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36"
-          }
-        }
+        ]
       },
       {
-        "_id" : "xwNPMpBKM7ox4DFhF",
         "reputation" : 30,
         "tokens" : 30,
         "createdAt" : Date.now(),
@@ -186,18 +167,9 @@ Meteor.startup(function () {
             "address" : "zeev@backfeed.cc",
             "verified" : false
           }
-        ],
-        "status" : {
-          "online" : false,
-          "lastLogin" : {
-            "date" : Date.now(),
-            "ipAddr" : "127.0.0.1",
-            "userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36"
-          }
-        }
+        ]
       },
       {
-        "_id" : "mTtrHnGGSAnJFXB9H",
         "reputation" : 20,
         "tokens" : 100,
         "createdAt" : Date.now(),
@@ -219,16 +191,7 @@ Meteor.startup(function () {
             "address" : "primavera@backfeed.cc",
             "verified" : false
           }
-        ],
-        "status" : {
-          "online" : true,
-          "lastLogin" : {
-            "date" : Date.now(),
-            "ipAddr" : "127.0.0.1",
-            "userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36"
-          },
-          "idle" : false
-        }
+        ]
       }
     ];
 
