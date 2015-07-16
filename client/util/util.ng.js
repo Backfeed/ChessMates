@@ -4,5 +4,6 @@ angular.module('blockchess.util', [
   // Directives
   'blockchess.util.timeAgo',
   // Filters
-  'blockchess.util.displayName'
+  'blockchess.util.displayName',
+  'blockchess.util.displayNameById'
 ]);

@@ -13,10 +13,11 @@
   <thead>
     <tr>
       <td>Move</td>
+      <td>Evalutions</td>
+      <td>User</td>
       <td>Stars</td>
-      <td>Reputation</td>
-      <td>Relevance</td>
-      <td>Created At</td>
+      <td>Favorite</td>
+      <td>Created</td>
     </tr>
   </thead>
   <tbody>
@@ -24,9 +25,10 @@
         ng-class="{ 'active': ctrl.selectedMove.notation == move.notation }"
         ng-click="ctrl.toggle(move)">
       <td>{{ ::move.notation }}</td>
-      <td>{{ move.avg_stars }}</td>
-      <td>{{ move.reputation_sum }}</td>
-      <td>{{ move.relevance_score }}</td>
+      <td>{{ move | evaluationsNum }}</td>
+      <td>{{ move.user_id | displayNameById }}</td>
+      <td>{{ move | avgStars }}</td>
+      <td>{{ move | favoriteCount }}</td>
       <td time-ago="move.created_at"></td>
     </tr>
   </tbody>

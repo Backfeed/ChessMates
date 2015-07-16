@@ -1,5 +1,8 @@
-angular.module('blockchess.games.util.suggestedMoves', [])
-.directive('suggestedMoves', suggestedMoves)
+angular.module('blockchess.games.util.suggestedMoves', [
+  'blockchess.games.util.suggestedMoves.evaluationsNum',
+  'blockchess.games.util.suggestedMoves.favoriteCount'
+])
+.directive('suggestedMoves', suggestedMoves);
 
 function suggestedMoves() {
   return {
@@ -19,11 +22,10 @@ function suggestedMovesController($scope) {
   });
 
   function toggle(move) {
-    if (ctrl.selectedMove === move) {
+    if (ctrl.selectedMove === move)
       ctrl.selectedMove = {};
-    } else {
+    else
       ctrl.selectedMove = move;
-    }
   }
 
 }
