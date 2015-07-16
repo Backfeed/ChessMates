@@ -27,7 +27,7 @@ function suggestMoveModalController($mdDialog, GamesService, CommonService) {
   }
 
   function turnChanged(move, turn) {
-    CommonService.toast("Time's up!");
+    //CommonService.toast("Time's up!");
     cancel("time ended for this turn!");
   }
 }

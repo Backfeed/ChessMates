@@ -1,11 +1,11 @@
 angular.module('blockchess.games.util.service', [])
-.service('GamesService', GamesService);
+  .service('GamesService', GamesService);
 
 function GamesService($q, $window, $meteor, $mdDialog, CommonService, EvaluationModel, GamesModel, GameBoardService, BoardService) {
   var gameId = "1"; // Dev
   movesStream.on('move', onMove);
   restartStream.on('restart', onRestart);
-  
+
   return {
     cancelMoveHighlights: cancelMoveHighlights,
     selectedMoveChanged: selectedMoveChanged,
@@ -126,23 +126,29 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     }
 
     openSuggestMoveModal(notation)
-    .then(function(stars) {
-      var move = {
-        user_id: Meteor.userId(),
-        notation: notation,
-        avg_stars: '4.5',
-        created_at: Date.now(),
-        fen: GameBoardService.game.fen(),
-        evaluations: [[],[],[],[],[]],
-        comments: []
-      };
-      deferred.resolve(move);
-      GamesModel.gameNotAuto.suggested_moves.push(move);
-      EvaluationModel.evaluate(move, stars);
-    })
-    .finally(function() {
-      movePieceBack();
-    });
+      .then(function(stars) {
+        var move = {
+          user_id: Meteor.userId(),
+          notation: notation,
+          avg_stars: '4.5',
+          created_at: Date.now(),
+          fen: GameBoardService.game.fen(),
+          evaluations: [[],[],[],[],[]],
+          comments: []
+        };
+        deferred.resolve(move);
+
+        var existingMove = _.find(GamesModel.gameNotAuto.suggested_moves, function(sug_move) {
+          return sug_move.notation === move.notation;
+        });
+        console.log(existingMove);
+
+        GamesModel.gameNotAuto.suggested_moves.push(move);
+        EvaluationModel.evaluate(move, stars);
+      })
+      .finally(function() {
+        movePieceBack();
+      });
 
     return deferred.promise;
   }

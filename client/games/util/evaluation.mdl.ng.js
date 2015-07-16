@@ -1,5 +1,5 @@
 angular.module('blockchess.games.util.evaluationModel', [])
-.service('EvaluationModel', EvaluationModel)
+.service('EvaluationModel', EvaluationModel);
 
 function EvaluationModel(GamesModel) {
 
@@ -36,7 +36,7 @@ function EvaluationModel(GamesModel) {
       favorite_move: false,
       stars: stars
     });
-    
+
     GamesModel.gameNotAuto.save().then(function(){
       console.log('Evalution Updated');
       Meteor.call('distributeReputation', "1", move.notation, move.evaluations[stars-1]);

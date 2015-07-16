@@ -6,15 +6,12 @@ restartStream    = new Meteor.Stream('restart');
 
 Games.allow({
     insert: function (userId)                         { return true; },
-    update: function (userId, game, fields, modifier) { 
-      return !!userId &&
-              !suggestedMoveExists(game.suggested_moves, modifier);
-    },
+    update: function (userId, game, fields, modifier) { return true; },
     remove: function (userId, game)                   { return true; }
 });
 
 function suggestedMoveExists(suggestedMoves, modifier) {
-  return modifier.$set && 
+  return modifier.$set &&
          modifier.$set.suggested_moves &&
          modifier.$set.suggested_moves[0] &&
          _.find(suggestedMoves, function(sug_move) {
