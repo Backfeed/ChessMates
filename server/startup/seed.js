@@ -133,8 +133,8 @@ Meteor.startup(function () {
         ]
       },
       {
-        "reputation" : 30,
-        "tokens" : 200,
+        "reputation" : 20,
+        "tokens" : 50,
         "createdAt" : Date.now(),
         "services" : {
           "password" : {
@@ -152,8 +152,8 @@ Meteor.startup(function () {
         ]
       },
       {
-        "reputation" : 30,
-        "tokens" : 30,
+        "reputation" : 20,
+        "tokens" : 50,
         "createdAt" : Date.now(),
         "services" : {
           "password" : {
@@ -172,7 +172,7 @@ Meteor.startup(function () {
       },
       {
         "reputation" : 20,
-        "tokens" : 100,
+        "tokens" : 50,
         "createdAt" : Date.now(),
         "services" : {
           "password" : {
@@ -190,6 +190,196 @@ Meteor.startup(function () {
         "emails" : [
           {
             "address" : "primavera@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "elad@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "ore@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "adam@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "ronny@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "michel@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "shahar@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "dana@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "philh@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "matan@backfeed.cc",
+            "verified" : false
+          }
+        ]
+      },
+      {
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "latif@backfeed.cc",
             "verified" : false
           }
         ]
