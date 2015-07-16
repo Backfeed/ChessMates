@@ -171,9 +171,6 @@ function clientDone(gameId) {
     function allClientsDone() {
       console.log('All clients done');
 
-      //var notation = Games.findOne({ game_id: gameId }).suggested_moves[0].notation; // TODO :: Getfrom protocol
-      //var move = { from: notation.substr(0,2), to: notation.substr(2) };
-      //executeMove(gameId, move, 'clan');
       ClientsDone = [];
       Meteor.call('endTurn',gameId);
     }

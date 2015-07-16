@@ -141,10 +141,14 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
         var existingMove = _.find(GamesModel.gameNotAuto.suggested_moves, function(sug_move) {
           return sug_move.notation === move.notation;
         });
-        console.log(existingMove);
+        console.log('existingMove -------- ', existingMove);
 
-        GamesModel.gameNotAuto.suggested_moves.push(move);
-        EvaluationModel.evaluate(move, stars);
+        if (existingMove) {
+          EvaluationModel.evaluate(existingMove, stars);
+        } else {
+          GamesModel.gameNotAuto.suggested_moves.push(move);
+          EvaluationModel.evaluate(move, stars);
+        }
       })
       .finally(function() {
         movePieceBack();
