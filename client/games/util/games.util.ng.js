@@ -13,6 +13,8 @@ angular.module('blockchess.games.util', [
   'blockchess.games.util.players',
   'blockchess.games.util.board',
   'blockchess.games.util.timer',
+  // Filters
+  'game.util.avgStars',
   // Modals
   'blockchess.games.util.suggestMoveModal'
 ]);
