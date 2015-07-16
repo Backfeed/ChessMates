@@ -23,11 +23,13 @@ function foo(msg){ console.log('foo', msg);}
 
 Meteor.methods({
   foo: foo,
+  displayNameCollection: displayNameCollection,
   AIEvaluationCB: AIEvaluationCB,
   validateGame: validateGame,
   AIGetMoveCb: AIGetMoveCb,
   executeMove: executeMove,
   updateTimer: updateTimer,
+  displayName: displayName,
   clientDone: clientDone,
   startTurn: startTurn,
   restart: restart,
@@ -43,6 +45,9 @@ if (Meteor.isServer) {
     removed: function(user) { connectionStream.emit('connections'); }
   });
 }
+
+
+
 function AIEvaluationCB(score) {
   console.log("score is: ", score);
 }
@@ -157,16 +162,17 @@ function endGame(gameId) {
 }
 
 function clientDone(gameId) {
-  validateGame(gameId);
   console.log('client Done!');
-
   if (Meteor.isServer) {
-    ClientsDone.push(this.userId);
-    console.log('client pushed');
+    validateGame(gameId);
+    validateUniqueness();
 
-    if (isAllClientsFinished()) {
+    ClientsDone.push(this.userId);
+    console.log(Meteor.call('displayName', Meteor.user()), "is done from:");
+    console.log(Meteor.call('displayNameCollection', ClientsDone));
+
+    if (isAllClientsFinished())
       allClientsDone()
-    }
 
     function allClientsDone() {
       console.log('All clients done');
@@ -181,6 +187,12 @@ function clientDone(gameId) {
       return ClientsDone.length !== 0 &&
              Meteor.users.find({ "status.online": true }).count() === ClientsDone.length;
     }
+
+    function validateUniqueness() {
+      if ( _.contains(ClientsDone, Meteor.userId()) )
+        throw new Meteor.Error(403, 'Already pressed "Im done"');
+    }
+
   }
 }
 
@@ -201,4 +213,20 @@ function getFen(prevFen, move) {
     console.log('Chess.fen() AFTER MOVE', Chess.fen());
     return Chess.fen();
   }
+}
+
+function displayNameCollection(usersIdArr) {
+  return usersIdArr.map(function(userId) {
+    return displayName(Meteor.users.findOne(userId));
+  });
+}
+
+function displayName(user) {
+  if (!user)
+    return;
+  if (user.profile && user.profile.name)
+    return user.profile.name;
+  if (user.emails)
+    return user.emails[0].address;
+  return "Anonymous user";
 }

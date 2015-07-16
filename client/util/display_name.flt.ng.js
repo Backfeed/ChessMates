@@ -10,6 +10,6 @@ function displayName() {
     else if (user.emails)
       return user.emails[0].address;
     else
-      return user;
+      return "Anonymous user";
   }
 }
