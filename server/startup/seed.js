@@ -1,3 +1,4 @@
+/* jshint ignore:start */
 Meteor.startup(function () {
   console.log('==========\n\n\n\n\n\n');
   if (Games.find().count() === 0) {
@@ -200,3 +201,4 @@ Meteor.startup(function () {
     });
   }
 });
+/* jshint ignore:end */

@@ -29,8 +29,7 @@
     "Parties",
     "Games",
     "Comments",
-    "Evaluations",
-    "SuggestedMoves",
+    "connectionStream",
     "$"
   ]
 }

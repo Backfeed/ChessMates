@@ -1,3 +1,4 @@
+/* jshint ignore:start */
 Engine = (function Engine() {
   var engine = getEngine();
   var evaler = getEvaler();
@@ -97,3 +98,4 @@ Engine = (function Engine() {
   }
 
 })();
+/* jshint ignore:end */
