@@ -1,5 +1,5 @@
 <div class="evaluations area">
-    <md-tabs md-center-tabs md-dynamic-height md-no-bar>
+    <md-tabs md-center-tabs md-dynamic-height md-no-bar md-autoselect="false">
         <md-tab label="•" ng-repeat="move in ctrl.moves" md-on-select="ctrl.selectedMove = move" class="evaluations-tab">
             <div class="evaluation text-center">
                 <h2 class="evaluation-step center-block">{{ ::move.notation }}</h2>
