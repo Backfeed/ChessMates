@@ -10,6 +10,7 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     cancelMoveHighlights: cancelMoveHighlights,
     selectedMoveChanged: selectedMoveChanged,
     formatMoveFrom: formatMoveFrom,
+    movePieceBack: movePieceBack,
     updateBoard: updateBoard,
     singleMove: singleMove,
     getMoveBy: getMoveBy,

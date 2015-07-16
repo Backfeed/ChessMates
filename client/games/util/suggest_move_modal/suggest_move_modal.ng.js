@@ -1,7 +1,7 @@
 angular.module('blockchess.games.util.suggestMoveModal', [])
 .controller('suggestMoveModalController', suggestMoveModalController);
 
-function suggestMoveModalController($mdDialog, CommonService) {
+function suggestMoveModalController($mdDialog, GamesService, CommonService) {
   var ctrl = this;
 
   angular.extend(ctrl, {
@@ -12,7 +12,13 @@ function suggestMoveModalController($mdDialog, CommonService) {
   movesStream.on('move', turnChanged);
 
   function submit() {
-    $mdDialog.hide(ctrl.stars);
+    if (GamesService.getMoveBy('notation', ctrl.notation)) {
+      CommonService.toast('move exists');
+      cancel('move exists');
+      GamesService.movePieceBack();
+    } else {
+      $mdDialog.hide(ctrl.stars);
+    }
   }
 
   function cancel(msg) {
