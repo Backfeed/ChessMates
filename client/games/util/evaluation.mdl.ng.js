@@ -39,6 +39,7 @@ function EvaluationModel(GamesModel) {
     
     GamesModel.gameNotAuto.save().then(function(){
       console.log('Evalution Updated');
+      Meteor.call('distributeReputation', "1", move.notation, move.evaluations[stars-1]);
     });
   }
 

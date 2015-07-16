@@ -4,9 +4,9 @@ Meteor.startup(function () {
     var games = [
       {
         'game_id': '1',
-        'moves': ['e2e4', 'e7e5', 'g1f3'],
-        'pgn': '1. e4 e5 2. Nf3 Nc6',
-        'fen': 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',
+        'moves': [],
+        'pgn': [],
+        'fen': 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
         'settings': {
           'inPlay': false,
           'timePerMove': 300000,
@@ -105,6 +105,135 @@ Meteor.startup(function () {
     ];
     _.forEach(new_game, function(game) {
       Games.insert(game);
+    });
+  }
+
+    // the password for each user is the name of the user twice
+  if (Meteor.users.find().count() === 0) {
+
+    var users = [
+      {
+        "_id" : "gs2b3gR4v6ipXuMyC",
+        "reputation" : 20,
+        "tokens" : 50,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$nkfJ8m2JL6Ni0ecOQIaaWuo9XWAND0Wdsy5MZIHyKpTjXEbupJuhe"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "tal@backfeed.cc",
+            "verified" : false
+          }
+        ],
+        "status" : {
+          "online" : false,
+          "lastLogin" : {
+            "date" : Date.now(),
+            "ipAddr" : "127.0.0.1",
+            "userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36"
+          }
+        }
+      },
+      {
+        "_id" : "TCLKcrCbmfzu4XCtm",
+        "reputation" : 30,
+        "tokens" : 200,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$7.rs66fgwp.rnR5koBk9buJmPs9zIduT2i2QtLmzXUJb6lhRiNqtO"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "yaniv@backfeed.cc",
+            "verified" : false
+          }
+        ],
+        "status" : {
+          "online" : false,
+          "lastLogin" : {
+            "date" : Date.now(),
+            "ipAddr" : "127.0.0.1",
+            "userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36"
+          }
+        }
+      },
+      {
+        "_id" : "xwNPMpBKM7ox4DFhF",
+        "reputation" : 30,
+        "tokens" : 30,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$k3wvBtGFvmj4plnd6cPqkeiHU.p.VddexnIxli0i7JI/p8RPH5iEW"
+          },
+          "resume" : {
+            "loginTokens" : []
+          }
+        },
+        "emails" : [
+          {
+            "address" : "zeev@backfeed.cc",
+            "verified" : false
+          }
+        ],
+        "status" : {
+          "online" : false,
+          "lastLogin" : {
+            "date" : Date.now(),
+            "ipAddr" : "127.0.0.1",
+            "userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36"
+          }
+        }
+      },
+      {
+        "_id" : "mTtrHnGGSAnJFXB9H",
+        "reputation" : 20,
+        "tokens" : 100,
+        "createdAt" : Date.now(),
+        "services" : {
+          "password" : {
+            "bcrypt" : "$2a$10$/goye4kWv7rDtHYxjvYfNuDWCIINqKOCKWYEbBOjmgpN9lJ9Vbeii"
+          },
+          "resume" : {
+            "loginTokens" : [
+              {
+                "when" : Date.now(),
+                "hashedToken" : "uhc2qSU2gXKJLzKIl2is0+c8Q9/nPURWp32l4YBiPbs="
+              }
+            ]
+          }
+        },
+        "emails" : [
+          {
+            "address" : "primavera@backfeed.cc",
+            "verified" : false
+          }
+        ],
+        "status" : {
+          "online" : true,
+          "lastLogin" : {
+            "date" : Date.now(),
+            "ipAddr" : "127.0.0.1",
+            "userAgent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36"
+          },
+          "idle" : false
+        }
+      }
+    ];
+
+    _.forEach(users, function(user) {
+      Meteor.users.insert(user);
     });
   }
 });

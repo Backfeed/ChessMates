@@ -14,15 +14,14 @@ function foo(msg){ console.log('foo', msg);}
 
 Meteor.methods({
   foo: foo,
-  distributeReputation: distributeReputation,
   AIEvaluationCB: AIEvaluationCB,
+  validateGame: validateGame,
   AIGetMoveCb: AIGetMoveCb,
   executeMove: executeMove,
   updateTimer: updateTimer,
   clientDone: clientDone,
   startTurn: startTurn,
   restart: restart,
-  endTurn: endTurn,
   endGame: endGame
 });
 
@@ -60,7 +59,10 @@ function resetGameData(gameId) {
         pgn: [],
         turns: [],
         moves: [],
-        suggested_moves: []
+        suggested_moves: [],
+        settings: {
+          timePerMove: 300000
+        },
       } 
     },
     CB
@@ -72,12 +74,6 @@ function resetGameData(gameId) {
     startTurn(gameId);
     restartStream.emit('restart');
   }
-}
-
-function distributeReputation(gameId) {
-  validateGame(gameId);
-  // Redistribute reputation after move
-  console.log('distributeReputation');
 }
 
 function executeMove(gameId, move, turn) {
@@ -125,11 +121,6 @@ function logTurn(gameId, move, turn, logTurnCB) {
       logTurnCB
     );
   }
-}
-
-function endTurn(gameId) {
-  console.log('endTurn');
-  Meteor.clearInterval(GameInterval);
 }
 
 function updateTimer(gameId, timeLeft) {
