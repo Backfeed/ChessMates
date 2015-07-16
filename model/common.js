@@ -44,7 +44,7 @@ function AIGetMoveCb(move) {
 }
 
 function restart(gameId) {
-  if (Meteor.isServer) { 
+  if (Meteor.isServer) {
     ClientsDone = [];
     Chess.reset();
     resetGameData(gameId);
@@ -53,8 +53,8 @@ function restart(gameId) {
 
 function resetGameData(gameId) {
   Games.update(
-    { game_id: gameId }, 
-    { $set: { 
+    { game_id: gameId },
+    { $set: {
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
         pgn: [],
         turns: [],
@@ -62,11 +62,11 @@ function resetGameData(gameId) {
         suggested_moves: [],
         settings: {
           timePerMove: 300000
-        },
-      } 
+        }
+      }
     },
     CB
-  );    
+  );
 
   function CB(err, result) {
     console.log('Reset Game Data CB Error: ', err);
@@ -89,10 +89,11 @@ function executeMove(gameId, move, turn) {
     console.log("logTurnCB: result", result);
     moves = Games.findOne({ game_id: gameId }).moves.join(" ");
     console.log("logTurnCB: moves", moves);
-    if (turn === 'clan') { 
+    startTurn(gameId);
+    if (turn === 'clan') {
       Meteor.setTimeout(function() {
         Engine.getMove(moves);
-      }, 5000);
+      }, 3000);
     }
   }
 }
@@ -100,30 +101,30 @@ function executeMove(gameId, move, turn) {
 function logTurn(gameId, move, turn, logTurnCB) {
   var game = Games.findOne({ game_id: gameId });
   var newFen = getFen(game.fen, move);
-  console.log("logTurn: newFen: ", newFen)
-  if (turn === "AI") { 
+  console.log("logTurn: newFen: ", newFen);
+  if (turn === "AI") {
     Games.update(
-      { game_id: gameId }, 
-      { 
+      { game_id: gameId },
+      {
         $push: { moves: move.from+move.to },
         $set:  { fen:   newFen }
-      }, 
+      },
       logTurnCB
     );
   }
   if (turn === "clan") {
     Games.update(
-      { game_id: gameId }, 
-      { 
+      { game_id: gameId },
+      {
         $push: { moves: move.from+move.to,      turns: game.suggested_moves },
         $set:  { fen:   newFen, suggested_moves: [] }
-      }, 
+      },
       logTurnCB
     );
   }
 }
 
-function updateTimer(gameId, timeLeft) {
+function updateTimer(timeLeft) {
   timerStream.emit('timer', timeLeft);
 }
 
@@ -132,12 +133,11 @@ function startTurn(gameId) {
   if (Meteor.isServer) {
     var game = Games.findOne({ game_id: gameId });
     var timeLeft = game.settings.timePerMove;
-    console.log
     Meteor.clearInterval(GameInterval);
     GameInterval = Meteor.setInterval(function() {
       timeLeft -= 1000;
       if (timeLeft <= 0) { Meteor.call('endTurn', gameId); }
-      else               { Meteor.call('updateTimer', gameId, timeLeft); }
+      else               { Meteor.call('updateTimer', timeLeft); }
     }, 1000);
   }
 }
@@ -152,18 +152,18 @@ function endGame(gameId) {
 
 function clientDone(gameId) {
   validateGame(gameId);
-  console.log('client Done!')
+  console.log('client Done!');
 
   if (Meteor.isServer) {
     ClientsDone.push(this.userId);
-    console.log('client pushed')
+    console.log('client pushed');
 
     if (isAllClientsFinished()) {
       allClientsDone()
     }
 
     function allClientsDone() {
-      console.log('All clients done')
+      console.log('All clients done');
 
       var notation = Games.findOne({ game_id: gameId }).suggested_moves[0].notation; // TODO :: Getfrom protocol
       var move = { from: notation.substr(0,2), to: notation.substr(2) };
@@ -172,8 +172,8 @@ function clientDone(gameId) {
     }
 
     function isAllClientsFinished() {
-      console.log("Users Online: ", Meteor.users.find({ "status.online": true }).count())
-      console.log("Users Done: ", ClientsDone.length)
+      console.log("Users Online: ", Meteor.users.find({ "status.online": true }).count());
+      console.log("Users Done: ", ClientsDone.length);
       return ClientsDone.length !== 0 &&
              Meteor.users.find({ "status.online": true }).count() === ClientsDone.length;
     }
