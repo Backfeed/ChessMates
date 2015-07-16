@@ -18,6 +18,7 @@ function EvaluationModel(GamesModel) {
   }
 
   function getEvaluationByUser(move) {
+    if (!move.evaluations.length) { return false; }
     var evaluation = false;
     move.evaluations.forEach(function(evaluationArray) {
       evaluationArray.forEach(function(evl) {

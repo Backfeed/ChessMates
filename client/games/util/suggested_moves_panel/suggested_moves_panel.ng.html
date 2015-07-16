@@ -1,34 +1,48 @@
 <div class="evaluations area">
-    <md-tabs md-center-tabs md-dynamic-height md-no-bar md-autoselect="false">
-        <md-tab label="•" ng-repeat="move in ctrl.moves" md-on-select="ctrl.selectedMove = move" class="evaluations-tab">
-            <div class="evaluation text-center">
-                <h2 class="evaluation-step center-block">{{ ::move.notation }}</h2>
-                <rating readonly="!$root.currentUser" class="rating" ng-model="ctrl.stars" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" ng-change="ctrl.evaluate()"></rating>
-                <br>
-                ctrl.isFavorite: {{ ctrl.isFavorite }}
-                <button ng-change="ctrl.flagFavorite()"
-                        ng-model="ctrl.isFavorite"
-                        ng-checked="ctrl.isFavorite"
-                        btn-checkbox
-                        type="button" 
-                        class="btn btn-default choose-favorite-move" 
-                        ng-disabled="!$root.currentUser">
-                        <img src="img/favorite.png" />
-                        My favorite move</button>
-            </div>
-            <hr />
-            <comments move="move" comments="move.comments"></comments>
-        </md-tab>
+  <md-tabs md-center-tabs 
+           md-no-bar
+           md-selected="ctrl.selectedIndex"
+           md-autoselect="false">
+    <md-tab label="•" 
+            ng-repeat="move in ctrl.moves" 
+            md-on-select="ctrl.selectedMove = move" 
+            class="evaluations-tab">
+      <div class="evaluation text-center">
+        <h2 class="evaluation-step center-block">{{ move.notation }}</h2>
+        <rating readonly="!$root.currentUser" 
+                class="rating" 
+                ng-model="ctrl.stars" 
+                on-hover="ctrl.hoveringOver(value)" 
+                on-leave="overStar = null" 
+                ng-change="ctrl.evaluate()"></rating>
+        <br>
+        <button ng-change="ctrl.flagFavorite()"
+                ng-model="ctrl.isFavorite"
+                ng-checked="ctrl.isFavorite"
+                btn-checkbox
+                type="button" 
+                class="btn btn-default choose-favorite-move" 
+                ng-disabled="!$root.currentUser">
+                <img src="img/favorite.png" />
+                My favorite move</button>
+      </div>
+      <hr />
+      <comments move="move" comments="move.comments"></comments>
+    </md-tab>
 
-        <!-- Mock -->
-        <md-tab ng-if="!ctrl.moves.length" label="•" class="evaluations-tab">
-            <div class="evaluation text-center">
-                <h2 class="evaluation-step center-block"></h2>
-                <rating ng-model="dummy.stars" class="rating" readonly="true"></rating>
-                <br>
-                <button type="button" disabled class="btn btn-default choose-favorite-move"><img src="img/favorite.png" />My favorite move</button>
-            </div>
-            <hr />
-        </md-tab>
-    </md-tabs>
+  <!-- Mock -->
+    <md-tab ng-if="!ctrl.moves.length" label="•" class="evaluations-tab">
+      <div class="evaluation text-center">
+        <h2 class="evaluation-step center-block"></h2>
+        <rating ng-model="dummy.stars" class="rating" readonly="true"></rating>
+        <br>
+        <button type="button" 
+                disabled 
+                class="btn btn-default choose-favorite-move">
+                <img src="img/favorite.png" />
+                My favorite move</button>
+      </div>
+      <hr />
+    </md-tab>
+  </md-tabs>
 </div>

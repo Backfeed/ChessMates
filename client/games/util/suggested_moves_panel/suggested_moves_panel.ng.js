@@ -25,7 +25,8 @@ function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
   $scope.$watch('ctrl.selectedMove', selectedMoveChanged);
 
   function selectedMoveChanged(move) {
-    if (!move || !move.evaluations) { return; }
+    if (!move || !ctrl.moves) { return; }
+    setTabIndex(move);
     var myEvaluation = EvaluationModel.getEvaluationByUser(move);
     if (myEvaluation) {
       ctrl.stars = myEvaluation.stars;
@@ -51,6 +52,13 @@ function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
 
   function hoveringOver(value) {
     //TODO add tooltip from spec
+  }
+
+  function setTabIndex(move) {
+    var notationArray = ctrl.moves.map(function(m){
+      return m.notation;
+    });
+    ctrl.selectedIndex = notationArray.indexOf(move.notation);
   }
 
 }
