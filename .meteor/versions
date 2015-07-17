@@ -7,6 +7,7 @@ accounts-ui@1.1.5
 accounts-ui-unstyled@1.1.7
 aldeed:collection2@2.3.3
 aldeed:simple-schema@1.3.3
+aldeed:template-extension@3.4.3
 angular:angular@1.4.2
 angular:angular-animate@1.4.2
 angular:angular-aria@1.4.2
@@ -15,6 +16,7 @@ angularui:angular-ui-bootstrap@0.13.0
 angularui:angular-ui-router@0.2.15
 angularutils:pagination@0.7.0
 autoupdate@1.2.1
+babrahams:editable-json@0.4.3
 base64@1.0.3
 binary-heap@1.0.3
 blaze@2.1.2
@@ -33,6 +35,7 @@ facebook@1.2.0
 fastclick@1.0.3
 fortawesome:fontawesome@4.3.0
 geojson-utils@1.0.3
+gwendall:session-json@0.1.7
 html-tools@1.0.4
 htmljs@1.0.4
 http@1.1.0
@@ -53,6 +56,19 @@ meteorhacks:async@1.0.0
 meteorhacks:kadira@2.22.0
 meteorhacks:meteorx@1.3.1
 meteorhacks:npm@1.3.0
+meteortoys:allthings@1.2.1
+meteortoys:authenticate@0.3.2
+meteortoys:autopub@0.3.1
+meteortoys:hotreload@0.2.0
+meteortoys:listen@0.3.0
+meteortoys:method@0.3.1
+meteortoys:pro@0.6.0
+meteortoys:pub@0.3.1
+meteortoys:shell@0.3.0
+meteortoys:status@0.1.0
+meteortoys:sub@0.3.1
+meteortoys:toykit@0.8.2
+meteortoys:toypro@0.3.0
 minifiers@1.1.5
 minimongo@1.0.8
 mizzao:timesync@0.3.2
@@ -61,6 +77,8 @@ mobile-status-bar@1.0.3
 momentjs:moment@2.10.3
 mongo@1.1.0
 mongo-livedata@1.0.8
+msavin:jetsetter@1.0.19
+msavin:mongol@1.0.102
 nemo64:bootstrap@3.3.5_1
 nemo64:bootstrap-data@3.3.5
 npm-bcrypt@0.7.8_2
