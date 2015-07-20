@@ -69,11 +69,12 @@ function resetGameData(gameId) {
   Games.update(
     { game_id: gameId },
     { $set: {
-        fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-        pgn: [],
+        played_this_turn: [],
+        suggested_moves: [],
         turns: [],
         moves: [],
-        suggested_moves: [],
+        pgn: [],
+        fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
         settings: {
           timePerMove: 300000
         }
@@ -144,6 +145,7 @@ function updateTimer(timeLeft) {
 
 function startTurn(gameId) {
   if (Meteor.isServer) {
+    resetPlayed(gameId);
     var game = Games.findOne({ game_id: gameId });
     var timeLeft = game.settings.timePerMove;
     Meteor.clearInterval(GameInterval);
@@ -153,6 +155,10 @@ function startTurn(gameId) {
       else               { Meteor.call('updateTimer', timeLeft); }
     }, 1000);
   }
+}
+
+function resetPlayed(gameId) {
+  Games.update({ game_id: gameId }, { $set: { played_this_turn: [] } });
 }
 
 function endGame(gameId) {
@@ -167,7 +173,14 @@ function clientDone(gameId) {
     validateGame(gameId);
     validateUniqueness();
 
+    // TODO :: Combine ClientDone with played_this_turn
     ClientsDone.push(this.userId);
+
+    Games.update(
+      { game_id: gameId },
+      { $push: { played_this_turn: Meteor.userId() } }
+    )
+
     console.log(Meteor.call('displayName', Meteor.user()), "is done from:");
     console.log(Meteor.call('displayNameCollection', ClientsDone));
 

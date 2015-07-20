@@ -14,8 +14,9 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
     restart: restart, // DEV
     gameId: gameId, // DEV
     pause: pause, // DEV
-    selectedMove: {},
+    isPlayed: isPlayed,
     imDone: imDone,
+    selectedMove: {},
     game: {}
   });
 
@@ -31,6 +32,7 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
   }
 
   function startTurn()       { GamesService.startTurn(gameId); }
+  function isPlayed()        { return GamesService.isPlayed(); }
   function endGame()         { GamesService.endGame(gameId);   }
   function restart()         { GamesService.restart();         }
   function imDone()          { GamesService.imDone(gameId);    }

@@ -5,6 +5,7 @@ Meteor.startup(function () {
     var games = [
       {
         'game_id': '1',
+        'played_this_turn': [], // ids
         'moves': [],
         'pgn': [],
         'fen': 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',

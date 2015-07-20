@@ -18,11 +18,12 @@ function GamesModel($meteor) {
 
   function restart() {
     angular.extend(model.game, {
-      fen: 'start',
-      pgn: [],
+      played_this_turn: [],
+      suggested_moves: [],
       turns: [],
       moves: [],
-      suggested_moves: [],
+      pgn: [],
+      fen: 'start',
       settings: {
         timePerMove: 300000
       }
