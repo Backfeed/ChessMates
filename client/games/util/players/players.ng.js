@@ -11,10 +11,11 @@ function players() {
   };
 }
 
-function playersController($meteor, GamesService) {
+function playersController($meteor, GamesService, EvaluationModel) {
   var ctrl = this;
   angular.extend(ctrl, {
-    userIsDone: userIsDone,
+    isFavorited: isFavorited,
+    isDone: isDone,
     usersList: [],
     users: []
   });
@@ -36,7 +37,12 @@ function playersController($meteor, GamesService) {
     });
   }
 
-  function userIsDone(id) {
-    return false; // TODO
+  function isDone(id) {
+    return GamesService.isDone(id);
   }
+
+  function isFavorited(id) {
+    EvaluationModel.getFavoriteByUser(id);
+  }
+
 }

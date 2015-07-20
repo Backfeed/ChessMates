@@ -1,6 +1,20 @@
-<ul>
-  <li ng-repeat="user in ctrl.usersList">
-    {{ user | displayName }}
-    <span ng-if="ctrl.userIsDone(user._id)"> - Done</span>
-  </li>
-</ul>
+<table>
+  <thead>
+    <tr>
+      <td>User</td>
+      <td>Reputation</td>
+      <td>Tokens</td>
+      <td>Favorite</td>
+      <td>Done</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="user in ctrl.usersList">
+      <td>{{ ::user | displayName }}</td>
+      <td>{{ user.reputation }}</td>
+      <td>{{ user.Tokens }}</td>
+      <td>{{ ctrl.isFavorited(user._id) }}</td>
+      <td>{{ ctrl.isDone(user._id) }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -15,15 +15,15 @@ function GamesService($q, $window, $meteor, $mdDialog, ProtocolService, CommonSe
     singleMove: singleMove,
     getMoveBy: getMoveBy,
     startTurn: startTurn,
-    isPlayed: isPlayed,
     endGame: endGame,
     restart: restart,
+    isDone: isDone,
     imDone: imDone,
     pause: pause
   };
 
-  function isPlayed() {
-    return GamesModel.game.played_this_turn.indexOf(Meteor.userId()) > -1;
+  function isDone(id) {
+    return GamesModel.game.played_this_turn.indexOf(id || Meteor.userId()) > -1;
   }
 
   function imDone(gameId) {

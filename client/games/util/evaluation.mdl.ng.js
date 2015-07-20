@@ -5,6 +5,7 @@ function EvaluationModel(GamesModel) {
 
   var model = {
     getUserEvaluationBy: getUserEvaluationBy,
+    getFavoriteByUser: getFavoriteByUser,
     flagFavorite: flagFavorite,
     evaluate: evaluate,
     create: create
@@ -50,11 +51,11 @@ function EvaluationModel(GamesModel) {
     evaluation.favorite_move = false;
   }
 
-  function getFavoriteByUser() {
+  function getFavoriteByUser(id) {
     var move;
     GamesModel.game.suggested_moves.forEach(function(sug_move) {
       sug_move.evaluations.forEach(function(evl) {
-        if (evl.favorite_move && evl.user_id === Meteor.userId()) {
+        if (evl.favorite_move && evl.user_id === (id || Meteor.userId()) ) {
           move = sug_move;
         }
       });
