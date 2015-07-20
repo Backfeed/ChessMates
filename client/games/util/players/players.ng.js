@@ -42,7 +42,7 @@ function playersController($meteor, GamesService, EvaluationModel) {
   }
 
   function isFavorited(id) {
-    EvaluationModel.getFavoriteByUser(id);
+    return !!EvaluationModel.getFavoriteByUser(id);
   }
 
 }

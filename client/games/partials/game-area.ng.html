@@ -24,22 +24,23 @@
     FEN: {{ ctrl.GameBoardService.game.fen() }} <br />
 
     <div board="{{ ctrl.gameId }}"></div>
-    <button ng-click="ctrl.evaluate('a4 e5 a5 e6')">Evaluate</button>
-      <button ng-click="ctrl.startTurn()">
-          <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-      </button>
-      <button ng-click="ctrl.endGame()">
-          <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
-      </button>
-      <button ng-click="ctrl.pause()">
-          <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
-      </button>
+    <button ng-click="ctrl.startTurn()">
+        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+    </button>
+    <button ng-click="ctrl.endGame()">
+        <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+    </button>
+    <button ng-click="ctrl.pause()">
+        <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+    </button>
     <button ng-click="ctrl.restart()">Restart</button>
     <button ng-click="ctrl.imDone()" 
             ng-class="{ 'is-disabled': ctrl.isDone() }"
             ng-disabled="ctrl.isDone()">I'm Done</button>
     <br>
-    Players: 
+    <br>
+    <br>
+
     <players></players>
 
     <br>
