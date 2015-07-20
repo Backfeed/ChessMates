@@ -45,6 +45,7 @@ function EvaluationModel(GamesModel) {
   }
 
   function unFlagFavorite() {
+    var move = getFavoriteByUser();
     var evaluation = getUserEvaluationBy(move);
     evaluation.favorite_move = false;
   }
