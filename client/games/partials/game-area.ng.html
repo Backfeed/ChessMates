@@ -36,7 +36,7 @@
       </button>
     <button ng-click="ctrl.restart()">Restart</button>
     <button ng-click="ctrl.imDone()" 
-            ng-class="{ 'is-disabled': ctrl.isPlayed() }"
+            ng-class="{ 'is-disabled': ctrl.isDone() }"
             ng-disabled="ctrl.isDone()">I'm Done</button>
     <br>
     Players: 
