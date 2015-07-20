@@ -9,11 +9,9 @@ function favoriteCount() {
 
 function getFavoriteCountFrom(move) {
   var count = 0;
-  move.evaluations.forEach(function(evalArr, i) {
-    evalArr.forEach(function(evl) {
-      if (evl.favorite_move)
-        count += 1;
-    });
+  move.evaluations.forEach(function(evl) {
+    if (evl.favorite_move)
+      count += 1;
   });
   return count;
 }

@@ -126,33 +126,31 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     }
 
     openSuggestMoveModal(notation)
-      .then(function(stars) {
+    .then(function(stars) {
+      var existingMove = _.find(GamesModel.game.suggested_moves, function(sug_move) {
+        return sug_move.notation === notation;
+      });
+
+      if (existingMove) {
+        EvaluationModel.create(existingMove, stars);
+        deferred.resolve(existingMove);
+      } else {
         var move = {
           user_id: Meteor.userId(),
           notation: notation,
-          avg_stars: '4.5',
           created_at: Date.now(),
           fen: GameBoardService.game.fen(),
-          evaluations: [[],[],[],[],[]],
+          evaluations: [],
           comments: []
         };
+        EvaluationModel.create(move, stars);
+        GamesModel.game.suggested_moves.push(move);
         deferred.resolve(move);
-
-        var existingMove = _.find(GamesModel.gameNotAuto.suggested_moves, function(sug_move) {
-          return sug_move.notation === move.notation;
-        });
-        console.log('existingMove -------- ', existingMove);
-
-        if (existingMove) {
-          EvaluationModel.evaluate(existingMove, stars);
-        } else {
-          GamesModel.gameNotAuto.suggested_moves.push(move);
-          EvaluationModel.evaluate(move, stars);
-        }
-      })
-      .finally(function() {
-        movePieceBack();
-      });
+      }
+    })
+    .finally(function() {
+      movePieceBack();
+    });
 
     return deferred.promise;
   }

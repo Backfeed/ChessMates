@@ -1,5 +1,4 @@
 angular.module('blockchess.games.util.suggestedMoves', [
-  'blockchess.games.util.suggestedMoves.evaluationsNum',
   'blockchess.games.util.suggestedMoves.favoriteCount'
 ])
 .directive('suggestedMoves', suggestedMoves);
