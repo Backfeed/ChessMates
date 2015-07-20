@@ -27,7 +27,7 @@ function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
   function selectedMoveChanged(move) {
     if (!move || !ctrl.moves) { return; }
     setTabIndex(move);
-    var myEvaluation = EvaluationModel.getEvaluationByUser(move);
+    var myEvaluation = EvaluationModel.getUserEvaluationBy(move);
     if (myEvaluation) {
       ctrl.stars = myEvaluation.stars;
       ctrl.isFavorite = myEvaluation.favorite_move;

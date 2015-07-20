@@ -4,7 +4,7 @@ angular.module('blockchess.games.util.evaluationModel', [])
 function EvaluationModel(GamesModel) {
 
   var model = {
-    getEvaluationByUser: getEvaluationByUser,
+    getUserEvaluationBy: getUserEvaluationBy,
     flagFavorite: flagFavorite,
     evaluate: evaluate
   };
@@ -12,12 +12,12 @@ function EvaluationModel(GamesModel) {
   return model;
 
   function evaluate(move, stars) {
-    var evaluation = getEvaluationByUser(move);
+    var evaluation = getUserEvaluationBy(move);
     if (evaluation) { destroy(evaluation, move.evaluations[evaluation.stars-1]); }
     create(move, stars);
   }
 
-  function getEvaluationByUser(move) {
+  function getUserEvaluationBy(move) {
     if (!move.evaluations.length) { return false; }
     var evaluation = false;
     move.evaluations.forEach(function(evaluationArray) {
@@ -48,18 +48,19 @@ function EvaluationModel(GamesModel) {
     evaluations = _.reject(evaluations, function(evl) {
       return evl.user_id === Meteor.userId()
     });
+    GamesModel.gameNotAuto.save();
   }
 
   function flagFavorite(move, flag) {
     if (flag) { unFlagFavorite(); } // In case another move is already flagged
-    var evaluation = getEvaluationByUser(move);
+    var evaluation = getUserEvaluationBy(move);
     evaluation.favorite_move = flag;
   }
 
   function unFlagFavorite() {
     var move = getFavoriteMoveByUser();
     if (move) {
-      var evaluation = getEvaluationByUser(move);
+      var evaluation = getUserEvaluationBy(move);
       evaluation.favorite_move = false;
     }
   }
