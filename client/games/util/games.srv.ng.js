@@ -127,12 +127,8 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
 
     openSuggestMoveModal(notation)
     .then(function(stars) {
-      var existingMove = _.find(GamesModel.game.suggested_moves, function(sug_move) {
-        return sug_move.notation === notation;
-      });
-
-      if (existingMove) {
-        EvaluationModel.create(existingMove, stars);
+      if (getMoveBy('notation', notation)) {
+        EvaluationModel.create(getMoveBy('notation', notation), stars);
         deferred.resolve(existingMove);
       } else {
         var move = {
