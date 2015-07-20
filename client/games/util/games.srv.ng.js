@@ -1,7 +1,7 @@
 angular.module('blockchess.games.util.service', [])
   .service('GamesService', GamesService);
 
-function GamesService($q, $window, $meteor, $mdDialog, CommonService, EvaluationModel, GamesModel, GameBoardService, BoardService) {
+function GamesService($q, $window, $meteor, $mdDialog, ProtocolService, CommonService, EvaluationModel, GamesModel, GameBoardService, BoardService) {
   var gameId = "1"; // Dev
   movesStream.on('move', onMove);
   restartStream.on('restart', onRestart);
@@ -69,9 +69,11 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     cancelMoveHighlights();
   }
 
-  function getMoveBy(attr, val) {
+  function getMoveBy(attr, val, notAuto) {
+    var gameRef = 'game';
+    if (notAuto) { gameRef = 'gameNotAuto'; }
     var move;
-    GamesModel.game.suggested_moves.forEach(function(m) {
+    GamesModel[gameRef].suggested_moves.forEach(function(m) {
       if (m[attr] === val) { move = m; }
     });
     return move;
@@ -128,8 +130,11 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
     openSuggestMoveModal(notation)
     .then(function(stars) {
       if (getMoveBy('notation', notation)) {
-        EvaluationModel.create(getMoveBy('notation', notation), stars);
-        deferred.resolve(existingMove);
+        EvaluationModel.create(getMoveBy('notation', notation, false), stars);
+        deferred.resolve(getMoveBy('notation', notation));
+        GamesModel.gameNotAuto.save().then(function(){
+          ProtocolService.distributeReputation("1", move, stars);
+        });
       } else {
         var move = {
           user_id: Meteor.userId(),
@@ -139,9 +144,12 @@ function GamesService($q, $window, $meteor, $mdDialog, CommonService, Evaluation
           evaluations: [],
           comments: []
         };
-        EvaluationModel.create(move, stars);
-        GamesModel.game.suggested_moves.push(move);
         deferred.resolve(move);
+        EvaluationModel.create(move, stars);
+        GamesModel.gameNotAuto.suggested_moves.push(move);
+        GamesModel.gameNotAuto.save().then(function(){
+          ProtocolService.distributeReputation("1", move, stars);
+        });
       }
     })
     .finally(function() {

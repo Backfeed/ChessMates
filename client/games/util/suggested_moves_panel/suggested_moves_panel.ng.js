@@ -11,7 +11,7 @@ function suggestedMovesPanel() {
   }
 }
 
-function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
+function suggestedMovesPanelController($scope, CommonService, ProtocolService, GamesModel, EvaluationModel) {
   var ctrl = this;
   
   angular.extend(ctrl, {
@@ -48,6 +48,9 @@ function suggestedMovesPanelController($scope, CommonService, EvaluationModel) {
 
   function evaluate() {
     EvaluationModel.evaluate(ctrl.selectedMove, ctrl.stars);
+    GamesModel.gameNotAuto.save().then(function(){
+      ProtocolService.distributeReputation("1", ctrl.selectedMove, ctrl.stars);
+    });
   }
 
   function hoveringOver(value) {
