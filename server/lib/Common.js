@@ -1,4 +1,3 @@
-console.log('common!');
 Common = (function Common() {
   
   return {
