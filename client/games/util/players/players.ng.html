@@ -12,7 +12,7 @@
     <tr ng-repeat="user in ctrl.usersList">
       <td>{{ ::user | displayName }}</td>
       <td>{{ user.reputation }}</td>
-      <td>{{ user.Tokens }}</td>
+      <td>{{ user.tokens }}</td>
       <td>{{ ctrl.isFavorited(user._id) }}</td>
       <td>{{ ctrl.isDone(user._id) }}</td>
     </tr>
