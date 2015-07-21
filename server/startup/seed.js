@@ -43,19 +43,13 @@ Meteor.startup(function () {
               }
             ],
             'evaluations': [
-              // An array for each star value
-              [
-                {
-                  'user_id': '1',
-                  'created_at': '1435857130718',
-                  'updated_at': '1435857152171',
-                  'favorite_move': false
-                }
-              ],
-              [],
-              [],
-              [],
-              []
+              {
+                'user_id': '1',
+                'stars': 3,
+                'created_at': '1435857130718',
+                'updated_at': '1435857152171',
+                'favorite_move': false
+              }
             ]
           }]
         ],
@@ -87,7 +81,7 @@ Meteor.startup(function () {
                 'text': 'oh yes it will'
               }
             ],
-            'evaluations': [[],[],[],[],[]]
+            'evaluations': []
           }
         ]
       }
