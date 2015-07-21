@@ -44,8 +44,6 @@ function playersController($scope, $meteor, GamesService, EvaluationModel) {
     ctrl.users.forEach(function(user) {
       ctrl.usersList.push(user);
       addToTotalFrom(user);
-      ctrl.totalReputation += user.reputation;
-      ctrl.totalTokens += user.tokens;
     });
   }
 
