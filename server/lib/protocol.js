@@ -59,15 +59,13 @@ Meteor.methods({
     console.log('endTurn');
     Meteor.clearInterval(GameInterval);
 
-    if (Meteor.isServer) {
-      var game = Games.findOne({ game_id: gameId })
-    }
+    var game = Games.findOne({ game_id: gameId })
 
 
     //iterate through each move
     for(j=0; j<game.suggested_moves.length; j++) {
       var move = game.suggested_moves[j];
-
+      var formattedEvaluations = getFormatted(move.evaluations)
       console.log("checking out move: " + move.notation);
       var score = 0;
       var totalrep = 0;
@@ -79,11 +77,11 @@ Meteor.methods({
           continue;
         }
 
-        var evarray = move.evaluations[star-1]
+        var evarray = formattedEvaluations[star-1];
         console.log("evalulelauloelulealueoluloaelualoe ---- " + move.evaluations[star-1])
 
-      console.log("checking......... star sytem = " + star +   "(from "+ stupidarray[move.notation])
-      console.log("lalalal")
+        console.log("checking......... star sytem = " + star +   "(from "+ stupidarray[move.notation])
+        console.log("lalalal")
 
         //re-allocate the Funds to all players
         var funds = stupidarray[move.notation][star];
@@ -106,9 +104,9 @@ Meteor.methods({
 
         //calculate the weight of each star
         var rep = 0;
-        for (i = 0; i < move.evaluations[star-1].length ; i++) {
+        for (i = 0; i < evarray.length ; i++) {
 
-          var u = Meteor.users.findOne(move.evaluations[star-1][i].user_id);
+          var u = Meteor.users.findOne(evarray[i].user_id);
           rep += u.reputation;
         }
 
@@ -181,3 +179,11 @@ Meteor.methods({
 
   }
 });
+
+function getFormatted(evaluations) {
+  var formattedArray = [[],[],[],[],[]];
+  evaluations.forEach(function(evl) {
+    formattedArray[evl.stars-1].push(evl);
+  });
+  return formattedArray;
+}
