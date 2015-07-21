@@ -13,7 +13,7 @@ function ProtocolService($mdToast) {
       if (evl.stars === stars)
         starSpecificEvaluations.push(evl);
     });
-    Meteor.call("distributeReputation", gameId, move.notation, starSpecificEvaluations);
+    Meteor.call("protoEvluate", gameId, move.notation, starSpecificEvaluations);
   }
 
 }

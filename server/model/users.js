@@ -6,5 +6,7 @@ Meteor.publish("userStatus", function() {
   return Meteor.users.find({ 'status.online': true }, { fields: {emails: 1, status: 1} });
 });
 
-connectionStream.permissions.write(function() { return true; });
-connectionStream.permissions.read(function()  { return true; });
+Meteor.users.find({ "status.online": true }).observe({
+  added: function(user) { connectionStream.emit('connections'); },
+  removed: function(user) { connectionStream.emit('connections'); }
+});

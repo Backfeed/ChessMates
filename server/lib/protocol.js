@@ -1,7 +1,7 @@
 var stupidarray = [];
 
 Meteor.methods({
-  distributeReputation: function distributeReputation(gameId, notation, evarray) {
+  protoEvluate: function protoEvluate(gameId, notation, evarray) {
     Meteor.call('validateGame',gameId);
     // Redistribute reputation after move
 
@@ -49,13 +49,13 @@ Meteor.methods({
       }
 
   },
-  endTurn: function endTurn(gameId) {
+  protoEndTurn: function protoEndTurn(gameId) {
     var star, i, j;
     var stars = [1000, 0, 1, 3, 7, 15, 31];
     var turn = [];
 
     log('endTurn');
-    Meteor.clearInterval(GameInterval);
+    
 
     var game = Games.findOne({ game_id: gameId })
 
@@ -164,13 +164,14 @@ Meteor.methods({
     win.tokens += turn[winner.move].credits;
     Meteor.users.update( { _id: win._id}, { $set: { 'tokens': win.tokens }} );
 
-    var move = { from: winner.move.substr(0,2), to: winner.move.substr(2) };
-    Meteor.call('executeMove',gameId, move, 'clan');
     //return winner.move;
+    var move = { from: winner.move.substr(0,2), to: winner.move.substr(2) };
+    return move;
 
     stupidarray = [];
 
   }
+  
 });
 
 function getFormatted(evaluations) {
