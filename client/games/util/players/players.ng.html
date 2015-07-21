@@ -1,11 +1,11 @@
 <table class="table table-bordered table-hover">
   <thead>
     <tr>
-      <td>User</td>
-      <td>Reputation</td>
-      <td>Tokens</td>
-      <td>Favorite</td>
-      <td>Done</td>
+      <th>User</th>
+      <th>Reputation</th>
+      <th>Tokens</th>
+      <th>Favorite</th>
+      <th>Done</th>
     </tr>
   </thead>
   <tbody>
@@ -17,4 +17,13 @@
       <td>{{ ctrl.isDone(user._id) }}</td>
     </tr>
   </tbody>
+  <tfoot>
+    <tr>
+      <td>{{ ctrl.usersList.length }}</td>
+      <td>{{ ctrl.totalReputation }}</td>
+      <td>{{ ctrl.totalTokens }}</td>
+      <td>{{ ctrl.totalFavorited }}</td>
+      <td>{{ ctrl.totalDone }}</td>
+    </tr>
+  </tfoot>
 </table>

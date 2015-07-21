@@ -23,6 +23,7 @@ function GamesService($q, $window, $meteor, $mdDialog, ProtocolService, CommonSe
   };
 
   function isDone(id) {
+    if (!GamesModel.game.played_this_turn) { return false; }
     return GamesModel.game.played_this_turn.indexOf(id || Meteor.userId()) > -1;
   }
 

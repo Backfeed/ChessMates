@@ -52,6 +52,7 @@ function EvaluationModel(GamesModel) {
   }
 
   function getFavoriteByUser(id) {
+    if (!GamesModel.game.suggested_moves) { return false; }
     var move;
     GamesModel.game.suggested_moves.forEach(function(sug_move) {
       sug_move.evaluations.forEach(function(evl) {
