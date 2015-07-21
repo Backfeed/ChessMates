@@ -1,8 +1,8 @@
-angular.module('blockchess.games.controller', [])
-.controller('GamesController', GamesController)
+angular.module('blockchess.games.showController', [])
+.controller('GamesShowController', GamesShowController)
 
-function GamesController($scope, GamesService, GamesModel, BoardService, GameBoardService) {
-  var gameId = "1"; // TODO: Get dynamically from current game
+function GamesShowController($scope, $state, GamesService, GamesModel, BoardService, GameBoardService) {
+  var gameId = $state.params.id;
   var ctrl = this;
 
   angular.extend(ctrl, {
@@ -39,18 +39,10 @@ function GamesController($scope, GamesService, GamesModel, BoardService, GameBoa
   function pause()           { GamesService.pause(gameId);     }
 
   function updateBoard() {
-    console.log('game fen changed!', ctrl.game.fen, GameBoardService.game)
     if (ctrl.game.fen && GameBoardService.game) {
       GamesService.updateBoard();
     }
   }
-
-  // DEV
-  //function evaluate() {
-  //  Engine.evaluate(GameBoardService.getHistory()).then(function(score) {
-  //    console.log('score is ', score);
-  //  })
-  //}
 
   function singleMove(e, notation) {
     GamesService.singleMove(e, notation)

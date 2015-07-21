@@ -4,7 +4,7 @@ angular.module("blockchess.routes", [])
 
 function routes($urlRouterProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
-  $urlRouterProvider.otherwise("/games");
+  $urlRouterProvider.otherwise("/games/1");
 }
 
 function stateChangeError($rootScope, $state) {

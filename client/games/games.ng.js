@@ -1,5 +1,6 @@
 angular.module('blockchess.games', [
-  'blockchess.games.routes',
+  'blockchess.games.config',
   'blockchess.games.util',
-  'blockchess.games.controller'
+  'blockchess.games.indexController',
+  'blockchess.games.showController'
 ]);
