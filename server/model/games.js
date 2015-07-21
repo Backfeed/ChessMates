@@ -55,6 +55,7 @@ function resetGameData(gameId) {
   );
 
   function CB(err, result) {
+    if (err) throw new Meteor.Error(403, err);
     startTurn(gameId);
     restartStream.emit('restart');
   }
@@ -69,6 +70,7 @@ function executeMove(gameId, move, turn) {
   }
 
   function logTurnCB(err, result) {
+    if (err) throw new Meteor.Error(403, err);
     moves = Games.findOne({ game_id: gameId }).moves.join(" ");
     startTurn(gameId);
     if (turn === 'clan') {
