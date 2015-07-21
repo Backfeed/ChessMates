@@ -389,16 +389,20 @@ Meteor.startup(function () {
     _.forEach(users, function(user) {
       user.username = user.emails[0].address.split('@')[0];
       var id = Accounts.createUser(user);
+      Meteor.users.update({_id:id}, user);
+      addRoles(id, user.username);
+    });
+
+    function addRoles(id, name) {
       var admins = ['admin', 'genesis', 'clan-master'];
       var member = 'genesis';
       // Adam and Yaniv are admins
-      var name = user.username;
       if (name === 'adam' || name === 'yaniv') {
         Roles.setUserRoles(id , admins);
       } else {
         Roles.setUserRoles(id, member);
       }
-    });
+    }
   }
 });
 /* jshint ignore:end */
