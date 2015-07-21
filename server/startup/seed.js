@@ -113,6 +113,11 @@ Meteor.startup(function () {
     // the password for each user is the name of the user twice
   if (Meteor.users.find().count() === 0) {
 
+    if (Roles.getAllRoles().length === 0) {
+      Roles.createRole('admin'); // can change setting during the game
+      Roles.createRole('genesis'); // genesis is the name of the first clan
+      Roles.createRole('clan-master'); // can change setting and invite to join...
+    }
     var users = [
       {
         "reputation" : 20,
@@ -388,7 +393,17 @@ Meteor.startup(function () {
     ];
 
     _.forEach(users, function(user) {
-      Meteor.users.insert(user);
+      user.username = user.emails[0].address.split('@')[0];
+      var id = Accounts.createUser(user);
+      var admins = ['admin', 'genesis', 'clan-master'];
+      var member = 'genesis';
+      // Adam and Yaniv are admins
+      var name = user.username;
+      if (name === 'adam' || name === 'yaniv') {
+        Roles.setUserRoles(id , admins);
+      } else {
+        Roles.setUserRoles(id, member);
+      }
     });
   }
 });
