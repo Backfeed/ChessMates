@@ -1,4 +1,4 @@
-var stupidarray = {} ;
+var stupidarray = [];
 
 Meteor.methods({
   distributeReputation: function distributeReputation(gameId, notation, evarray) {
@@ -6,10 +6,10 @@ Meteor.methods({
     // Redistribute reputation after move
 
     var game = Games.findOne({ game_id: gameId });
-    console.log('distributeReputation');
+    log('distributeReputation');
 
     var curreval = _.last(evarray);
-    console.log(curreval);
+    log('user: ', Common.displayNameOf(user), ' stars: ', curreval.stars);
 
     // pay reputation at stake
     var user = Meteor.users.findOne(curreval.user_id);
@@ -17,7 +17,7 @@ Meteor.methods({
     user.reputation -= stake;
     Meteor.users.update( { _id: curreval.user_id}, { $set: { 'reputation': user.reputation }} );
 
-    console.log("updating " + user.emails + " reputation to = " + user.reputation);
+    log("updating " + Common.displayNameOf(user) + " reputation to = " + user.reputation);
 
     //check if it's the first evaluation, to prepare the dummy user
     if(!stupidarray[notation]) {
@@ -43,11 +43,9 @@ Meteor.methods({
      if(!stupidarray[notation][curreval.stars]) { stupidarray[notation][curreval.stars] = 0;}
       stupidarray[notation][curreval.stars] += Math.round( stake * 3 / fullstake * 100) /100;
 
-      console.log("stupidarray for "+ notation + " ==== " + stupidarray[notation])
-
       for (i = 0; i < evarray.length; i++) {
         var u = Meteor.users.findOne(evarray[i].user_id);
-        console.log(u.emails + " ===  " + u.reputation);
+        log(u.emails + " ===  " + u.reputation);
       }
 
   },
@@ -56,7 +54,7 @@ Meteor.methods({
     var stars = [1000, 0, 1, 3, 7, 15, 31];
     var turn = [];
 
-    console.log('endTurn');
+    log('endTurn');
     Meteor.clearInterval(GameInterval);
 
     var game = Games.findOne({ game_id: gameId })
@@ -66,7 +64,7 @@ Meteor.methods({
     for(j=0; j<game.suggested_moves.length; j++) {
       var move = game.suggested_moves[j];
       var formattedEvaluations = getFormatted(move.evaluations)
-      console.log("checking out move: " + move.notation);
+      log("checking out move: " + move.notation);
       var score = 0;
       var totalrep = 0;
 
@@ -78,14 +76,10 @@ Meteor.methods({
         }
 
         var evarray = formattedEvaluations[star-1];
-        console.log("evalulelauloelulealueoluloaelualoe ---- " + move.evaluations[star-1])
-
-        console.log("checking......... star sytem = " + star +   "(from "+ stupidarray[move.notation])
-        console.log("lalalal")
 
         //re-allocate the Funds to all players
         var funds = stupidarray[move.notation][star];
-        console.log("Total amount of funds collected for Star " + star + " = " + funds);
+        log("Total amount of funds collected for Star " + star + " = " + funds);
         var k, fullstake = 0;
 
         //redistribute the stake to other evaluators of the same move/star
@@ -119,18 +113,17 @@ Meteor.methods({
 
       //calculate the average value of the move
       turn[move.notation] = {reputation: totalrep, credits: score / totalrep, value: score}
-      console.log("move " + move.notation + " = " + score + " ( " + score / totalrep + " ) with " + totalrep + " reputation");
+      log("move " + move.notation + " = " + score + " ( " + score / totalrep + " ) with " + totalrep + " reputation");
 
     }
 
-
     //select the movie to be played
-    console.log(turn);
+    log(turn);
     var winner;
 
     //check if there is only one evaluation on that movie/star
     if(turn.length === 1) {
-      console.log("only one....... ");
+      log("only one....... ");
     }
 
     //first sort the move by the amount of value
@@ -139,7 +132,7 @@ Meteor.methods({
       sorted.push( [ move, turn[move].value ] );
     }
     sorted.sort(function(a, b) { return b[1] - a[1]; });
-    console.log(sorted);
+    log(sorted);
 
 
     //then identify the one with the highest overall score * rep || highest score || highest reputation
@@ -158,11 +151,11 @@ Meteor.methods({
     }
 
 
-    console.log("AND THE WINNER IS: " + winner.move);
+    log("AND THE WINNER MOVE IS: " + winner.move);
 //    var m = Games.findOne({ 'suggested_moves.notation' : winner.move });
     var m = game.suggested_moves.filter( function(move) { return move.notation === winner.move })
     //  var m = Array.from(game.suggested_moves).find({notation: winner.move});
-    console.log("winning user = " + m[0].user_id);
+    log("winning user = " + m[0].user_id);
 
 
 
@@ -187,3 +180,5 @@ function getFormatted(evaluations) {
   });
   return formattedArray;
 }
+
+function log(msg) { console.log("PROTCOL: ", msg); }

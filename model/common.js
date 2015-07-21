@@ -71,8 +71,6 @@ function resetGameData(gameId) {
   );
 
   function CB(err, result) {
-    console.log('Reset Game Data CB Error: ', err);
-    console.log('Reset Game Data CB result: ', result);
     startTurn(gameId);
     restartStream.emit('restart');
   }
@@ -87,10 +85,7 @@ function executeMove(gameId, move, turn) {
   }
 
   function logTurnCB(err, result) {
-    console.log("logTurnCB: err", err);
-    console.log("logTurnCB: result", result);
     moves = Games.findOne({ game_id: gameId }).moves.join(" ");
-    console.log("logTurnCB: moves", moves);
     startTurn(gameId);
     if (turn === 'clan') {
       Meteor.setTimeout(function() {
@@ -101,9 +96,9 @@ function executeMove(gameId, move, turn) {
 }
 
 function logTurn(gameId, move, turn, logTurnCB) {
+  debugger;
   var game = Games.findOne({ game_id: gameId });
   var newFen = getFen(game.fen, move);
-  console.log("logTurn: newFen: ", newFen);
   if (turn === "AI") {
     Games.update(
       { game_id: gameId },
@@ -155,7 +150,6 @@ function endGame(gameId) {
 }
 
 function clientDone(gameId) {
-  console.log('client Done!');
   if (Meteor.isServer) {
     validateGame(gameId);
     validateUniqueness();
@@ -172,15 +166,12 @@ function clientDone(gameId) {
       allClientsDone()
 
     function allClientsDone() {
-      console.log('All clients done');
 
       ClientsDone = [];
       Meteor.call('endTurn',gameId);
     }
 
     function isAllClientsFinished() {
-      console.log("Users Online: ", Meteor.users.find({ "status.online": true }).count());
-      console.log("Users Done: ", ClientsDone.length);
       return ClientsDone.length !== 0 &&
              Meteor.users.find({ "status.online": true }).count() === ClientsDone.length;
     }
@@ -204,10 +195,7 @@ function validateGame(gameId) {
 
 function getFen(prevFen, move) {
   if (Meteor.isServer) {
-    console.log('prevFen ', prevFen);
-    console.log('Chess.fen() BEFORE MOVE ', Chess.fen());
     Chess.move(move);
-    console.log('Chess.fen() AFTER MOVE', Chess.fen());
     return Chess.fen();
   }
 }
