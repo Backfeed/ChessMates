@@ -10,26 +10,13 @@ Games.allow({
     remove: function (userId, game)                   { return true; }
 });
 
-function suggestedMoveExists(suggestedMoves, modifier) {
-  return modifier.$set &&
-         modifier.$set.suggested_moves &&
-         modifier.$set.suggested_moves[0] &&
-         _.find(suggestedMoves, function(sug_move) {
-          return sug_move.notation === modifier.$set.suggested_moves[0].notation;
-         });
-}
-
-function foo(msg){ console.log('foo', msg);}
-
 Meteor.methods({
-  foo: foo,
-  displayNameCollection: displayNameCollection,
+  log: log,
   AIEvaluationCB: AIEvaluationCB,
   validateGame: validateGame,
   AIGetMoveCb: AIGetMoveCb,
   executeMove: executeMove,
   updateTimer: updateTimer,
-  displayName: displayName,
   clientDone: clientDone,
   startTurn: startTurn,
   restart: restart,
@@ -181,9 +168,6 @@ function clientDone(gameId) {
       { $push: { played_this_turn: Meteor.userId() } }
     )
 
-    console.log(Meteor.call('displayName', Meteor.user()), "is done from:");
-    console.log(Meteor.call('displayNameCollection', ClientsDone));
-
     if (isAllClientsFinished())
       allClientsDone()
 
@@ -228,18 +212,5 @@ function getFen(prevFen, move) {
   }
 }
 
-function displayNameCollection(usersIdArr) {
-  return usersIdArr.map(function(userId) {
-    return displayName(Meteor.users.findOne(userId));
-  });
-}
-
-function displayName(user) {
-  if (!user)
-    return;
-  if (user.profile && user.profile.name)
-    return user.profile.name;
-  if (user.emails)
-    return user.emails[0].address;
-  return "Anonymous user";
-}
+// For testing Meter.call in shady places
+function log(msg) { console.log('log', msg); }
