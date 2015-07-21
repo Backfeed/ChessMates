@@ -1,5 +1,6 @@
+console.log('common!');
 Common = (function Common() {
-
+  
   return {
     displayNamesOf: displayNamesOf,
     displayNameOf: displayNameOf
