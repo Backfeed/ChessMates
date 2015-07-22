@@ -6,6 +6,7 @@ angular.module('blockchess', [
     'ui.bootstrap',
     'blockchess.routes',
     'blockchess.util',
+    'blockchess.clans',
     'blockchess.games'
 ]);
 
