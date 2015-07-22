@@ -29,11 +29,9 @@ function AIGetMoveCb(move) {
 }
 
 function restart(gameId) {
-  if (Meteor.isServer) {
-    ClientsDone = [];
-    Chess.reset();
-    resetGameData(gameId);
-  }
+  ClientsDone = [];
+  Chess.reset();
+  resetGameData(gameId);
 }
 
 function resetGameData(gameId) {
@@ -62,12 +60,10 @@ function resetGameData(gameId) {
 }
 
 function executeMove(gameId, move, turn) {
-  if (Meteor.isServer) {
-    var moves;
-    console.log(turn, ": ", move);
-    movesStream.emit('move', move, turn);
-    logTurn(gameId, move, turn, logTurnCB);
-  }
+  var moves;
+  console.log(turn, ": ", move);
+  movesStream.emit('move', move, turn);
+  logTurn(gameId, move, turn, logTurnCB);
 
   function logTurnCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
