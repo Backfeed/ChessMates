@@ -4,7 +4,6 @@ Meteor.publish('games', function (options, gameId) {
 
 // TODO :: I think thi will break with multiple games / clans
 GameInterval = {};
-ClientsDone = [];
 
 Meteor.methods({
   AIEvaluationCB: AIEvaluationCB,
@@ -25,11 +24,10 @@ function AIEvaluationCB(score) {
 
 function AIGetMoveCb(move) {
   console.log('AI Move: ', move);
-  if (Meteor.isServer) { executeMove("1", move, "AI"); }
+  executeMove("1", move, "AI");
 }
 
 function restart(gameId) {
-  ClientsDone = [];
   Chess.reset();
   resetGameData(gameId);
 }
@@ -79,7 +77,7 @@ function executeMove(gameId, move, turn) {
 
 function logTurn(gameId, move, turn, logTurnCB) {
   var game = Games.findOne({ game_id: gameId });
-  var newFen = getFen(game.fen, move);
+  var newFen = getFen(move);
   if (turn === "AI") {
     Games.update(
       { game_id: gameId },
@@ -107,17 +105,15 @@ function updateTimer(timeLeft) {
 }
 
 function startTurn(gameId) {
-  if (Meteor.isServer) {
-    resetPlayed(gameId);
-    var game = Games.findOne({ game_id: gameId });
-    var timeLeft = game.settings.timePerMove;
-    Meteor.clearInterval(GameInterval);
-    GameInterval = Meteor.setInterval(function() {
-      timeLeft -= 1000;
-      if (timeLeft <= 0) { endTurn(gameId); }
-      else               { updateTimer(timeLeft); }
-    }, 1000);
-  }
+  resetPlayed(gameId);
+  var game = Games.findOne({ game_id: gameId });
+  var timeLeft = game.settings.timePerMove;
+  Meteor.clearInterval(GameInterval);
+  GameInterval = Meteor.setInterval(function() {
+    timeLeft -= 1000;
+    if (timeLeft <= 0) { endTurn(gameId); }
+    else               { updateTimer(timeLeft); }
+  }, 1000);
 }
 
 function resetPlayed(gameId) {
@@ -125,44 +121,30 @@ function resetPlayed(gameId) {
 }
 
 function endGame(gameId) {
-  if (Meteor.isServer) {
-    Meteor.clearInterval(GameInterval);
-  }
+  Meteor.clearInterval(GameInterval);
 }
 
 function clientDone(gameId) {
-  if (Meteor.isServer) {
-    validateGame(gameId);
-    validateUniqueness();
+  validateGame(gameId);
+  validateUniqueness(gameId);
+  Games.update(
+    { game_id: gameId },
+    { $push: { played_this_turn: Meteor.userId() } },
+    function() { if (isAllClientsFinished(gameId)) { endTurn(gameId); } }
+  )
 
-    // TODO :: Combine ClientDone with played_this_turn
-    ClientsDone.push(this.userId);
-
-    Games.update(
-      { game_id: gameId },
-      { $push: { played_this_turn: Meteor.userId() } }
-    )
-
-    if (isAllClientsFinished())
-      allClientsDone()
-
-    function allClientsDone() {
-
-      ClientsDone = [];
-      endTurn(gameId);
-    }
-
-    function isAllClientsFinished() {
-      return ClientsDone.length !== 0 &&
-             Meteor.users.find({ "status.online": true }).count() === ClientsDone.length;
-    }
-
-    function validateUniqueness() {
-      if ( _.contains(ClientsDone, Meteor.userId()) )
-        throw new Meteor.Error(403, 'Already pressed "Im done"');
-    }
-
+  function validateUniqueness() {
+    var played = Games.findOne({game_id: gameId}).played_this_turn;
+    if ( _.contains(played, Meteor.userId()) )
+      throw new Meteor.Error(403, 'Already pressed "Im done"');
   }
+
+}
+
+function isAllClientsFinished(gameId) {
+  playersN = Meteor.users.find({ "status.online": true }).count();
+  playedN = Games.findOne({game_id: gameId}).played_this_turn.length;
+  return playersN === playedN;
 }
 
 function validateGame(gameId) {
@@ -174,11 +156,9 @@ function validateGame(gameId) {
     throw new Meteor.Error(404, "No such game");
 }
 
-function getFen(prevFen, move) {
-  if (Meteor.isServer) {
-    Chess.move(move);
-    return Chess.fen();
-  }
+function getFen(move) {
+  Chess.move(move);
+  return Chess.fen();
 }
 
 function endTurn(gameId) {
