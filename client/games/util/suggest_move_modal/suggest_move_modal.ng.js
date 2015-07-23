@@ -9,7 +9,8 @@ function suggestMoveModalController($mdDialog, GamesService, CommonService, $sco
     cancel: cancel
   });
 
-  $scope.$watch('ctrl.game.turn', turnChanged);
+  //TODO make this by timer
+  //$scope.$watch('ctrl.game.turn', turnChanged);
 
   function submit() {
     if (GamesService.getMoveBy('notation', ctrl.notation)) {

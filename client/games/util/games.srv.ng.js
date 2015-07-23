@@ -107,7 +107,7 @@ function GamesService($q, $meteor, $mdDialog, ProtocolService, CommonService, Ev
     BoardService.board.position(GameBoardService.game.fen());
   }
 
-  function singleMove(e, notation) {
+  function singleMove(notation) {
     var deferred = $q.defer();
 
     // TODO :: Delete this check

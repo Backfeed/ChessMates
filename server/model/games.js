@@ -46,7 +46,7 @@ function resetGameData(gameId) {
         suggested_moves: [],
         turns: [],
         moves: [],
-        turn: 'clan',
+        turn: 'start',
         restarted: true,
         pgn: [],
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
@@ -70,24 +70,29 @@ function resetGameData(gameId) {
 function executeMove(gameId, move, turn) {
   var moves;
   console.log(turn, ": ", move);
-  Games.update(
-    { game_id: gameId },
-    {
-      $set:  { turn: turn }
-    }
-  );
   logTurn(gameId, move, turn, logTurnCB);
 
   function logTurnCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
     moves = Games.findOne({ game_id: gameId }).moves.join(" ");
+    Games.update(
+      { game_id: gameId },
+      {
+        $set:  { turn: turn }
+      },
+      initNextTurn
+    );
+  }
+
+  function initNextTurn () {
     startTurn(gameId);
     if (turn === 'clan') {
       Meteor.setTimeout(function() {
         Engine.getMove(moves);
-      }, 3000);
+      }, 2000);
     }
   }
+
 }
 
 function logTurn(gameId, move, turn, logTurnCB) {
@@ -97,7 +102,10 @@ function logTurn(gameId, move, turn, logTurnCB) {
     Games.update(
       { game_id: gameId },
       {
-        $push: { moves: move.from+move.to },
+        $push: {
+          moves: move.from+move.to,
+          pgn: move
+        },
         $set:  { fen:   newFen }
       },
       logTurnCB
@@ -107,7 +115,11 @@ function logTurn(gameId, move, turn, logTurnCB) {
     Games.update(
       { game_id: gameId },
       {
-        $push: { moves: move.from+move.to,      turns: game.suggested_moves },
+        $push: {
+          moves: move.from+move.to,
+          pgn: move,
+          turns: game.suggested_moves
+        },
         $set:  { fen:   newFen, suggested_moves: [] }
       },
       logTurnCB
@@ -137,7 +149,6 @@ function endTurn(gameId) {
   validateGame(gameId);
   Meteor.clearInterval(GameInterval);
   var move = Meteor.call('protoEndTurn', gameId);
-  executeMove(gameId, move, 'clan');
 }
 
 function resetPlayed(gameId) {

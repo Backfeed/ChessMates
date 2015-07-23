@@ -55,7 +55,7 @@ Meteor.methods({
     var turn = [];
 
     log('endTurn');
-    
+
 
     var game = Games.findOne({ game_id: gameId })
 
@@ -166,12 +166,15 @@ Meteor.methods({
 
     //return winner.move;
     var move = { from: winner.move.substr(0,2), to: winner.move.substr(2) };
-    return move;
+    //return move;
+
+    Meteor.call('executeMove',gameId, move, 'clan');
+    //executeMove(gameId, move, 'clan');
 
     stupidarray = [];
 
   }
-  
+
 });
 
 function getFormatted(evaluations) {

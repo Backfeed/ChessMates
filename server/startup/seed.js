@@ -100,7 +100,7 @@ Meteor.startup(function () {
         'game_id': '1',
         'pgn': [],
         'fen': 'start',
-        'turn': 'clan',
+        'turn': 'start',
         'restarted': true,
         'turns': [],
         'suggested_moves': []
