@@ -103,12 +103,6 @@ function logTurn(gameId, move, turn, logTurnCB) {
   }
 }
 
-function updateTimer(gameId, timer) {
-  Timer.update(
-    { game_id: gameId }, timer
-  );
-}
-
 function startTurn(gameId) {
   resetPlayed(gameId);
   var timer = Timer.findOne({ game_id: gameId });
@@ -121,6 +115,19 @@ function startTurn(gameId) {
   }, 1000);
 }
 
+function updateTimer(gameId, timer) {
+  Timer.update(
+    { game_id: gameId }, timer
+  );
+}
+
+function endTurn(gameId) {
+  validateGame(gameId);
+  Meteor.clearInterval(GameInterval);
+  var move = Meteor.call('protoEndTurn', gameId);
+  executeMove(gameId, move, 'clan');
+}
+
 function resetPlayed(gameId) {
   Games.update({ game_id: gameId }, { $set: { played_this_turn: [] } });
 }
@@ -131,6 +138,7 @@ function endGame(gameId) {
 
 function clientDone(gameId) {
   validateGame(gameId);
+  validateUser(this.userId);
   validateUniqueness(gameId);
   Games.update(
     { game_id: gameId },
@@ -154,11 +162,15 @@ function isAllClientsFinished(gameId) {
 
 function validateGame(gameId) {
   check(gameId, String);
-  if (! Meteor.userId())
-    throw new Meteor.Error(403, "You must be logged in");
   var game = Games.findOne({ game_id: gameId });
   if (! game)
     throw new Meteor.Error(404, "No such game");
+}
+
+function validateUser(userId) {
+  check(userId, String);
+  if (! userId)
+    throw new Meteor.Error(403, "You must be logged in");
 }
 
 function getFen(move) {
@@ -166,9 +178,3 @@ function getFen(move) {
   return Chess.fen();
 }
 
-function endTurn(gameId) {
-  validateGame(gameId);
-  Meteor.clearInterval(GameInterval);
-  var move = Meteor.call('protoEndTurn', gameId);
-  executeMove(gameId, move, 'clan');
-}
