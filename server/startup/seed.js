@@ -25,6 +25,13 @@ Meteor.startup(function () {
     });
   }
 
+  if (SuggestedMoves.find().count() === 0) {
+    SuggestedMoves.insert({
+      'game_id': '1',
+      'moves': []
+    });
+  }
+
   if (Games.find().count() === 0) {
     var games = [
       {

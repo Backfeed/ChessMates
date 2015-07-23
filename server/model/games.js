@@ -15,6 +15,10 @@ Meteor.publish('status', function (options, gameId) {
 Meteor.publish('turns', function (options, gameId) {
   return Turns.find({"game_id": "1"});
 });
+
+Meteor.publish('suggested_moves', function (options, gameId) {
+  return SuggestedMoves.find({"game_id": "1"});
+});
 // TODO :: I think thi will break with multiple games / clans
 GameInterval = {};
 
@@ -59,7 +63,6 @@ function resetGameData(gameId) {
     { game_id: gameId },
     { $set: {
         played_this_turn: [],
-        suggested_moves: [],
         moves: [],
         pgn: [],
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
@@ -125,19 +128,23 @@ function logTurn(gameId, move, turn, logTurnCB) {
     );
   }
   if (turn === "clan") {
+    var suggested_moves = SuggestedMoves.findOne({ game_id: gameId });
     Turns.update(
       { game_id: gameId },
-      { $push: { turns: game.suggested_moves } }
+      { $push: { turns: suggested_moves.moves } }
+    );
+    SuggestedMoves.update(
+      { game_id: gameId },
+      { $set:  { moves: [] } }
     );
     Games.update(
       { game_id: gameId },
       {
         $push: {
           moves: move.from+move.to,
-          pgn: move,
-          turns: game.suggested_moves
+          pgn: move
         },
-        $set:  { fen:   newFen, suggested_moves: [] }
+        $set:  { fen: newFen }
       },
       logTurnCB
     );

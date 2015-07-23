@@ -25,7 +25,7 @@ function playersController($scope, $meteor, GamesService, EvaluationModel) {
   });
 
   $scope.$watch('ctrl.game.played_this_turn', updateTotalDone);
-  $scope.$watch('ctrl.game.suggested_moves', updateTotalFavorited, true);
+  $scope.$watch('ctrl.suggested_moves', updateTotalFavorited, true);
 
   $meteor.subscribe('userStatus');
 
@@ -70,9 +70,9 @@ function playersController($scope, $meteor, GamesService, EvaluationModel) {
   }
 
   function updateTotalFavorited(suggested_moves) {
-    if (!suggested_moves || !suggested_moves.length) { return 0; }
+    if (!suggested_moves || !suggested_moves.moves.length) { return 0; }
     ctrl.totalFavorited = 0;
-    suggested_moves.forEach(function(sug_move) {
+    suggested_moves.moves.forEach(function(sug_move) {
       sug_move.evaluations.forEach(function(evl) {
         if (evl.favorite_move)
           ctrl.totalFavorited += 1;
