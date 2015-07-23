@@ -24,6 +24,8 @@ function GamesShowController($scope, $state, GamesService, GamesModel, BoardServ
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard, true);
+  $scope.$watch('ctrl.game.move', onMove);
+  $scope.$watch('ctrl.game.restarted', onRestart);
 
   init();
 
@@ -39,6 +41,18 @@ function GamesShowController($scope, $state, GamesService, GamesModel, BoardServ
   function isDone()   { return GamesService.isDone();          }
   function imDone()          { GamesService.imDone(gameId);    }
   function pause()           { GamesService.pause(gameId);     }
+
+  function onRestart() {
+    if (ctrl.game && ctrl.game.restarted) {
+      GamesService.onRestart();
+    }
+  }
+
+  function onMove() {
+    if (ctrl.game && ctrl.game.turn) {
+      GamesService.onMove(_.last(ctrl.game.moves), ctrl.game.turn);
+    }
+  }
 
   function updateBoard() {
     if (ctrl.game.fen && GameBoardService.game) {

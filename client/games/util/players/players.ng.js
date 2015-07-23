@@ -28,7 +28,6 @@ function playersController($scope, $meteor, GamesService, EvaluationModel) {
   $scope.$watch('ctrl.game.suggested_moves', updateTotalFavorited, true);
 
   $meteor.subscribe('userStatus');
-  connectionStream.on('connections', updateUsers);
 
   init();
 
@@ -75,7 +74,7 @@ function playersController($scope, $meteor, GamesService, EvaluationModel) {
     ctrl.totalFavorited = 0;
     suggested_moves.forEach(function(sug_move) {
       sug_move.evaluations.forEach(function(evl) {
-        if (evl.favorite_move) 
+        if (evl.favorite_move)
           ctrl.totalFavorited += 1;
       });
     });

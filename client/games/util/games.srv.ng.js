@@ -1,10 +1,8 @@
 angular.module('blockchess.games.util.service', [])
   .service('GamesService', GamesService);
 
-function GamesService($q, $window, $meteor, $mdDialog, ProtocolService, CommonService, EvaluationModel, GamesModel, GameBoardService, BoardService) {
+function GamesService($q, $meteor, $mdDialog, ProtocolService, CommonService, EvaluationModel, GamesModel, GameBoardService, BoardService) {
   var gameId = "1"; // Dev
-  movesStream.on('move', onMove);
-  restartStream.on('restart', onRestart);
 
   return {
     cancelMoveHighlights: cancelMoveHighlights,
@@ -17,6 +15,8 @@ function GamesService($q, $window, $meteor, $mdDialog, ProtocolService, CommonSe
     startTurn: startTurn,
     endGame: endGame,
     restart: restart,
+    onRestart: onRestart,
+    onMove: onMove,
     isDone: isDone,
     imDone: imDone,
     pause: pause
@@ -64,7 +64,7 @@ function GamesService($q, $window, $meteor, $mdDialog, ProtocolService, CommonSe
       controllerAs: 'ctrl',
       templateUrl: "client/games/util/suggest_move_modal/suggest_move_modal.ng.html",
       controller: 'suggestMoveModalController',
-      locals: { notation: notation }
+      locals: { notation: notation, game: GamesModel.game }
     });
   }
 

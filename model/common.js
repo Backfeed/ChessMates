@@ -1,9 +1,6 @@
 Clans            = new Mongo.Collection('clans');
 Games            = new Mongo.Collection('games');
 Timer            = new Mongo.Collection('timer');
-connectionStream = new Meteor.Stream('connection');
-movesStream      = new Meteor.Stream('engineMove');
-restartStream    = new Meteor.Stream('restart');
 
 Games.allow({
     insert: function (userId)                         { return true; },

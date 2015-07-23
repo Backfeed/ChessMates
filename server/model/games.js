@@ -46,24 +46,36 @@ function resetGameData(gameId) {
         suggested_moves: [],
         turns: [],
         moves: [],
+        turn: 'clan',
+        restarted: true,
         pgn: [],
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
       }
     },
-    CB
+    restartCB
   );
 
-  function CB(err, result) {
+  function restartCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
     startTurn(gameId);
-    restartStream.emit('restart');
+    Games.update(
+      { game_id: gameId },
+      {
+        $set:  { restarted: false }
+      }
+    );
   }
 }
 
 function executeMove(gameId, move, turn) {
   var moves;
   console.log(turn, ": ", move);
-  movesStream.emit('move', move, turn);
+  Games.update(
+    { game_id: gameId },
+    {
+      $set:  { turn: turn }
+    }
+  );
   logTurn(gameId, move, turn, logTurnCB);
 
   function logTurnCB(err, result) {
