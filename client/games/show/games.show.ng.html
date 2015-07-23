@@ -1,7 +1,7 @@
 <section class="area game-area" layout="row">
 
   <div class="game-sidebar" flex="15">
-      <timer settings="ctrl.game.settings"></timer>
+      <timer settings="ctrl.timer"></timer>
       <dl class="game-metadata">
         <dt>Clan's Score:</dt>
         <dd>240</dd>
@@ -14,7 +14,7 @@
   </div>
 
   <div flex>
-    
+
     <strong>DB:</strong> <br>
     History: {{ ctrl.game.moves.join(" ") }} <br />
     FEN: {{ ctrl.game.fen }} <br />
@@ -34,7 +34,7 @@
         <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
     </button>
     <button ng-click="ctrl.restart()">Restart</button>
-    <button ng-click="ctrl.imDone()" 
+    <button ng-click="ctrl.imDone()"
             ng-class="{ 'is-disabled': ctrl.isDone() }"
             ng-disabled="ctrl.isDone()">I'm Done</button>
     <br>

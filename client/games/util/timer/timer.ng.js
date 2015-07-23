@@ -15,17 +15,14 @@ function timer() {
 function timerController($scope) {
   var ctrl = this;
   angular.extend(ctrl, {
-    timeLeft: 0,
     timeLeftPercentage: 100
   });
 
-  timerStream.on('timer', function(timeLeft) {
-    //console.log('timeLeft - ', timeLeft/1000);
-    ctrl.timeLeft = timeLeft;
+  $scope.$watch('ctrl.settings.timeLeft', updateTime);
+
+  function updateTime() {
     if (ctrl.settings)
-        ctrl.timeLeftPercentage = Math.round((ctrl.timeLeft / ctrl.settings.timePerMove) * 100);
-    //TODO see how to avoid using apply here, some reactivly thingy
-    $scope.$apply();
-  });
+        ctrl.timeLeftPercentage = Math.round((ctrl.settings.timeLeft / ctrl.settings.timePerMove) * 100);
+  }
 
 }

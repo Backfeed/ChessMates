@@ -17,6 +17,7 @@ function GamesShowController($scope, $state, GamesService, GamesModel, BoardServ
     isDone: isDone,
     imDone: imDone,
     selectedMove: {},
+    timer: {},
     game: {}
   });
 
@@ -29,6 +30,7 @@ function GamesShowController($scope, $state, GamesService, GamesModel, BoardServ
   function init() {
     GamesModel.set(gameId);
     ctrl.game = GamesModel.game;
+    ctrl.timer = GamesModel.timer;
   }
 
   function startTurn()       { GamesService.startTurn(gameId); }

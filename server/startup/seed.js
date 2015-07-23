@@ -1,6 +1,14 @@
 /* jshint ignore:start */
 Meteor.startup(function () {
   console.log('==========\n\n\n\n\n\n');
+  if (Timer.find().count() === 0) {
+    Timer.insert({
+      'game_id': '1',
+      'inPlay': false,
+      'timePerMove': 300000,
+      'timeLeft': 300000
+    });
+  }
   if (Games.find().count() === 0) {
     var games = [
       {

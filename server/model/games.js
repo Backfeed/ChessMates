@@ -1,5 +1,11 @@
 Meteor.publish('games', function (options, gameId) {
-  return Games.find({});
+  //return Games.find({});
+  //return Games.findOne({"game_id": gameId});
+  return Games.find({"game_id": "1"});
+});
+
+Meteor.publish('timer', function (options, gameId) {
+  return Timer.find({"game_id": "1"});
 });
 
 // TODO :: I think thi will break with multiple games / clans
@@ -41,10 +47,7 @@ function resetGameData(gameId) {
         turns: [],
         moves: [],
         pgn: [],
-        fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-        settings: {
-          timePerMove: 300000
-        }
+        fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
       }
     },
     CB
@@ -100,19 +103,21 @@ function logTurn(gameId, move, turn, logTurnCB) {
   }
 }
 
-function updateTimer(timeLeft) {
-  timerStream.emit('timer', timeLeft);
+function updateTimer(gameId, timer) {
+  Timer.update(
+    { game_id: gameId }, timer
+  );
 }
 
 function startTurn(gameId) {
   resetPlayed(gameId);
-  var game = Games.findOne({ game_id: gameId });
-  var timeLeft = game.settings.timePerMove;
+  var timer = Timer.findOne({ game_id: gameId });
+  timer.timeLeft = timer.timePerMove;
   Meteor.clearInterval(GameInterval);
   GameInterval = Meteor.setInterval(function() {
-    timeLeft -= 1000;
-    if (timeLeft <= 0) { endTurn(gameId); }
-    else               { updateTimer(timeLeft); }
+    timer.timeLeft -= 1000;
+    if (timer.timeLeft <= 0) { endTurn(gameId); }
+    else               { updateTimer(gameId, timer); }
   }, 1000);
 }
 

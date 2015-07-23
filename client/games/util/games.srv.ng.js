@@ -37,7 +37,7 @@ function GamesService($q, $window, $meteor, $mdDialog, ProtocolService, CommonSe
   function pause(gameId) {
     $meteor.call('pauseGame', gameId).then(
       function() {
-        GamesModel.game.settings.inPlay = !GamesModel.game.settings.inPlay;
+        GamesModel.timer.inPlay = !GamesModel.timer.inPlay;
         CommonService.toast('game paused');
       },
       function(err) { console.log('failed', err); }
