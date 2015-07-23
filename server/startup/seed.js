@@ -9,6 +9,22 @@ Meteor.startup(function () {
       'timeLeft': 300000
     });
   }
+
+  if (Status.find().count() === 0) {
+    Status.insert({
+      'game_id': '1',
+      'turn': 'start',
+      'restarted': true
+    });
+  }
+
+  if (Turns.find().count() === 0) {
+    Turns.insert({
+      'game_id': '1',
+      'turns': []
+    });
+  }
+
   if (Games.find().count() === 0) {
     var games = [
       {
@@ -100,9 +116,6 @@ Meteor.startup(function () {
         'game_id': '1',
         'pgn': [],
         'fen': 'start',
-        'turn': 'start',
-        'restarted': true,
-        'turns': [],
         'suggested_moves': []
       }
     ];

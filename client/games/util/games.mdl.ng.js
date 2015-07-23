@@ -15,6 +15,7 @@ function GamesModel($meteor) {
     model.game = $meteor.object(Games, { game_id: id }).subscribe('games');
     model.gameNotAuto = $meteor.object(Games, { game_id: id }, false).subscribe('games');
     model.timer = $meteor.object(Timer, { game_id: id }, false).subscribe('timer');
+    model.status = $meteor.object(Status, { game_id: id }, false).subscribe('status');
   }
 
   function restart() {

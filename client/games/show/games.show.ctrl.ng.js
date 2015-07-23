@@ -18,6 +18,7 @@ function GamesShowController($scope, $state, GamesService, GamesModel, BoardServ
     imDone: imDone,
     selectedMove: {},
     timer: {},
+    status: {},
     game: {}
   });
 
@@ -25,8 +26,8 @@ function GamesShowController($scope, $state, GamesService, GamesModel, BoardServ
   $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
   //TODO why use 'true' here? it's a string
   $scope.$watch('ctrl.game.fen', updateBoard, true);
-  $scope.$watch('ctrl.game.turn', onTurn, true);
-  $scope.$watch('ctrl.game.restarted', onRestart, true);
+  $scope.$watch('ctrl.status.turn', onTurn, true);
+  $scope.$watch('ctrl.status.restarted', onRestart, true);
 
   init();
 
@@ -34,6 +35,7 @@ function GamesShowController($scope, $state, GamesService, GamesModel, BoardServ
     GamesModel.set(gameId);
     ctrl.game = GamesModel.game;
     ctrl.timer = GamesModel.timer;
+    ctrl.status = GamesModel.status;
   }
 
   function startTurn()       { GamesService.startTurn(gameId); }
@@ -44,19 +46,19 @@ function GamesShowController($scope, $state, GamesService, GamesModel, BoardServ
   function pause()           { GamesService.pause(gameId);     }
 
   function onRestart() {
-    if (ctrl.game && ctrl.game.restarted) {
+    if (ctrl.status) {
       GamesService.onRestart();
     }
   }
 
   function onTurn() {
-    if (ctrl.game && ctrl.game.turn) {
+    if (ctrl.status) {
       GamesService.onMove(_.last(ctrl.game.pgn), ctrl.game.turn);
     }
   }
 
   function updateBoard() {
-    if (ctrl.game.fen && GameBoardService.game) {
+    if (ctrl.game && GameBoardService.game) {
       GamesService.updateBoard();
     }
   }

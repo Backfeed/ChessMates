@@ -8,6 +8,13 @@ Meteor.publish('timer', function (options, gameId) {
   return Timer.find({"game_id": "1"});
 });
 
+Meteor.publish('status', function (options, gameId) {
+  return Status.find({"game_id": "1"});
+});
+
+Meteor.publish('turns', function (options, gameId) {
+  return Turns.find({"game_id": "1"});
+});
 // TODO :: I think thi will break with multiple games / clans
 GameInterval = {};
 
@@ -39,15 +46,21 @@ function restart(gameId) {
 }
 
 function resetGameData(gameId) {
+  Status.update(
+    { game_id: gameId },
+    {
+      $set:  {
+        turn: 'start',
+        restarted: true
+      }
+    }
+  );
   Games.update(
     { game_id: gameId },
     { $set: {
         played_this_turn: [],
         suggested_moves: [],
-        turns: [],
         moves: [],
-        turn: 'start',
-        restarted: true,
         pgn: [],
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
       }
@@ -58,7 +71,7 @@ function resetGameData(gameId) {
   function restartCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
     startTurn(gameId);
-    Games.update(
+    Status.update(
       { game_id: gameId },
       {
         $set:  { restarted: false }
@@ -75,7 +88,7 @@ function executeMove(gameId, move, turn) {
   function logTurnCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
     moves = Games.findOne({ game_id: gameId }).moves.join(" ");
-    Games.update(
+    Status.update(
       { game_id: gameId },
       {
         $set:  { turn: turn }
@@ -112,6 +125,10 @@ function logTurn(gameId, move, turn, logTurnCB) {
     );
   }
   if (turn === "clan") {
+    Turns.update(
+      { game_id: gameId },
+      { $push: { turns: game.suggested_moves } }
+    );
     Games.update(
       { game_id: gameId },
       {
