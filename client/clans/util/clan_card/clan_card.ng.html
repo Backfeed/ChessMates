@@ -1,0 +1,15 @@
+<div layout="row" ui-sref="clan({ id: ctrl.clan._id })" class="pointer">
+  <div flex="25">
+    <img ng-src="{{ ctrl.clan.image_url }}" alt="Clans image">
+  </div>
+  
+  <div flex="50">
+    <h3>{{ ::ctrl.clan.title }}</h3>
+    <p>{{ ::ctrl.clan.description }}</p>
+  </div>
+  
+  <div flex="25">
+    {{ ctrl.clan.players_ids.length }} Players <br>
+    {{ ctrl.clan.totalTokens }} Tokens <br>
+  </div>
+</div>
