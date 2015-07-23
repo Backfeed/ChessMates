@@ -1,4 +1,4 @@
-angular.module("blockchess.routes", [])
+angular.module("blockchess.config.routes", [])
 .run(stateChangeError)
 .config(routes);
 
