@@ -1,15 +1,16 @@
-<div layout="row" ui-sref="clan({ id: ctrl.clan._id })" class="pointer">
-  <div flex="25">
-    <img ng-src="{{ ctrl.clan.image_url }}" alt="Clans image">
-  </div>
-  
-  <div flex="50">
+<md-list-item class="md-2-line pointer" ui-sref="clan({ id: ctrl.clan._id })">
+  <img ng-src="{{ ctrl.clan.image_url }}" class="md-avatar" alt="Clans image">
+  <div class="md-list-item-text">
     <h3>{{ ::ctrl.clan.title }}</h3>
     <p>{{ ::ctrl.clan.description }}</p>
   </div>
-  
-  <div flex="25">
-    {{ ctrl.clan.players_ids.length }} Players <br>
-    {{ ctrl.clan.totalTokens }} Tokens <br>
+  <div class="md-list-item-text">
+    <md-icon md-svg-icon="social:ic_people_24px" aria-label="People Icon"></md-icon> 
+    {{ ctrl.clan.players_ids.length }}
+    
+    <md-icon md-svg-icon="action:ic_search_24px" aria-label="Tokens Icon"></md-icon> 
+    {{ ctrl.clan.totalTokens }}
+
+    Left to add: games count, schedule, active games
   </div>
-</div>
+</md-list-item>

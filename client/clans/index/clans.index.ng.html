@@ -1,7 +1,15 @@
 <div>
   <div layout="row">
     <h1>Behold the great clans of chessmates ...</h1>
+    <md-icon md-svg-icon="action:ic_add_48px" 
+             aria-label="Add ClanIcon"
+             ui-sref="createClan"></md-icon>
   </div>
-  
-  <clan-card clan="clan" ng-repeat="clan in ctrl.clans"></clan-card>
+
+  <md-content>
+    <md-list>
+      <clan-card clan="clan" ng-repeat="clan in ctrl.clans"></clan-card>
+    </md-list>
+  </md-content>
+
 </div>
