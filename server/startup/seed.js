@@ -124,7 +124,7 @@ Meteor.startup(function () {
     });
   }
 
-    // the password for each user is the name of the user twice
+  // the password for each user is 'taltal'
   if (Meteor.users.find().count() === 0) {
 
     if (Roles.getAllRoles().length === 0) {
@@ -423,6 +423,16 @@ Meteor.startup(function () {
         Roles.setUserRoles(id, member);
       }
     }
+  }
+
+  if (Clans.find().count() === 0) {
+    Clans.insert({
+      description: "We are legions. We are everywhere. Expect us when you least expect us.",
+      players_ids: [],
+      image_url: 'http://backfeed.cc/wp-content/uploads/2015/05/loop_white.gif',
+      title: "Backfeed kickass clan",
+      total_tokens: 0
+    });
   }
 });
 /* jshint ignore:end */
