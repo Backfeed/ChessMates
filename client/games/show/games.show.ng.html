@@ -1,8 +1,8 @@
 <div layout="row" layout-margin>
   <section class="area game-area" layout="row" flex="70">
-  
+
     <div class="game-sidebar" flex="15">
-        <timer settings="ctrl.game.settings"></timer>
+        <timer settings="ctrl.timer"></timer>
         <dl class="game-metadata">
           <dt>Clan's Score:</dt>
           <dd>240</dd>
@@ -13,17 +13,18 @@
           <dd>532</dd>
         </dl>
     </div>
-  
+
     <div flex>
-      
+
       <strong>DB:</strong> <br>
       History: {{ ctrl.game.moves.join(" ") }} <br />
       FEN: {{ ctrl.game.fen }} <br />
+      TURN: {{ ctrl.status.turn }} <br />
       <strong>LOCAL:</strong> <br>
       History: {{ ctrl.GameBoardService.game.history().join(" ") }} <br />
       Turn: {{ ctrl.GameBoardService.game.turn() }} <br />
       FEN: {{ ctrl.GameBoardService.game.fen() }} <br />
-  
+
       <div board="{{ ctrl.gameId }}"></div>
       <button ng-click="ctrl.startTurn()">
           <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
@@ -35,28 +36,28 @@
           <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
       </button>
       <button ng-click="ctrl.restart()">Restart</button>
-      <button ng-click="ctrl.imDone()" 
+      <button ng-click="ctrl.imDone()"
               ng-class="{ 'is-disabled': ctrl.isDone() }"
               ng-disabled="ctrl.isDone()">I'm Done</button>
       <br>
       <br>
       <br>
-  
+
       <players game="ctrl.game"></players>
-  
+
       <br>
-  
+
       History: {{ ctrl.game.pgn }}
     </div>
-  
+
     <div flex="40">
       <suggested-moves moves="ctrl.game.suggested_moves" selected-move="ctrl.selectedMove"></suggested-moves>
     </div>
-  
+
   </section>
-  
-  
+
+
   <suggested-moves-panel flex
-                         moves="ctrl.game.suggested_moves" 
+                         moves="ctrl.game.suggested_moves"
                          selected-move="ctrl.selectedMove"></suggested-moves-panel>
 </div>
