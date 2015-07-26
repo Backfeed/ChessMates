@@ -26,10 +26,10 @@
     "Meteor",
     "Kadira",
     "check",
-    "Parties",
-    "Games",
-    "Comments",
-    "connectionStream",
+    "Game",
+    "Evaluation",
+    "SuggestedMove",
+    "Comment",
     "$"
   ]
 }

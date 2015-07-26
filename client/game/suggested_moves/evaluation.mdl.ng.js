@@ -54,7 +54,7 @@ function EvaluationModel(GamesModel) {
   function getFavoriteByUser(id) {
     if (!GamesModel.suggested_moves) { return false; }
     var move;
-    GamesModel.suggested_moves.moves.forEach(function(sug_move) {
+    GamesModel.suggested_moves.forEach(function(sug_move) {
       sug_move.evaluations.forEach(function(evl) {
         if (evl.favorite_move && evl.user_id === (id || Meteor.userId()) ) {
           move = sug_move;

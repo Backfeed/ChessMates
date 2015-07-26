@@ -56,12 +56,12 @@ Meteor.methods({
     log('endTurn');
 
 
-    var suggested_moves = SuggestedMoves.findOne({ game_id: gameId }).moves;
+    var suggested_moves = SuggestedMove.find({ game_id: gameId });
 
     //iterate through each move
     for(j=0; j<suggested_moves.length; j++) {
       var move = suggested_moves[j];
-      var formattedEvaluations = getFormatted(move.evaluations)
+      var formattedEvaluations = getFormatted(move.evaluations);
       log("checking out move: " + move.notation);
       var score = 0;
       var totalrep = 0;

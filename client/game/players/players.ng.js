@@ -70,9 +70,9 @@ function playersController($scope, $meteor, GamesService, EvaluationModel) {
   }
 
   function updateTotalFavorited(suggested_moves) {
-    if (!suggested_moves || !suggested_moves.moves.length) { return 0; }
+    if (!suggested_moves || !suggested_moves.length) { return 0; }
     ctrl.totalFavorited = 0;
-    suggested_moves.moves.forEach(function(sug_move) {
+    suggested_moves.forEach(function(sug_move) {
       sug_move.evaluations.forEach(function(evl) {
         if (evl.favorite_move)
           ctrl.totalFavorited += 1;

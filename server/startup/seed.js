@@ -18,106 +18,36 @@ Meteor.startup(function () {
     });
   }
 
-  if (Turns.find().count() === 0) {
-    Turns.insert({
+  if (SuggestedMove.find().count() === 0) {
+    SuggestedMove.insert({
       'game_id': '1',
-      'turns': []
+      'turnId': '1',
+      'userId': '1',
+      'createdAt': '1435857130718',
+      'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
+      'notation': 'e4'
     });
   }
 
-  if (SuggestedMoves.find().count() === 0) {
-    SuggestedMoves.insert({
-      'game_id': '1',
-      'moves': []
+  if (Evaluation.find().count() === 0) {
+    Evaluation.insert({
+      'suggestedMoveId': '1',
+      'userId': '1',
+      'createdAt': '1435857130718',
+      'favorite_move': false,
+      'stars': 4
     });
   }
 
-  if (Games.find().count() === 0) {
-    var games = [
-      {
-        'game_id': '1',
-        'played_this_turn': [], // ids
-        'moves': [],
-        'pgn': [],
-        'fen': 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-        'settings': {
-          'inPlay': false,
-          'timePerMove': 300000,
-          'timeLeft': 300000
-        },
-        'turns': [
-          [{
-            'user_id': '1',
-            'created_at': '1435857130718',
-            'updated_at': '1435857152171',
-            'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
-            'notation': 'e4',
-            'avg_stars': '3.5',
-            'relevance_score': '1',
-            'reputation_sum': '1',
-            'favorite_move': true,
-            'comments': [
-              {
-                'user_id': '1',
-                'created_at': '1435857130718',
-                'text': 'This one will cause us to loose the diagonal'
-              },
-              {
-                'user_id': '2',
-                'created_at': '1435857230718',
-                'text': 'no it wont'
-              },
-              {
-                'user_id': '1',
-                'created_at': '1435857330718',
-                'text': 'oh yes it will'
-              }
-            ],
-            'evaluations': [
-              {
-                'user_id': '1',
-                'stars': 3,
-                'created_at': '1435857130718',
-                'updated_at': '1435857152171',
-                'favorite_move': false
-              }
-            ]
-          }]
-        ],
-        'suggested_moves': [
-          {
-            'user_id': '1',
-            'created_at': '1435857130718',
-            'updated_at': '1435857152171',
-            'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
-            'notation': 'e4',
-            'avg_stars': '3.5',
-            'relevance_score': '1',
-            'reputation_sum': '1',
-            'favorite_move': true,
-            'comments': [
-              {
-                'user_id': '1',
-                'created_at': '1435857130718',
-                'text': 'This one will cause us to loose the diagonal'
-              },
-              {
-                'user_id': '2',
-                'created_at': '1435857230718',
-                'text': 'no it wont'
-              },
-              {
-                'user_id': '1',
-                'created_at': '1435857330718',
-                'text': 'oh yes it will'
-              }
-            ],
-            'evaluations': []
-          }
-        ]
-      }
-    ];
+  if (Comment.find().count() === 0) {
+    Comment.insert({
+      'suggestedMoveId': '1',
+      'userId': '1',
+      'text': 'This one will cause us to loose the diagonal'
+    });
+  }
 
+  if (Game.find().count() === 0) {
     var new_game = [
       {
         'game_id': '1',
@@ -127,7 +57,7 @@ Meteor.startup(function () {
       }
     ];
     _.forEach(new_game, function(game) {
-      Games.insert(game);
+      Game.insert(game);
     });
   }
 
@@ -432,8 +362,8 @@ Meteor.startup(function () {
     }
   }
 
-  if (Clans.find().count() === 0) {
-    Clans.insert({
+  if (Clan.find().count() === 0) {
+    Clan.insert({
       description: "We are legions. We are everywhere. Expect us when you least expect us.",
       players_ids: [],
       image_url: 'http://backfeed.cc/wp-content/uploads/2015/05/loop_white.gif',
