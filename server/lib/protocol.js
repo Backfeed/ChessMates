@@ -5,7 +5,6 @@ Meteor.methods({
     Meteor.call('validateGame',gameId);
     // Redistribute reputation after move
 
-    var game = Games.findOne({ game_id: gameId });
     log('distributeReputation');
 
     var curreval = _.last(evarray);
@@ -57,12 +56,11 @@ Meteor.methods({
     log('endTurn');
 
 
-    var game = Games.findOne({ game_id: gameId })
-
+    var suggested_moves = SuggestedMoves.findOne({ game_id: gameId }).moves;
 
     //iterate through each move
-    for(j=0; j<game.suggested_moves.length; j++) {
-      var move = game.suggested_moves[j];
+    for(j=0; j<suggested_moves.length; j++) {
+      var move = suggested_moves[j];
       var formattedEvaluations = getFormatted(move.evaluations)
       log("checking out move: " + move.notation);
       var score = 0;
@@ -153,8 +151,8 @@ Meteor.methods({
 
     log("AND THE WINNER MOVE IS: " + winner.move);
 //    var m = Games.findOne({ 'suggested_moves.notation' : winner.move });
-    var m = game.suggested_moves.filter( function(move) { return move.notation === winner.move })
-    //  var m = Array.from(game.suggested_moves).find({notation: winner.move});
+    var m = suggested_moves.filter( function(move) { return move.notation === winner.move })
+    //  var m = Array.from(suggested_moves).find({notation: winner.move});
     log("winning user = " + m[0].user_id);
 
 
