@@ -19,31 +19,81 @@ Meteor.startup(function () {
   }
 
   if (SuggestedMove.find().count() === 0) {
-    SuggestedMove.insert({
-      'game_id': '1',
-      'turnId': '1',
-      'userId': '1',
-      'createdAt': '1435857130718',
-      'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
-      'notation': 'e4'
+    var suggestedMoves = [
+      {
+        'game_id': '1',
+        'turnId': '1',
+        'userId': '1',
+        'createdAt': '1435857130718',
+        'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
+        'notation': 'e4'
+      },
+      {
+        'game_id': '1',
+        'turnId': '2',
+        'userId': '1',
+        'createdAt': '1435857130718',
+        'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
+        'notation': 'd4'
+      }
+    ];
+    _.forEach(suggestedMoves, function(suggestedMove) {
+      SuggestedMoves.insert(suggestedMove);
     });
   }
 
   if (Evaluation.find().count() === 0) {
-    Evaluation.insert({
-      'suggestedMoveId': '1',
-      'userId': '1',
-      'createdAt': '1435857130718',
-      'favorite_move': false,
-      'stars': 4
+    var evaluations = [
+      {
+        'suggestedMoveId': '1',
+        'userId': '1',
+        'createdAt': '1435857130718',
+        'favorite_move': false,
+        'stars': 4
+      },
+      {
+        'suggestedMoveId': '2',
+        'userId': '1',
+        'createdAt': '1435857130718',
+        'favorite_move': false,
+        'stars': 2
+      }
+    ];
+    _.forEach(evaluations, function(evaluation) {
+      Evaluation.insert(evaluation);
     });
   }
 
   if (Comment.find().count() === 0) {
-    Comment.insert({
-      'suggestedMoveId': '1',
-      'userId': '1',
-      'text': 'This one will cause us to loose the diagonal'
+    var comments = [
+      {
+        'suggestedMoveId': '1',
+        'userId': '1',
+        'text': 'This one will cause us to loose the diagonal'
+      },
+      {
+        'suggestedMoveId': '1',
+        'userId': '1',
+        'text': 'davay davay das vedanya'
+      },
+      {
+        'suggestedMoveId': '1',
+        'userId': '1',
+        'text': 'whats goin on'
+      },
+      {
+        'suggestedMoveId': '2',
+        'userId': '1',
+        'text': 'second move s bitch'
+      },
+      {
+        'suggestedMoveId': '3',
+        'userId': '1',
+        'text': 'this is a comment for third move'
+      }
+    ];
+    _.forEach(comments, function(comment) {
+      Comment.insert(comment);
     });
   }
 
