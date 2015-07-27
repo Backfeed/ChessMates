@@ -26,7 +26,7 @@ function commentsController() {
   function create() {
     ctrl.comments.push({
       user_id: Meteor.userId(),
-      created_at: Date.now(),
+      createdAt: Date.now(),
       text: ctrl.newComment.body
     });
     ctrl.newComment.body = ''

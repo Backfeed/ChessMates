@@ -5,7 +5,7 @@
       <md-option ng-value="relevance_score">Relevance</md-option>
       <md-option ng-value="reputation_sum">Reputation</md-option>
       <md-option ng-value="avg_stars">Stars</md-option>
-      <md-option ng-value="created_at">Created At</md-option>
+      <md-option ng-value="createdAt">Created At</md-option>
   </md-select>
 </div>
 
@@ -29,7 +29,7 @@
       <td>{{ move.user_id | displayNameById }}</td>
       <td>{{ move | avgStars }}</td>
       <td>{{ move | favoriteCount }}</td>
-      <td time-ago="move.created_at"></td>
+      <td time-ago="move.createdAt"></td>
     </tr>
   </tbody>
 </table>

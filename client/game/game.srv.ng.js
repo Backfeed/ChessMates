@@ -144,7 +144,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
         var move = {
           user_id: Meteor.userId(),
           notation: notation,
-          created_at: Date.now(),
+          createdAt: Date.now(),
           fen: GameBoardService.game.fen(),
           evaluations: [],
           comments: []

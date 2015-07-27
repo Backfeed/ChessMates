@@ -33,7 +33,7 @@ function EvaluationModel(GamesModel) {
   function create(move, stars) {
     move.evaluations.push({
       user_id: Meteor.userId(),
-      created_at: Date.now(),
+      createdAt: Date.now(),
       favoriteMove: false,
       stars: stars
     });

@@ -3,7 +3,7 @@
      <span class="commenter-name">{{ ctrl.getUserById(move.user_id) | displayName }}</span>
      <span class="comment-type">- suggested this move</span>
    </div>
-   <div class="comment-time pull-right">• {{ ctrl.move.created_at | date : 'shortTime' }}</div>
+   <div class="comment-time pull-right">• {{ ctrl.move.createdAt | date : 'shortTime' }}</div>
 </div>
 
 <form ng-submit="ctrl.create()">
@@ -20,7 +20,7 @@
        <span class="comment-type" ng-if="comment.type == 'comment'"> - comment</span>
        <span class="comment-type" ng-if="comment.type == 'backfeed'"> - backfeed {{ comment.stars }} stars</span>
      </div><!-- TODO maybe use a filter with momentjs for better parsing -->
-     <div class="comment-time pull-right">• {{ comment.created_at | date : 'shortTime' }}</div>
+     <div class="comment-time pull-right">• {{ comment.createdAt | date : 'shortTime' }}</div>
   </div>
   <div class="comment-body">{{ comment.text}}</div>
 </div>
