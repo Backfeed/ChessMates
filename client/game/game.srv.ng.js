@@ -1,7 +1,7 @@
 angular.module('blockchess.game.service', [])
   .service('GameService', GameService);
 
-function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, EvaluationModel, GameModel, ChessValidator, ChessBoard) {
+function GameService($q, $meteor, $mdDialog, ProtocolService, ToastService, EvaluationModel, GameModel, ChessValidator, ChessBoard) {
   var gameId = "1"; // Dev
 
   return {
@@ -29,7 +29,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
 
   function imDone(gameId) {
     $meteor.call('clientDone', gameId).then(
-      function()    { CommonService.toast('Waitin fo the gang, ya'); },
+      function()    { ToastService.toast('Waitin fo the gang, ya'); },
       function(err) { console.log('failed', err); }
     );
   }
@@ -38,7 +38,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
     $meteor.call('pauseGame', gameId).then(
       function() {
         GameModel.timer.inPlay = !GameModel.timer.inPlay;
-        CommonService.toast('game paused');
+        ToastService.toast('game paused');
       },
       function(err) { console.log('failed', err); }
     );
@@ -46,14 +46,14 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
 
   function startTurn(gameId) {
     $meteor.call('startTurn', gameId).then(
-      function()    { CommonService.toast('turn started'); },
+      function()    { ToastService.toast('turn started'); },
       function(err) { console.log('failed', err); }
     );
   }
 
   function endGame(gameId) {
     $meteor.call('endGame', gameId).then(
-      function()    { CommonService.toast('No Move Suggested. Game Over!!'); },
+      function()    { ToastService.toast('No Move Suggested. Game Over!!'); },
       function(err) { console.log('failed', err); }
     );
   }
@@ -112,21 +112,21 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
 
     // TODO :: Delete this check
     if (!Meteor.userId()) {
-      CommonService.toast('Must be logged in to suggest a move');
+      ToastService.toast('Must be logged in to suggest a move');
       movePieceBack();
       deferred.resolve({});
       return deferred.promise;
     }
 
     if (getMoveBy('userId', Meteor.userId())) {
-      CommonService.toast('Can only suggest one move per turn');
+      ToastService.toast('Can only suggest one move per turn');
       deferred.resolve(getMoveBy('userId', Meteor.userId()));
       movePieceBack();
       return deferred.promise;
     }
 
     if (getMoveBy('notation', notation)) {
-      CommonService.toast('move exists');
+      ToastService.toast('move exists');
       deferred.resolve(getMoveBy('notation', notation));
       movePieceBack();
       return deferred.promise;
@@ -171,7 +171,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
   function onMove(move, turn) {
     console.log('Gameboard Moved! ', move, turn);
     cancelMoveHighlights();
-    CommonService.toast('Turn changed');
+    ToastService.toast('Turn changed');
     ChessValidator.game.move(move);
   }
 
