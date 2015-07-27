@@ -113,9 +113,10 @@ function seedGame() {
   var newGame = [
     {
       'gameId': '1',
+      'moves': [],
+      'playedThisTurn': [],
       'pgn': [],
       'fen': 'start',
-      'suggestedMoves': []
     }
   ];
   _.forEach(newGame, function(game) {
