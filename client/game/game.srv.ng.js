@@ -78,7 +78,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
     var gameRef = 'game';
     if (notAuto) { gameRef = 'gameNotAuto'; }
     var move;
-    GamesModel[gameRef].suggested_moves.forEach(function(m) {
+    GamesModel[gameRef].suggestedMoves.forEach(function(m) {
       if (m[attr] === val) { move = m; }
     });
     return move;
@@ -151,7 +151,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
         };
         deferred.resolve(move);
         EvaluationModel.create(move, stars);
-        GamesModel.gameNotAuto.suggested_moves.push(move);
+        GamesModel.gameNotAuto.suggestedMoves.push(move);
         GamesModel.gameNotAuto.save().then(function(){
           ProtocolService.distributeReputation("1", move, stars);
         });

@@ -34,7 +34,7 @@ function EvaluationModel(GamesModel) {
     move.evaluations.push({
       user_id: Meteor.userId(),
       created_at: Date.now(),
-      favorite_move: false,
+      favoriteMove: false,
       stars: stars
     });
   }
@@ -42,22 +42,22 @@ function EvaluationModel(GamesModel) {
   function flagFavorite(move, flag) {
     if (flag && getFavoriteByUser()) { unFlagFavorite(); } // In case another move is already flagged
     var evaluation = getUserEvaluationBy(move);
-    evaluation.favorite_move = flag;
+    evaluation.favoriteMove = flag;
   }
 
   function unFlagFavorite() {
     var move = getFavoriteByUser();
     var evaluation = getUserEvaluationBy(move);
-    evaluation.favorite_move = false;
+    evaluation.favoriteMove = false;
   }
 
   function getFavoriteByUser(id) {
-    if (!GamesModel.suggested_moves) { return false; }
+    if (!GamesModel.suggestedMoves) { return false; }
     var move;
-    GamesModel.suggested_moves.forEach(function(sug_move) {
-      sug_move.evaluations.forEach(function(evl) {
-        if (evl.favorite_move && evl.user_id === (id || Meteor.userId()) ) {
-          move = sug_move;
+    GamesModel.suggestedMoves.forEach(function(sugMove) {
+      sugMove.evaluations.forEach(function(evl) {
+        if (evl.favoriteMove && evl.user_id === (id || Meteor.userId()) ) {
+          move = sugMove;
         }
       });
     });

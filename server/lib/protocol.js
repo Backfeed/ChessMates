@@ -56,11 +56,11 @@ Meteor.methods({
     log('endTurn');
 
 
-    var suggested_moves = SuggestedMoves.find({ gameId: gameId });
+    var suggestedMoves = SuggestedMoves.find({ gameId: gameId });
 
     //iterate through each move
-    for(j=0; j<suggested_moves.length; j++) {
-      var move = suggested_moves[j];
+    for(j=0; j<suggestedMoves.length; j++) {
+      var move = suggestedMoves[j];
       var formattedEvaluations = getFormatted(move.evaluations);
       log("checking out move: " + move.notation);
       var score = 0;
@@ -150,9 +150,9 @@ Meteor.methods({
 
 
     log("AND THE WINNER MOVE IS: " + winner.move);
-//    var m = Games.findOne({ 'suggested_moves.notation' : winner.move });
-    var m = suggested_moves.filter( function(move) { return move.notation === winner.move })
-    //  var m = Array.from(suggested_moves).find({notation: winner.move});
+//    var m = Games.findOne({ 'suggestedMoves.notation' : winner.move });
+    var m = suggestedMoves.filter( function(move) { return move.notation === winner.move })
+    //  var m = Array.from(suggestedMoves).find({notation: winner.move});
     log("winning user = " + m[0].user_id);
 
 

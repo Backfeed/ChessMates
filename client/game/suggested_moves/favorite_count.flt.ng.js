@@ -10,7 +10,7 @@ function favoriteCount() {
 function getFavoriteCountFrom(move) {
   var count = 0;
   move.evaluations.forEach(function(evl) {
-    if (evl.favorite_move)
+    if (evl.favoriteMove)
       count += 1;
   });
   return count;
