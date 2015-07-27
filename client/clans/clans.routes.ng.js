@@ -1,4 +1,4 @@
-angular.module('blockchess.clans.config', [])
+angular.module('blockchess.clans.routes', [])
 .config(clansRoutes);
 
 function clansRoutes($stateProvider) {
