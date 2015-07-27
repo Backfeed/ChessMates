@@ -1,5 +1,5 @@
 angular.module('blockchess.games.routes', [])
-.config(gamesRoutes)
+.config(gamesRoutes);
 
 function gamesRoutes($stateProvider) {
   $stateProvider

@@ -1,6 +1,6 @@
 angular.module('blockchess.game', [
   // Controllers
-  'blockchess.game.controller'
+  'blockchess.game.controller',
   // Models (angular services who handle DB data)
   'blockchess.game.evaluationModel',
   'blockchess.game.model',

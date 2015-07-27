@@ -38,7 +38,7 @@ Meteor.startup(function () {
       }
     ];
     _.forEach(suggestedMoves, function(suggestedMove) {
-      SuggestedMoves.insert(suggestedMove);
+      SuggestedMove.insert(suggestedMove);
     });
   }
 
