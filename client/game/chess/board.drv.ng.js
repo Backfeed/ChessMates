@@ -1,12 +1,12 @@
 angular.module('blockchess.game.chess.board', [])
 .directive('board', board)
 
-function board(BoardService) {
+function board(ChessBoard) {
   return {
     template: '<div id="board"></div>',
     scope: {},
     link: function(scope, elem, attrs) {
-      BoardService.init(attrs.board);
+      ChessBoard.init(attrs.board);
     }
   }
 }

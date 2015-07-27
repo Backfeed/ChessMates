@@ -5,13 +5,13 @@ function players() {
   return {
     bindToController: true,
     controllerAs: 'ctrl',
-    templateUrl: 'client/games/util/players/players.ng.html',
+    templateUrl: 'client/game/players/players.ng.html',
     controller: playersController,
     scope: { game: '='}
   };
 }
 
-function playersController($scope, $meteor, GamesService, EvaluationModel) {
+function playersController($scope, $meteor, GameService, EvaluationModel) {
   var ctrl = this;
   angular.extend(ctrl, {
     totalReputation: 0,
@@ -57,7 +57,7 @@ function playersController($scope, $meteor, GamesService, EvaluationModel) {
   }
 
   function isDone(id) {
-    return GamesService.isDone(id);
+    return GameService.isDone(id);
   }
 
   function isFavorited(id) {

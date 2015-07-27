@@ -1,7 +1,7 @@
 angular.module('blockchess.game.chess.boardService', [])
-.service('BoardService', BoardService)
+.service('ChessBoard', ChessBoard)
 
-function BoardService($rootScope, $window, GamesModel, GameBoardService) {
+function ChessBoard($rootScope, $window, GameModel, ChessValidator) {
   var cfg = {
     draggable: true,
     onDragStart: onDragStart,
@@ -21,11 +21,11 @@ function BoardService($rootScope, $window, GamesModel, GameBoardService) {
   }
 
   function onDragStart(source, piece, position, orientation) {
-    return !GameBoardService.game.game_over();
+    return !ChessValidator.game.game_over();
   };
 
   function onDrop(source, target) {
-    var move = GameBoardService.game.move({
+    var move = ChessValidator.game.move({
         from: source,
         to: target,
         promotion: 'q'
@@ -38,6 +38,6 @@ function BoardService($rootScope, $window, GamesModel, GameBoardService) {
   };
 
   function onSnapEnd() {
-      Board.board.position(GameBoardService.game.fen());
+      Board.board.position(ChessValidator.game.fen());
   };
 }

@@ -1,4 +1,5 @@
 angular.module('blockchess.game.suggestedMoves', [
+  'blockchess.game.suggestedMoves.evaluationModel',
   'blockchess.game.suggestedMoves.favoriteCount',
   'blockchess.game.suggestedMoves.protocol',
   'blockchess.game.suggestedMoves.avgStars'
@@ -9,7 +10,7 @@ function suggestedMoves() {
   return {
     bindToController: true,
     controllerAs: 'ctrl',
-    templateUrl: "client/games/util/suggested_moves/suggested_moves.ng.html",
+    templateUrl: "client/game/suggested_moves/suggested_moves.ng.html",
     controller: suggestedMovesController,
     restrict: 'E',
     scope: { moves: '=', selectedMove: '=' }

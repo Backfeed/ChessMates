@@ -1,8 +1,6 @@
 angular.module('blockchess.game', [
-  // Controllers
+  'blockchess.game.routes',
   'blockchess.game.controller',
-  // Models (angular services who handle DB data)
-  'blockchess.game.evaluationModel',
   'blockchess.game.model',
   // Components
   'blockchess.game.chess',
@@ -12,7 +10,6 @@ angular.module('blockchess.game', [
   'blockchess.game.suggestedMoves',
   'blockchess.game.comments',
   'blockchess.game.players',
-  'blockchess.game.timer',
+  'blockchess.game.timer'
   // Filters
-  'blockchess.game.avgStars'
-])
+]);

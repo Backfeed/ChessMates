@@ -5,7 +5,7 @@ function timer() {
   return {
     bindToController: true,
     controllerAs: 'ctrl',
-    templateUrl: "client/games/util/timer/timer.ng.html",
+    templateUrl: "client/game/timer/timer.ng.html",
     controller: timerController,
     restrict: 'E',
     scope: { settings: '=' }

@@ -5,7 +5,7 @@ function comments() {
   return {
     bindToController: true,
     controllerAs: 'ctrl',
-    templateUrl: "client/games/util/comments/comments.ng.html",
+    templateUrl: "client/game/comments/comments.ng.html",
     controller: commentsController,
     restrict: 'E',
     scope: { comments: '=', move: '=' }

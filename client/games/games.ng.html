@@ -1,0 +1,18 @@
+<div>
+  <div layout="row">
+    <h1>Games</h1>
+  </div>
+
+  <md-content>
+    <md-list>
+      <md-list-item ng-repeat="game in ctrl.games" class="md-2-line">
+        <div class="md-list-item-text" ui-sref="game({ id: game._id })">
+          _id: {{ ::game._id }}
+        </div>
+        <div class="md-list-item-text">
+        </div>
+      </md-list-item>
+    </md-list>
+  </md-content>
+
+</div>

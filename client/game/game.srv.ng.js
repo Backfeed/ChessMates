@@ -1,7 +1,7 @@
 angular.module('blockchess.game.service', [])
   .service('GameService', GameService);
 
-function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, EvaluationModel, GamesModel, GameBoardService, BoardService) {
+function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, EvaluationModel, GameModel, ChessValidator, ChessBoard) {
   var gameId = "1"; // Dev
 
   return {
@@ -23,8 +23,8 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
   };
 
   function isDone(id) {
-    if (!GamesModel.game.playedThisTurn) { return false; }
-    return GamesModel.game.playedThisTurn.indexOf(id || Meteor.userId()) > -1;
+    if (!GameModel.game.playedThisTurn) { return false; }
+    return GameModel.game.playedThisTurn.indexOf(id || Meteor.userId()) > -1;
   }
 
   function imDone(gameId) {
@@ -37,7 +37,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
   function pause(gameId) {
     $meteor.call('pauseGame', gameId).then(
       function() {
-        GamesModel.timer.inPlay = !GamesModel.timer.inPlay;
+        GameModel.timer.inPlay = !GameModel.timer.inPlay;
         CommonService.toast('game paused');
       },
       function(err) { console.log('failed', err); }
@@ -64,13 +64,13 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
       controllerAs: 'ctrl',
       templateUrl: "client/games/util/suggest_move_modal/suggest_move_modal.ng.html",
       controller: 'suggestMoveModalController',
-      locals: { notation: notation, game: GamesModel.game }
+      locals: { notation: notation, game: GameModel.game }
     });
   }
 
   function updateBoard() {
-    console.log("history: updateBoard: ", GameBoardService.getHistory());
-    BoardService.board.position(GamesModel.game.fen);
+    console.log("history: updateBoard: ", ChessValidator.getHistory());
+    ChessBoard.board.position(GameModel.game.fen);
     cancelMoveHighlights();
   }
 
@@ -78,7 +78,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
     var gameRef = 'game';
     if (notAuto) { gameRef = 'gameNotAuto'; }
     var move;
-    GamesModel[gameRef].suggestedMoves.forEach(function(m) {
+    GameModel[gameRef].suggestedMoves.forEach(function(m) {
       if (m[attr] === val) { move = m; }
     });
     return move;
@@ -103,8 +103,8 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
   }
 
   function movePieceBack() {
-    GameBoardService.game.undo();
-    BoardService.board.position(GameBoardService.game.fen());
+    ChessValidator.game.undo();
+    ChessBoard.board.position(ChessValidator.game.fen());
   }
 
   function singleMove(notation) {
@@ -137,7 +137,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
       if (getMoveBy('notation', notation)) {
         EvaluationModel.create(getMoveBy('notation', notation, false), stars);
         deferred.resolve(getMoveBy('notation', notation));
-        GamesModel.gameNotAuto.save().then(function(){
+        GameModel.gameNotAuto.save().then(function(){
           ProtocolService.distributeReputation("1", move, stars);
         });
       } else {
@@ -145,14 +145,14 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
           userId: Meteor.userId(),
           notation: notation,
           createdAt: Date.now(),
-          fen: GameBoardService.game.fen(),
+          fen: ChessValidator.game.fen(),
           evaluations: [],
           comments: []
         };
         deferred.resolve(move);
         EvaluationModel.create(move, stars);
-        GamesModel.gameNotAuto.suggestedMoves.push(move);
-        GamesModel.gameNotAuto.save().then(function(){
+        GameModel.gameNotAuto.suggestedMoves.push(move);
+        GameModel.gameNotAuto.save().then(function(){
           ProtocolService.distributeReputation("1", move, stars);
         });
       }
@@ -172,13 +172,13 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
     console.log('Gameboard Moved! ', move, turn);
     cancelMoveHighlights();
     CommonService.toast('Turn changed');
-    GameBoardService.game.move(move);
+    ChessValidator.game.move(move);
   }
 
   function onRestart() {
     console.log('onRestart called!');
     cancelMoveHighlights();
-    GameBoardService.game.reset();
+    ChessValidator.game.reset();
   }
 
 }

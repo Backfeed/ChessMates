@@ -1,14 +1,14 @@
 angular.module('blockchess.game.controller', [])
 .controller('GameController', GameController)
 
-function GameController($scope, $state, GamesService, GamesModel, BoardService, GameBoardService) {
+function GameController($scope, $state, GameService, GameModel, ChessBoard, ChessValidator) {
   var gameId = $state.params.id;
   var ctrl = this;
 
   angular.extend(ctrl, {
-    GameBoardService: GameBoardService, // DEV
-    BoardService: BoardService, // DEV
-    GamesModel: GamesModel, // DEV
+    ChessValidator: ChessValidator, // DEV
+    ChessBoard: ChessBoard, // DEV
+    GameModel: GameModel, // DEV
     startTurn: startTurn, // DEV
     endGame: endGame, // DEV
     restart: restart, // DEV
@@ -23,7 +23,7 @@ function GameController($scope, $state, GamesService, GamesModel, BoardService, 
   });
 
   $scope.$on('singleMove', singleMove);
-  $scope.$watch('ctrl.selectedMove', GamesService.selectedMoveChanged);
+  $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
   //TODO why use 'true' here? it's a string
   $scope.$watch('ctrl.game.fen', updateBoard, true);
   $scope.$watch('ctrl.status.turn', onTurn, true);
@@ -32,39 +32,39 @@ function GameController($scope, $state, GamesService, GamesModel, BoardService, 
   init();
 
   function init() {
-    GamesModel.set(gameId);
-    ctrl.game = GamesModel.game;
-    ctrl.timer = GamesModel.timer;
-    ctrl.status = GamesModel.status;
+    GameModel.set(gameId);
+    ctrl.game = GameModel.game;
+    ctrl.timer = GameModel.timer;
+    ctrl.status = GameModel.status;
   }
 
-  function startTurn()       { GamesService.startTurn(gameId); }
-  function endGame()         { GamesService.endGame(gameId);   }
-  function restart()         { GamesService.restart();         }
-  function isDone()   { return GamesService.isDone();          }
-  function imDone()          { GamesService.imDone(gameId);    }
-  function pause()           { GamesService.pause(gameId);     }
+  function startTurn()       { GameService.startTurn(gameId); }
+  function endGame()         { GameService.endGame(gameId);   }
+  function restart()         { GameService.restart();         }
+  function isDone()   { return GameService.isDone();          }
+  function imDone()          { GameService.imDone(gameId);    }
+  function pause()           { GameService.pause(gameId);     }
 
   function onRestart() {
     if (ctrl.status) {
-      GamesService.onRestart();
+      GameService.onRestart();
     }
   }
 
   function onTurn() {
     if (ctrl.status) {
-      GamesService.onMove(_.last(ctrl.game.pgn), ctrl.game.turn);
+      GameService.onMove(_.last(ctrl.game.pgn), ctrl.game.turn);
     }
   }
 
   function updateBoard() {
-    if (ctrl.game && GameBoardService.game) {
-      GamesService.updateBoard();
+    if (ctrl.game && ChessValidator.game) {
+      GameService.updateBoard();
     }
   }
 
   function singleMove(e, notation) {
-    GamesService.singleMove(notation)
+    GameService.singleMove(notation)
     .then(function(selectedMove) {
       ctrl.selectedMove = selectedMove;
     });

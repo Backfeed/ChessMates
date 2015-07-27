@@ -21,9 +21,9 @@
       FEN: {{ ctrl.game.fen }} <br />
       TURN: {{ ctrl.status.turn }} <br />
       <strong>LOCAL:</strong> <br>
-      History: {{ ctrl.GameBoardService.game.history().join(" ") }} <br />
-      Turn: {{ ctrl.GameBoardService.game.turn() }} <br />
-      FEN: {{ ctrl.GameBoardService.game.fen() }} <br />
+      History: {{ ctrl.ChessValidator.game.history().join(" ") }} <br />
+      Turn: {{ ctrl.ChessValidator.game.turn() }} <br />
+      FEN: {{ ctrl.ChessValidator.game.fen() }} <br />
 
       <div board="{{ ctrl.gameId }}"></div>
       <button ng-click="ctrl.startTurn()">

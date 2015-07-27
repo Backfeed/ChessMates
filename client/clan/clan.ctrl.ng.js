@@ -1,8 +1,7 @@
-angular.module('blockchess.clans.controller', [])
+angular.module('blockchess.clan.controller', [])
 .controller('ClanController', ClanController);
 
 function ClanController($meteor, $state) {
-  var clanId = $state.params.id;
   var ctrl = this;
 
   angular.extend(ctrl, {

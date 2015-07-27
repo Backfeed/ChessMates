@@ -1,7 +1,7 @@
-angular.module('blockchess.game.evaluationModel', [])
+angular.module('blockchess.game.suggestedMoves.evaluationModel', [])
 .service('EvaluationModel', EvaluationModel);
 
-function EvaluationModel(GamesModel) {
+function EvaluationModel(GameModel) {
 
   var model = {
     getUserEvaluationBy: getUserEvaluationBy,
@@ -52,9 +52,9 @@ function EvaluationModel(GamesModel) {
   }
 
   function getFavoriteByUser(id) {
-    if (!GamesModel.suggestedMoves) { return false; }
+    if (!GameModel.suggestedMoves) { return false; }
     var move;
-    GamesModel.suggestedMoves.forEach(function(sugMove) {
+    GameModel.suggestedMoves.forEach(function(sugMove) {
       sugMove.evaluations.forEach(function(evl) {
         if (evl.favoriteMove && evl.userId === (id || Meteor.userId()) ) {
           move = sugMove;
