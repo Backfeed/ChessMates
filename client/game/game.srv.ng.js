@@ -23,8 +23,8 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
   };
 
   function isDone(id) {
-    if (!GamesModel.game.played_this_turn) { return false; }
-    return GamesModel.game.played_this_turn.indexOf(id || Meteor.userId()) > -1;
+    if (!GamesModel.game.playedThisTurn) { return false; }
+    return GamesModel.game.playedThisTurn.indexOf(id || Meteor.userId()) > -1;
   }
 
   function imDone(gameId) {

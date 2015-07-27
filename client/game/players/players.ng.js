@@ -24,7 +24,7 @@ function playersController($scope, $meteor, GamesService, EvaluationModel) {
     users: []
   });
 
-  $scope.$watch('ctrl.game.played_this_turn', updateTotalDone);
+  $scope.$watch('ctrl.game.playedThisTurn', updateTotalDone);
   $scope.$watch('ctrl.suggestedMoves', updateTotalFavorited, true);
 
   $meteor.subscribe('userStatus');

@@ -23,7 +23,7 @@ function GameModel($meteor) {
 
   function restart() {
     angular.extend(model.game, {
-      played_this_turn: [],
+      playedThisTurn: [],
       moves: [],
       pgn: [],
       fen: 'start'
