@@ -2,15 +2,15 @@
 Meteor.startup(function () {
   console.log('==========\n\n\n\n\n\n');
 
-  if (Roles.getAllRoles().length === 0)    seedRoles()
-  if (Meteor.users.find().count() === 0)   seedUsers()
-  if (Clans.find().count() === 0)          seedClan()
-  if (Timers.find().count() === 0)         seedTimer()
-  if (Status.find().count() === 0)         seedStatus()
-  if (SuggestedMoves.find().count() === 0) seedSuggestedMoves()
-  if (Evaluations.find().count() === 0)    seedEvaluations()
-  if (Comments.find().count() === 0)       seedComments()
-  if (Games.find().count() === 0)          seedGame()
+  if (Roles.getAllRoles().length === 0)    seedRoles();
+  if (Meteor.users.find().count() === 0)   seedUsers();
+  if (Clans.find().count() === 0)          seedClan();
+  if (Timers.find().count() === 0)         seedTimer();
+  if (Status.find().count() === 0)         seedStatus();
+  if (SuggestedMoves.find().count() === 0) seedSuggestedMoves();
+  if (Evaluations.find().count() === 0)    seedEvaluations();
+  if (Comments.find().count() === 0)       seedComments();
+  if (Games.find().count() === 0)          seedGame();
 });
 
 function seedTimer() {
