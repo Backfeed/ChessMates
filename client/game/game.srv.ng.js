@@ -118,9 +118,9 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
       return deferred.promise;
     }
 
-    if (getMoveBy('user_id', Meteor.userId())) {
+    if (getMoveBy('userId', Meteor.userId())) {
       CommonService.toast('Can only suggest one move per turn');
-      deferred.resolve(getMoveBy('user_id', Meteor.userId()));
+      deferred.resolve(getMoveBy('userId', Meteor.userId()));
       movePieceBack();
       return deferred.promise;
     }
@@ -142,7 +142,7 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, CommonService, Eva
         });
       } else {
         var move = {
-          user_id: Meteor.userId(),
+          userId: Meteor.userId(),
           notation: notation,
           createdAt: Date.now(),
           fen: GameBoardService.game.fen(),

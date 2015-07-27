@@ -23,7 +23,7 @@ function EvaluationModel(GamesModel) {
     if (!move.evaluations || !move.evaluations.length) { return false; }
     var evaluation = false;
     move.evaluations.forEach(function(evl) {
-      if (evl.user_id === Meteor.userId()) {
+      if (evl.userId === Meteor.userId()) {
         evaluation = evl;
       }
     });
@@ -32,7 +32,7 @@ function EvaluationModel(GamesModel) {
 
   function create(move, stars) {
     move.evaluations.push({
-      user_id: Meteor.userId(),
+      userId: Meteor.userId(),
       createdAt: Date.now(),
       favoriteMove: false,
       stars: stars
@@ -56,7 +56,7 @@ function EvaluationModel(GamesModel) {
     var move;
     GamesModel.suggestedMoves.forEach(function(sugMove) {
       sugMove.evaluations.forEach(function(evl) {
-        if (evl.favoriteMove && evl.user_id === (id || Meteor.userId()) ) {
+        if (evl.favoriteMove && evl.userId === (id || Meteor.userId()) ) {
           move = sugMove;
         }
       });

@@ -1,6 +1,6 @@
 <div class="comment" layout="row" layout-align="space-between">
    <div class="comment-meta">
-     <span class="commenter-name">{{ ctrl.getUserById(move.user_id) | displayName }}</span>
+     <span class="commenter-name">{{ ctrl.getUserById(move.userId) | displayName }}</span>
      <span class="comment-type">- suggested this move</span>
    </div>
    <div class="comment-time pull-right">• {{ ctrl.move.createdAt | date : 'shortTime' }}</div>
@@ -16,7 +16,7 @@
 <div ng-repeat="comment in ctrl.comments">
   <div class="comment" layout="row" layout-align="space-between">
      <div class="comment-meta"> <!-- TODO maybe use a filter for the user name + make bind once-->
-       <span class="commenter-name">{{ ctrl.getUserById(comment.user_id) | displayName }}</span>
+       <span class="commenter-name">{{ ctrl.getUserById(comment.userId) | displayName }}</span>
        <span class="comment-type" ng-if="comment.type == 'comment'"> - comment</span>
        <span class="comment-type" ng-if="comment.type == 'backfeed'"> - backfeed {{ comment.stars }} stars</span>
      </div><!-- TODO maybe use a filter with momentjs for better parsing -->

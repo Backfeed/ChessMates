@@ -11,10 +11,10 @@ Meteor.methods({
     log('user: ', Common.displayNameOf(user), ' stars: ', curreval.stars);
 
     // pay reputation at stake
-    var user = Meteor.users.findOne(curreval.user_id);
+    var user = Meteor.users.findOne(curreval.userId);
     var stake = user.reputation * 0.1;
     user.reputation -= stake;
-    Meteor.users.update( { _id: curreval.user_id}, { $set: { 'reputation': user.reputation }} );
+    Meteor.users.update( { _id: curreval.userId}, { $set: { 'reputation': user.reputation }} );
 
     log("updating " + Common.displayNameOf(user) + " reputation to = " + user.reputation);
 
@@ -27,14 +27,14 @@ Meteor.methods({
       var i;
       var fullstake = 0;
       for (i = 0; i < evarray.length; i++) {
-        var u = Meteor.users.findOne(evarray[i].user_id);
+        var u = Meteor.users.findOne(evarray[i].userId);
         fullstake += u.reputation * 0.1;
       }
       //add the stake of the dummy user, arbitrarily set at 3
       fullstake += 3;
 
       for (i = 0; i < evarray.length; i++) {
-        var u = Meteor.users.findOne(evarray[i].user_id);
+        var u = Meteor.users.findOne(evarray[i].userId);
         u.reputation += Math.round(stake * (u.reputation * 0.1) / fullstake * 100) / 100;
         Meteor.users.update({_id: u._id}, {$set: {'reputation': u.reputation}});
       }
@@ -43,7 +43,7 @@ Meteor.methods({
       stupidarray[notation][curreval.stars] += Math.round( stake * 3 / fullstake * 100) /100;
 
       for (i = 0; i < evarray.length; i++) {
-        var u = Meteor.users.findOne(evarray[i].user_id);
+        var u = Meteor.users.findOne(evarray[i].userId);
         log(u.emails + " ===  " + u.reputation);
       }
 
@@ -82,12 +82,12 @@ Meteor.methods({
 
         //redistribute the stake to other evaluators of the same move/star
         for (k = 0; k < evarray.length; k++) {
-          var u = Meteor.users.findOne(evarray[k].user_id);
+          var u = Meteor.users.findOne(evarray[k].userId);
           fullstake += u.reputation * 0.1;
         }
 
         for (k = 0; k < evarray.length; k++) {
-          var u = Meteor.users.findOne(evarray[k].user_id);
+          var u = Meteor.users.findOne(evarray[k].userId);
           u.reputation += Math.round(funds * (u.reputation * 0.1) / fullstake * 100) / 100;
           Meteor.users.update({_id: u._id}, {$set: {'reputation': u.reputation}});
         }
@@ -98,7 +98,7 @@ Meteor.methods({
         var rep = 0;
         for (i = 0; i < evarray.length ; i++) {
 
-          var u = Meteor.users.findOne(evarray[i].user_id);
+          var u = Meteor.users.findOne(evarray[i].userId);
           rep += u.reputation;
         }
 
@@ -153,12 +153,12 @@ Meteor.methods({
 //    var m = Games.findOne({ 'suggestedMoves.notation' : winner.move });
     var m = suggestedMoves.filter( function(move) { return move.notation === winner.move })
     //  var m = Array.from(suggestedMoves).find({notation: winner.move});
-    log("winning user = " + m[0].user_id);
+    log("winning user = " + m[0].userId);
 
 
 
     //distribute  tokens to the contributor who picked the winning move !
-    var win = Meteor.users.findOne(m[0].user_id);
+    var win = Meteor.users.findOne(m[0].userId);
     win.tokens += turn[winner.move].credits;
     Meteor.users.update( { _id: win._id}, { $set: { 'tokens': win.tokens }} );
 

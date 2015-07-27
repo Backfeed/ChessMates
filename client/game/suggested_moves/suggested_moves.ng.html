@@ -26,7 +26,7 @@
         ng-click="ctrl.toggle(move)">
       <td>{{ ::move.notation }}</td>
       <td>{{ move.evaluations.length }}</td>
-      <td>{{ move.user_id | displayNameById }}</td>
+      <td>{{ move.userId | displayNameById }}</td>
       <td>{{ move | avgStars }}</td>
       <td>{{ move | favoriteCount }}</td>
       <td time-ago="move.createdAt"></td>
