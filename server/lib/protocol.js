@@ -56,7 +56,7 @@ Meteor.methods({
     log('endTurn');
 
 
-    var suggested_moves = SuggestedMove.find({ game_id: gameId });
+    var suggested_moves = SuggestedMoves.find({ gameId: gameId });
 
     //iterate through each move
     for(j=0; j<suggested_moves.length; j++) {

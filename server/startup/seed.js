@@ -1,9 +1,9 @@
 /* jshint ignore:start */
 Meteor.startup(function () {
   console.log('==========\n\n\n\n\n\n');
-  if (Timer.find().count() === 0) {
-    Timer.insert({
-      'game_id': '1',
+  if (Timers.find().count() === 0) {
+    Timers.insert({
+      'gameId': '1',
       'inPlay': false,
       'timePerMove': 300000,
       'timeLeft': 300000
@@ -12,16 +12,16 @@ Meteor.startup(function () {
 
   if (Status.find().count() === 0) {
     Status.insert({
-      'game_id': '1',
+      'gameId': '1',
       'turn': 'start',
       'restarted': true
     });
   }
 
-  if (SuggestedMove.find().count() === 0) {
+  if (SuggestedMoves.find().count() === 0) {
     var suggestedMoves = [
       {
-        'game_id': '1',
+        'gameId': '1',
         'turnId': '1',
         'userId': '1',
         'createdAt': '1435857130718',
@@ -29,7 +29,7 @@ Meteor.startup(function () {
         'notation': 'e4'
       },
       {
-        'game_id': '1',
+        'gameId': '1',
         'turnId': '2',
         'userId': '1',
         'createdAt': '1435857130718',
@@ -38,33 +38,33 @@ Meteor.startup(function () {
       }
     ];
     _.forEach(suggestedMoves, function(suggestedMove) {
-      SuggestedMove.insert(suggestedMove);
+      SuggestedMoves.insert(suggestedMove);
     });
   }
 
-  if (Evaluation.find().count() === 0) {
+  if (Evaluations.find().count() === 0) {
     var evaluations = [
       {
         'suggestedMoveId': '1',
         'userId': '1',
         'createdAt': '1435857130718',
-        'favorite_move': false,
+        'favoriteMove': false,
         'stars': 4
       },
       {
         'suggestedMoveId': '2',
         'userId': '1',
         'createdAt': '1435857130718',
-        'favorite_move': false,
+        'favoriteMove': false,
         'stars': 2
       }
     ];
     _.forEach(evaluations, function(evaluation) {
-      Evaluation.insert(evaluation);
+      Evaluations.insert(evaluation);
     });
   }
 
-  if (Comment.find().count() === 0) {
+  if (Comments.find().count() === 0) {
     var comments = [
       {
         'suggestedMoveId': '1',
@@ -93,21 +93,21 @@ Meteor.startup(function () {
       }
     ];
     _.forEach(comments, function(comment) {
-      Comment.insert(comment);
+      Comments.insert(comment);
     });
   }
 
-  if (Game.find().count() === 0) {
-    var new_game = [
+  if (Games.find().count() === 0) {
+    var newGame = [
       {
-        'game_id': '1',
+        'gameId': '1',
         'pgn': [],
         'fen': 'start',
-        'suggested_moves': []
+        'suggestedMoves': []
       }
     ];
-    _.forEach(new_game, function(game) {
-      Game.insert(game);
+    _.forEach(newGame, function(game) {
+      Games.insert(game);
     });
   }
 
@@ -116,7 +116,6 @@ Meteor.startup(function () {
 
     if (Roles.getAllRoles().length === 0) {
       Roles.createRole('admin'); // can change setting during the game
-      Roles.createRole('genesis'); // genesis is the name of the first clan
       Roles.createRole('clan-master'); // can change setting and invite to join...
     }
     var users = [
@@ -412,13 +411,13 @@ Meteor.startup(function () {
     }
   }
 
-  if (Clan.find().count() === 0) {
-    Clan.insert({
+  if (Clans.find().count() === 0) {
+    Clans.insert({
       description: "We are legions. We are everywhere. Expect us when you least expect us.",
-      players_ids: [],
-      image_url: 'http://backfeed.cc/wp-content/uploads/2015/05/loop_white.gif',
+      playersIds: [],
+      imageUrl: 'http://backfeed.cc/wp-content/uploads/2015/05/loop_white.gif',
       title: "Backfeed kickass clan",
-      total_tokens: 0
+      totalTokens: 0
     });
   }
 });

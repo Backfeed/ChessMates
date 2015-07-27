@@ -1,32 +1,27 @@
-Meteor.publish('game', function (options, gameId) {
-  //return Games.find({});
-  //return Games.findOne({"game_id": gameId});
-  return Game.find({"game_id": "1"});
+Meteor.publish('games', function (options, gameId) {
+  return Games.find({"gameId": "1"});
 });
 
-Meteor.publish('timer', function (options, gameId) {
-  return Timer.find({"game_id": "1"});
+Meteor.publish('timers', function (options, gameId) {
+  return Timers.find({"gameId": "1"});
 });
 
 Meteor.publish('status', function (options, gameId) {
-  return Status.find({"game_id": "1"});
+  return Status.find({"gameId": "1"});
 });
 
-Meteor.publish('suggested_move', function (options, gameId) {
-  return SuggestedMove.find({"game_id": "1"});
+Meteor.publish('suggestedMoves', function (options, gameId) {
+  return SuggestedMoves.find({"gameId": "1"});
 });
 
-Meteor.publish('evaluation', function (options, gameId) {
-  return Evaluation.find({"game_id": "1"});
+Meteor.publish('evaluations', function (options, gameId) {
+  return Evaluations.find({"gameId": "1"});
 });
 
-Meteor.publish('comment', function (options, gameId) {
-  return Comment.find({"game_id": "1"});
+Meteor.publish('comments', function (options, gameId) {
+  return Comments.find({"gameId": "1"});
 });
 
-Meteor.publish('clan', function (options, gameId) {
-  return Clan.find({"game_id": "1"});
-});
 // TODO :: I think thi will break with multiple games / clans
 GameInterval = {};
 
@@ -59,7 +54,7 @@ function restart(gameId) {
 
 function resetGameData(gameId) {
   Status.update(
-    { game_id: gameId },
+    { gameId: gameId },
     {
       $set:  {
         turn: 'start',
@@ -67,10 +62,10 @@ function resetGameData(gameId) {
       }
     }
   );
-  Game.update(
-    { game_id: gameId },
+  Games.update(
+    { gameId: gameId },
     { $set: {
-        played_this_turn: [],
+        playedThisTurn: [],
         moves: [],
         pgn: [],
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
@@ -83,7 +78,7 @@ function resetGameData(gameId) {
     if (err) throw new Meteor.Error(403, err);
     startTurn(gameId);
     Status.update(
-      { game_id: gameId },
+      { gameId: gameId },
       {
         $set:  { restarted: false }
       }
@@ -98,9 +93,9 @@ function executeMove(gameId, move, turn) {
 
   function logTurnCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
-    moves = Game.findOne({ game_id: gameId }).moves.join(" ");
+    moves = Games.findOne({ gameId: gameId }).moves.join(" ");
     Status.update(
-      { game_id: gameId },
+      { gameId: gameId },
       {
         $set:  { turn: turn }
       },
@@ -120,11 +115,11 @@ function executeMove(gameId, move, turn) {
 }
 
 function logTurn(gameId, move, turn, logTurnCB) {
-  var game = Game.findOne({ game_id: gameId });
+  var game = Games.findOne({ gameId: gameId });
   var newFen = getFen(move);
   if (turn === "AI") {
-    Game.update(
-      { game_id: gameId },
+    Games.update(
+      { gameId: gameId },
       {
         $push: {
           moves: move.from+move.to,
@@ -136,13 +131,13 @@ function logTurn(gameId, move, turn, logTurnCB) {
     );
   }
   if (turn === "clan") {
-    var suggested_moves = SuggestedMove.find({ game_id: gameId });
-    SuggestedMove.update(
-      { game_id: gameId },
+    var suggestedMoves = SuggestedMoves.find({ gameId: gameId });
+    SuggestedMoves.update(
+      { gameId: gameId },
       { $set:  { moves: [] } }
     );
-    Game.update(
-      { game_id: gameId },
+    Games.update(
+      { gameId: gameId },
       {
         $push: {
           moves: move.from+move.to,
@@ -157,7 +152,7 @@ function logTurn(gameId, move, turn, logTurnCB) {
 
 function startTurn(gameId) {
   resetPlayed(gameId);
-  var timer = Timer.findOne({ game_id: gameId });
+  var timer = Timers.findOne({ gameId: gameId });
   timer.timeLeft = timer.timePerMove;
   Meteor.clearInterval(GameInterval);
   GameInterval = Meteor.setInterval(function() {
@@ -168,8 +163,8 @@ function startTurn(gameId) {
 }
 
 function updateTimer(gameId, timer) {
-  Timer.update(
-    { game_id: gameId }, timer
+  Timers.update(
+    { gameId: gameId }, timer
   );
 }
 
@@ -180,7 +175,7 @@ function endTurn(gameId) {
 }
 
 function resetPlayed(gameId) {
-  Game.update({ game_id: gameId }, { $set: { played_this_turn: [] } });
+  Games.update({ gameId: gameId }, { $set: { playedThisTurn: [] } });
 }
 
 function endGame(gameId) {
@@ -191,14 +186,14 @@ function clientDone(gameId) {
   validateGame(gameId);
   validateUser(this.userId);
   validateUniqueness(gameId);
-  Game.update(
-    { game_id: gameId },
-    { $push: { played_this_turn: Meteor.userId() } },
+  Games.update(
+    { gameId: gameId },
+    { $push: { playedThisTurn: Meteor.userId() } },
     function() { if (isAllClientsFinished(gameId)) { endTurn(gameId); } }
   )
 
   function validateUniqueness() {
-    var played = Game.findOne({game_id: gameId}).played_this_turn;
+    var played = Games.findOne({gameId: gameId}).playedThisTurn;
     if ( _.contains(played, Meteor.userId()) )
       throw new Meteor.Error(403, 'Already pressed "Im done"');
   }
@@ -207,13 +202,13 @@ function clientDone(gameId) {
 
 function isAllClientsFinished(gameId) {
   playersN = Meteor.users.find({ "status.online": true }).count();
-  playedN = Game.findOne({game_id: gameId}).played_this_turn.length;
+  playedN = Games.findOne({gameId: gameId}).playedThisTurn.length;
   return playersN === playedN;
 }
 
 function validateGame(gameId) {
   check(gameId, String);
-  var game = Game.findOne({ game_id: gameId });
+  var game = Games.findOne({ gameId: gameId });
   if (! game)
     throw new Meteor.Error(404, "No such game");
 }

@@ -12,13 +12,13 @@ function GameModel($meteor) {
   return model;
 
   function set(id) {
-    model.game = $meteor.object(Game, { game_id: id }).subscribe('game');
-    model.gameNotAuto = $meteor.object(Game, { game_id: id }, false).subscribe('game');
-    model.timer = $meteor.object(Timer, { game_id: id }, false).subscribe('timer');
-    model.status = $meteor.object(Status, { game_id: id }, false).subscribe('status');
-    model.suggested_moves = $meteor.collection(function() { return SuggestedMove.find({ game_id: id }) }).subscribe('suggested_moves');
-    model.evaluations = $meteor.collection(function() { return Evaluation.find({ game_id: id }) }).subscribe('suggested_moves');
-    model.comments = $meteor.collection(function() { return Comment.find({ game_id: id }) }).subscribe('suggested_moves');
+    model.game = $meteor.object(Games, { gameId: id }).subscribe('games');
+    model.gameNotAuto = $meteor.object(Games, { gameId: id }, false).subscribe('games');
+    model.timer = $meteor.object(Timers, { gameId: id }, false).subscribe('timers');
+    model.status = $meteor.object(Status, { gameId: id }, false).subscribe('status');
+    model.suggested_moves = $meteor.collection(function() { return SuggestedMoves.find({ gameId: id }) }).subscribe('suggestedMoves');
+    model.evaluations = $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('suggestedMoves');
+    model.comments = $meteor.collection(function() { return Comments.find({ gameId: id }) }).subscribe('suggestedMoves');
   }
 
   function restart() {

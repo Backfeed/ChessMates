@@ -5,8 +5,3 @@ Meteor.publish(null, function () {
 Meteor.publish("userStatus", function() {
   return Meteor.users.find({ 'status.online': true }, { fields: {emails: 1, status: 1} });
 });
-
-//Meteor.users.find({ "status.online": true }).observe({
-//  added: function(user) { connectionStream.emit('connections'); },
-//  removed: function(user) { connectionStream.emit('connections'); }
-//});
