@@ -22,7 +22,7 @@ Meteor.publish('comments', function (options, gameId) {
   return Comments.find({"gameId": "1"});
 });
 
-// TODO :: I think thi will break with multiple games / clans
+// TODO :: I think this will break with multiple games / clans
 GameInterval = {};
 
 Meteor.methods({
@@ -55,13 +55,13 @@ function restart(gameId) {
 function resetGameData(gameId) {
   Status.update(
     { gameId: gameId },
-    {
-      $set:  {
+    { $set:  {
         turn: 'start',
         restarted: true
       }
     }
   );
+
   Games.update(
     { gameId: gameId },
     { $set: {
@@ -74,14 +74,26 @@ function resetGameData(gameId) {
     restartCB
   );
 
+  Timers.update(
+    { gameId: gameId },
+    { $set: {
+        inPlay: false,
+        timePerMove: 300000,
+        timeLeft: 300000
+      }
+    }
+  );
+
+  Evaluations.remove({ gameId: gameId });
+  SuggestedMoves.remove({ gameId: gameId });
+  Comments.remove({ gameId: gameId });
+
   function restartCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
     startTurn(gameId);
     Status.update(
       { gameId: gameId },
-      {
-        $set:  { restarted: false }
-      }
+      { $set: { restarted: false } }
     );
   }
 }
@@ -96,9 +108,7 @@ function executeMove(gameId, move, turn) {
     moves = Games.findOne({ gameId: gameId }).moves.join(" ");
     Status.update(
       { gameId: gameId },
-      {
-        $set:  { turn: turn }
-      },
+      { $set: { turn: turn } },
       initNextTurn
     );
   }
@@ -134,7 +144,7 @@ function logTurn(gameId, move, turn, logTurnCB) {
     var suggestedMoves = SuggestedMoves.find({ gameId: gameId });
     SuggestedMoves.update(
       { gameId: gameId },
-      { $set:  { moves: [] } }
+      { $set: { moves: [] } }
     );
     Games.update(
       { gameId: gameId },
@@ -158,14 +168,12 @@ function startTurn(gameId) {
   GameInterval = Meteor.setInterval(function() {
     timer.timeLeft -= 1000;
     if (timer.timeLeft <= 0) { endTurn(gameId); }
-    else               { updateTimer(gameId, timer); }
+    else                     { updateTimer(gameId, timer); }
   }, 1000);
 }
 
 function updateTimer(gameId, timer) {
-  Timers.update(
-    { gameId: gameId }, timer
-  );
+  Timers.update({ gameId: gameId }, timer );
 }
 
 function endTurn(gameId) {
@@ -175,7 +183,10 @@ function endTurn(gameId) {
 }
 
 function resetPlayed(gameId) {
-  Games.update({ gameId: gameId }, { $set: { playedThisTurn: [] } });
+  Games.update(
+    { gameId: gameId }, 
+    { $set: { playedThisTurn: [] } }
+  );
 }
 
 function endGame(gameId) {

@@ -4,30 +4,33 @@ angular.module('blockchess.game.model', [])
 function GameModel($meteor) {
 
   var model = {
+    set: set,
+    getTurnIndex: getTurnIndex,
     restart: restart,
     game: {},
-    set: set
+    gameNotAuto: {},
+    timer: {},
+    status: {},
+    suggestedMoves: [],
+    evalutions: [],
+    comments: []
   };
 
   return model;
 
   function set(id) {
-    model.game = $meteor.object(Games, { gameId: id }).subscribe('games');
-    model.gameNotAuto = $meteor.object(Games, { gameId: id }, false).subscribe('games');
-    model.timer = $meteor.object(Timers, { gameId: id }, false).subscribe('timers');
-    model.status = $meteor.object(Status, { gameId: id }, false).subscribe('status');
-    model.suggestedMoves = $meteor.collection(function() { return SuggestedMoves.find({ gameId: id }) }).subscribe('suggestedMoves');
-    model.evaluations = $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('suggestedMoves');
-    model.comments = $meteor.collection(function() { return Comments.find({ gameId: id }) }).subscribe('suggestedMoves');
-  }
-
-  function restart() {
-    angular.extend(model.game, {
-      playedThisTurn: [],
-      moves: [],
-      pgn: [],
-      fen: 'start'
+    angular.extend(model, {
+      game          : $meteor.object(Games,  { gameId: id }).subscribe('games'),
+      gameNotAuto   : $meteor.object(Games,  { gameId: id }, false).subscribe('games'),
+      timer         : $meteor.object(Timers, { gameId: id }, false).subscribe('timers'),
+      status        : $meteor.object(Status, { gameId: id }, false).subscribe('status'),
+      suggestedMoves: $meteor.collection(function() { return SuggestedMoves.find({ gameId: id }) }).subscribe('suggestedMoves'),
+      evaluations   : $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('suggestedMoves'),
+      comments      : $meteor.collection(function() { return Comments.find({ gameId: id }) }).subscribe('suggestedMoves')
     });
   }
+
+  function restart() { Meteor.call('restart', "1"); }
+  function getTurnIndex() { return model.game.moves.length + 1; }
 
 }
