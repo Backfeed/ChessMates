@@ -74,14 +74,10 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, ToastService, Eval
     cancelMoveHighlights();
   }
 
-  function getMoveBy(attr, val, notAuto) {
-    var gameRef = 'game';
-    if (notAuto) { gameRef = 'gameNotAuto'; }
-    var move;
-    GameModel[gameRef].suggestedMoves.forEach(function(m) {
-      if (m[attr] === val) { move = m; }
+  function getMoveBy(attr, val) {
+    return _.find(GameModel.suggestedMoves, function(m) {
+      return m[attr] === val;
     });
-    return move;
   }
 
   function formatMoveFrom(notation) {

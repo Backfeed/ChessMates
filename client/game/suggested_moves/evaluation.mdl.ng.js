@@ -52,16 +52,19 @@ function EvaluationModel(GameModel) {
   }
 
   function getFavoriteByUser(id) {
-    if (!GameModel.suggestedMoves) { return false; }
-    var move;
-    GameModel.suggestedMoves.forEach(function(sugMove) {
-      sugMove.evaluations.forEach(function(evl) {
-        if (evl.favoriteMove && evl.userId === (id || Meteor.userId()) ) {
-          move = sugMove;
-        }
-      });
+    if (!GameModel.evaluations) { return false; }
+    var moveId;
+    GameModel.evaluations.forEach(function(evl) {
+      if (evl.favoriteMove && evl.userId === (id || Meteor.userId()) ) {
+        moveId = evl.suggsetedMoveId;
+      }
     });
-    return move;
+    if (!moveId) { return false; }
+
+    return _.find(GameModel.suggestedMoves, function(sugMove) {
+      return sugMove._id === moveId;
+    });
+
   }
 
 }
