@@ -8,15 +8,21 @@ function myRating($meteor) {
       init();
 
       function init() {
-        var myEval = getEval();
-        if (myEval)
-          scope.myRating = myEval.stars;
+        get();
+      }
+
+      function get() {
+        $meteor.subscribe('evaluations').then(function() {
+          var myEval = getEval();
+          if (myEval)
+            scope.myRating = myEval.stars;
+        });
       }
       
       function rate() { Meteor.call('rate', attrs.moveId, scope.myRating); }
 
       function getEval() {
-        return $meteor.object(Evaluations, { moveId: attrs.moveId, userId: Meteor.userId() }).subscribe('evaluations');
+        return $meteor.object(Evaluations, { moveId: attrs.moveId, userId: Meteor.userId() });
       }
     }
   }
