@@ -10,8 +10,10 @@ Meteor.publish('status', function (options, gameId) {
   return Status.find({"gameId": "1"});
 });
 
-Meteor.publish('suggestedMoves', function (options, gameId) {
-  return SuggestedMoves.find({"gameId": "1"});
+Meteor.publish('suggestedMoves', function (options, gameId, turnIndex) {
+  if (!turnIndex)
+      turnIndex = 1;
+  return SuggestedMoves.find({"gameId": "1", "turnIndex": turnIndex});
 });
 
 Meteor.publish('comments', function (options, gameId) {
@@ -53,6 +55,7 @@ function resetGameData(gameId) {
     { gameId: gameId },
     { $set:  {
         turn: 'start',
+        turnIndex: 1,
         restarted: true
       }
     }
@@ -102,9 +105,10 @@ function executeMove(gameId, move, turn) {
   function logTurnCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
     moves = Games.findOne({ gameId: gameId }).moves.join(" ");
+    var status = Status.findOne({ gameId: gameId });
     Status.update(
       { gameId: gameId },
-      { $set: { turn: turn } },
+      { $set: { turn: turn , turnIndex: status.turnIndex++} },
       initNextTurn
     );
   }
@@ -123,7 +127,7 @@ function executeMove(gameId, move, turn) {
 function logTurn(gameId, move, turn, logTurnCB) {
   var game = Games.findOne({ gameId: gameId });
   var newFen = getFen(move);
-  if (turn === "AI") {
+  //if (turn === "AI") {
     Games.update(
       { gameId: gameId },
       {
@@ -135,25 +139,25 @@ function logTurn(gameId, move, turn, logTurnCB) {
       },
       logTurnCB
     );
-  }
-  if (turn === "clan") {
-    var suggestedMoves = SuggestedMoves.find({ gameId: gameId });
-    SuggestedMoves.update(
-      { gameId: gameId },
-      { $set: { moves: [] } }
-    );
-    Games.update(
-      { gameId: gameId },
-      {
-        $push: {
-          moves: move.from+move.to,
-          pgn: move
-        },
-        $set:  { fen: newFen }
-      },
-      logTurnCB
-    );
-  }
+  //}
+  //if (turn === "clan") {
+  //  var suggestedMoves = SuggestedMoves.find({ gameId: gameId });
+  //  SuggestedMoves.update(
+  //    { gameId: gameId },
+  //    { $set: { moves: [] } }
+  //  );
+  //  Games.update(
+  //    { gameId: gameId },
+  //    {
+  //      $push: {
+  //        moves: move.from+move.to,
+  //        pgn: move
+  //      },
+  //      $set:  { fen: newFen }
+  //    },
+  //    logTurnCB
+  //  );
+  //}
 }
 
 function startTurn(gameId) {

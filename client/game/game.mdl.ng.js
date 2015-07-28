@@ -5,13 +5,11 @@ function GameModel($meteor) {
 
   var model = {
     set: set,
-    getTurnIndex: getTurnIndex,
     restart: restart,
     game: {},
     gameNotAuto: {},
     timer: {},
     status: {},
-    suggestedMoves: [],
     evaluations: [],
     comments: []
   };
@@ -24,11 +22,11 @@ function GameModel($meteor) {
       gameNotAuto   : $meteor.object(Games,  { gameId: id }, false).subscribe('games'),
       timer         : $meteor.object(Timers, { gameId: id }, false).subscribe('timers'),
       status        : $meteor.object(Status, { gameId: id }, false).subscribe('status'),
-      suggestedMoves: $meteor.collection(SuggestedMoves, { gameId: id }).subscribe('suggestedMoves')
+      evaluations   : $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('evaluations'),
+      comments      : $meteor.collection(function() { return Comments.find({ gameId: id }) }).subscribe('comments')
     });
   }
 
   function restart() { Meteor.call('restart', "1"); }
-  function getTurnIndex() { return model.game.moves.length + 1; }
 
 }

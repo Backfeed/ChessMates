@@ -102,7 +102,7 @@ function GameService($q, $meteor, ToastService, GameModel, ChessValidator, Chess
     GameModel.suggestedMoves.push({
       createdAt: Date.now(),
       gameId: "1",
-      turnIndex: GameModel.getTurnIndex(),
+      turnIndex: GameModel.status.turnIndex,
       notation: notation,
       userId: Meteor.userId(),
       fen: ChessValidator.game.fen()

@@ -26,6 +26,7 @@ function seedStatus() {
   Status.insert({
     'gameId': '1',
     'turn': 'start',
+    'turnIndex': 1,
     'restarted': true
   });
 }
@@ -34,7 +35,7 @@ function seedSuggestedMoves() {
   var suggestedMoves = [
     {
       'gameId': '1',
-      'turnIndex': '1',
+      'turnIndex': 1,
       'userId': '1',
       'createdAt': '1435857130718',
       'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
@@ -42,7 +43,7 @@ function seedSuggestedMoves() {
     },
     {
       'gameId': '1',
-      'turnIndex': '2',
+      'turnIndex': 2,
       'userId': '1',
       'createdAt': '1435857130718',
       'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',

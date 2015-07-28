@@ -1,7 +1,7 @@
 angular.module('blockchess.game.controller', [])
 .controller('GameController', GameController)
 
-function GameController($scope, $state, GameService, GameModel, ChessBoard, ChessValidator) {
+function GameController($scope, GameService, GameModel, ChessBoard, ChessValidator) {
   var gameId = "1";
   var ctrl = this;
 
