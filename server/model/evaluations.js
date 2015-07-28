@@ -1,5 +1,5 @@
 Meteor.publish('evaluations', function (options, gameId) {
-  return Evaluations.find({}, { fields: { stars: 1, moveId: 1, userId: 1 } });
+  return Evaluations.find({}, { fields: { stars: 1, moveId: 1, userId: 1, favoriteMove: 1 } });
 });
 
 Meteor.methods({
@@ -33,7 +33,11 @@ function createBy(moveId, stars) {
   Evaluations.insert({
     moveId: moveId,
     userId: Meteor.userId(),
-    favoriteMove: true,
+    favoriteMove: amICreatorOfMove(moveId),
     stars: stars
   });
+}
+
+function amICreatorOfMove(id) {
+  return SuggestedMoves.findOne({ _id: id }).userId === Meteor.userId();
 }
