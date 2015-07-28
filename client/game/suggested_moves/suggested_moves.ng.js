@@ -1,7 +1,11 @@
 angular.module('blockchess.game.suggestedMoves', [
   'blockchess.game.suggestedMoves.evaluationModel',
-  'blockchess.game.suggestedMoves.favoriteCount',
+  // Services
   'blockchess.game.suggestedMoves.protocol',
+  // Directives
+  'blockchess.game.suggestedMoves.myRating',
+  // Filters
+  'blockchess.game.suggestedMoves.favoriteCount',
   'blockchess.game.suggestedMoves.avgStars'
 ])
 .directive('suggestedMoves', suggestedMoves);
