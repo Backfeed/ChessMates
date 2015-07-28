@@ -18,6 +18,8 @@
       <td>Stars</td>
       <td>Favorite</td>
       <td>Created</td>
+      <td>Rate</td>
+      <td>Favorite</td>
     </tr>
   </thead>
   <tbody>
@@ -30,6 +32,10 @@
       <td>{{ move._id | avgStars }}</td>
       <td>{{ move._id | favoriteCount }}</td>
       <td time-ago="move.createdAt"></td>
+      <td><rating ng-model="myRating"
+                  move-id="{{ move._id }}"
+                  my-rating></rating></td>
+      <td>Is my fav?</td>
     </tr>
   </tbody>
 </table>

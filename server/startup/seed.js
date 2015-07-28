@@ -57,14 +57,14 @@ function seedSuggestedMoves() {
 function seedEvaluations() {
   var evaluations = [
     {
-      'suggestedMoveId': '1',
+      'moveId': '1',
       'userId': '1',
       'createdAt': '1435857130718',
       'favoriteMove': false,
       'stars': 4
     },
     {
-      'suggestedMoveId': '2',
+      'moveId': '2',
       'userId': '1',
       'createdAt': '1435857130718',
       'favoriteMove': false,

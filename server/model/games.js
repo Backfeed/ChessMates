@@ -14,10 +14,6 @@ Meteor.publish('suggestedMoves', function (options, gameId) {
   return SuggestedMoves.find({"gameId": "1"});
 });
 
-Meteor.publish('evaluations', function (options, gameId) {
-  return Evaluations.find({"gameId": "1"});
-});
-
 Meteor.publish('comments', function (options, gameId) {
   return Comments.find({"gameId": "1"});
 });
