@@ -12,7 +12,7 @@ function GameModel($meteor) {
     timer: {},
     status: {},
     suggestedMoves: [],
-    evalutions: [],
+    evaluations: [],
     comments: []
   };
 
@@ -24,9 +24,7 @@ function GameModel($meteor) {
       gameNotAuto   : $meteor.object(Games,  { gameId: id }, false).subscribe('games'),
       timer         : $meteor.object(Timers, { gameId: id }, false).subscribe('timers'),
       status        : $meteor.object(Status, { gameId: id }, false).subscribe('status'),
-      suggestedMoves: $meteor.collection(function() { return SuggestedMoves.find({ gameId: id }) }).subscribe('suggestedMoves'),
-      evaluations   : $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('suggestedMoves'),
-      comments      : $meteor.collection(function() { return Comments.find({ gameId: id }) }).subscribe('suggestedMoves')
+      suggestedMoves: $meteor.collection(SuggestedMoves, { gameId: id }).subscribe('suggestedMoves')
     });
   }
 
