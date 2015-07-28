@@ -8,8 +8,10 @@ function myRating($meteor) {
       if (myEval)
         scope.myRating = myEval.stars;
       elem.on('click', rate);
-      
-      function rate() { Meteor.call('rate', attrs.moveId, scope.myRating); }
+
+      function rate() {
+        Meteor.call('rate', attrs.moveId, scope.myRating);
+      }
     }
   }
 }

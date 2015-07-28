@@ -1,11 +1,30 @@
 var stupidarray = [];
 
+function getMoveBy(moveId) {
+  return SuggestedMoves.findOne({ _id: moveId });
+}
+
+function getEvalsBy(moveId) {
+  return Evaluations.find({ moveId: moveId }).fetch();
+}
+
 Meteor.methods({
-  protoEvluate: function protoEvluate(gameId, notation, evarray) {
-    Meteor.call('validateGame',gameId);
+  protoRate: function protoRate(moveId, stars) {
     // Redistribute reputation after move
 
     log('distributeReputation');
+
+    var evaluations = getEvalsBy(moveId);
+    var notation = getMoveBy(moveId).notation;
+
+    var evarray = (function buildOtherStupidArray(stars) {
+      var starSpecificEvaluations = [];
+      evaluations.forEach(function (evl) {
+        if (evl.stars === stars)
+          starSpecificEvaluations.push(evl);
+      });
+      return starSpecificEvaluations;
+    })(stars);
 
     var curreval = _.last(evarray);
     log('user: ', Common.displayNameOf(user), ' stars: ', curreval.stars);
@@ -56,12 +75,13 @@ Meteor.methods({
     log('endTurn');
 
 
-    var suggestedMoves = SuggestedMoves.find({ gameId: gameId });
+    var suggestedMoves = SuggestedMoves.find({ gameId: gameId }).fetch();
 
     //iterate through each move
     for(j=0; j<suggestedMoves.length; j++) {
       var move = suggestedMoves[j];
-      var formattedEvaluations = getFormatted(move.evaluations);
+      var evaluations = getEvalsBy(move._id);
+      var formattedEvaluations = getFormatted(evaluations);
       log("checking out move: " + move.notation);
       var score = 0;
       var totalrep = 0;

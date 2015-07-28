@@ -12,6 +12,7 @@ function rate(moveId, stars) {
     updateBy(moveId, stars);
   else
     createBy(moveId, stars);
+  Meteor.call("protoRate", moveId, stars);
 }
 
 function getBy(moveId) {
@@ -20,17 +21,17 @@ function getBy(moveId) {
 
 function updateBy(moveId, stars) {
   Evaluations.update(
-    { 
-      moveId: moveId, userId: 
-      Meteor.userId() 
+    {
+      moveId: moveId, userId:
+      Meteor.userId()
     },
     { $set: { stars: stars } }
   )
 }
 
 function createBy(moveId, stars) {
-  Evaluations.insert({ 
-    moveId: moveId, 
+  Evaluations.insert({
+    moveId: moveId,
     userId: Meteor.userId(),
     favoriteMove: true,
     stars: stars

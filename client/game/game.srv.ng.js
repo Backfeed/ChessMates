@@ -1,7 +1,7 @@
 angular.module('blockchess.game.service', [])
   .service('GameService', GameService);
 
-function GameService($q, $meteor, $mdDialog, ProtocolService, ToastService, EvaluationModel, GameModel, ChessValidator, ChessBoard) {
+function GameService($q, $meteor, ToastService, GameModel, ChessValidator, ChessBoard) {
   var gameId = "1"; // Dev
 
   return {

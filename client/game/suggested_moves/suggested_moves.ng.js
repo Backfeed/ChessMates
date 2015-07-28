@@ -1,7 +1,5 @@
 angular.module('blockchess.game.suggestedMoves', [
   'blockchess.game.suggestedMoves.evaluationModel',
-  // Services
-  'blockchess.game.suggestedMoves.protocol',
   // Directives
   'blockchess.game.suggestedMoves.myRating',
   // Filters

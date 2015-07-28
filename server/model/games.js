@@ -80,7 +80,7 @@ function resetGameData(gameId) {
     }
   );
 
-  Evaluations.remove({ gameId: gameId });
+  Evaluations.remove();
   SuggestedMoves.remove({ gameId: gameId });
   Comments.remove({ gameId: gameId });
 
@@ -180,7 +180,7 @@ function endTurn(gameId) {
 
 function resetPlayed(gameId) {
   Games.update(
-    { gameId: gameId }, 
+    { gameId: gameId },
     { $set: { playedThisTurn: [] } }
   );
 }
