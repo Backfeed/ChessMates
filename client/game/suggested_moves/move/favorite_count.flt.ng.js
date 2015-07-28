@@ -1,10 +1,10 @@
-angular.module('blockchess.game.suggestedMoves.favoriteCount', [])
+angular.module('blockchess.game.suggestedMoves.move.favoriteCount', [])
 .filter('favoriteCount', favoriteCount);
 
 function favoriteCount($meteor) {
-  return function(moveId) {
+  return function(evaluations) {
+    if (!evaluations || !evaluations.length) return 0;
     var count = 0;
-    var evaluations = $meteor.collection(Evaluations, { suggestedMoveId: moveId });
     _.each(evaluations, function(evl) {
       if (evl.favoriteMove)
         count += 1;

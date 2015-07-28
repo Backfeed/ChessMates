@@ -1,4 +1,6 @@
-angular.module('blockchess.game.players', [])
+angular.module('blockchess.game.players', [
+  'blockchess.game.players.evaluationModel'
+])
 .directive('players', players);
 
 function players() {

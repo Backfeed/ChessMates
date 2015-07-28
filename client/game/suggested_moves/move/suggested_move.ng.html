@@ -1,0 +1,12 @@
+<td>{{ ::ctrl.move.notation }}</td>
+<td>{{ ctrl.evaluations.length }}</td>
+<td>{{ ::ctrl.move.userId | displayNameById }}</td>
+<td>{{ ctrl.evaluations | avgStars }}</td>
+<td>{{ ctrl.evaluations | favoriteCount }}</td>
+<td time-ago="ctrl.move.createdAt"></td>
+<td>
+  <rating ng-model="myRating"
+          move-id="{{ ctrl.move._id }}"
+          my-rating></rating>
+</td>
+<td>Is my fav?</td>

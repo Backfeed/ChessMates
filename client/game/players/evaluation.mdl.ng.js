@@ -1,4 +1,4 @@
-angular.module('blockchess.game.suggestedMoves.evaluationModel', [])
+angular.module('blockchess.game.players.evaluationModel', [])
 .service('EvaluationModel', EvaluationModel);
 
 function EvaluationModel(GameModel) {

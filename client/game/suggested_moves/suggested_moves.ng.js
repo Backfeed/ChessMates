@@ -1,10 +1,6 @@
 angular.module('blockchess.game.suggestedMoves', [
-  'blockchess.game.suggestedMoves.evaluationModel',
   // Directives
-  'blockchess.game.suggestedMoves.myRating',
-  // Filters
-  'blockchess.game.suggestedMoves.favoriteCount',
-  'blockchess.game.suggestedMoves.avgStars'
+  'blockchess.game.suggestedMoves.move'
 ])
 .directive('suggestedMoves', suggestedMoves);
 

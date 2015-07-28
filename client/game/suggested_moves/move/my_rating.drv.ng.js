@@ -1,4 +1,4 @@
-angular.module('blockchess.game.suggestedMoves.myRating', [])
+angular.module('blockchess.game.suggestedMoves.move.myRating', [])
 .directive('myRating', myRating);
 
 function myRating($meteor) {

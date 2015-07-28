@@ -23,19 +23,11 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="move in ctrl.suggestedMoves | orderBy : sorting" 
+    <tr ng-repeat="move in ctrl.suggestedMoves | orderBy : sorting"
+        suggested-move
+        move="move"
         ng-class="{ 'active': ctrl.selectedMove.notation == move.notation }"
         ng-click="ctrl.toggle(move)">
-      <td>{{ ::move.notation }}</td>
-      <td>{{ move.evaluations.length }}</td>
-      <td>{{ move.userId | displayNameById }}</td>
-      <td>{{ move._id | avgStars }}</td>
-      <td>{{ move._id | favoriteCount }}</td>
-      <td time-ago="move.createdAt"></td>
-      <td><rating ng-model="myRating"
-                  move-id="{{ move._id }}"
-                  my-rating></rating></td>
-      <td>Is my fav?</td>
     </tr>
   </tbody>
 </table>
