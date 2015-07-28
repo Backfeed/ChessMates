@@ -28,7 +28,7 @@
       <td>{{ move.evaluations.length }}</td>
       <td>{{ move.userId | displayNameById }}</td>
       <td>{{ move._id | avgStars }}</td>
-      <td>{{ move | favoriteCount }}</td>
+      <td>{{ move._id | favoriteCount }}</td>
       <td time-ago="move.createdAt"></td>
     </tr>
   </tbody>
