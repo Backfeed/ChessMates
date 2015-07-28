@@ -21,13 +21,13 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="move in ctrl.moves | orderBy : sorting" 
+    <tr ng-repeat="move in ctrl.suggestedMoves | orderBy : sorting" 
         ng-class="{ 'active': ctrl.selectedMove.notation == move.notation }"
         ng-click="ctrl.toggle(move)">
       <td>{{ ::move.notation }}</td>
       <td>{{ move.evaluations.length }}</td>
       <td>{{ move.userId | displayNameById }}</td>
-      <td>{{ move | avgStars }}</td>
+      <td>{{ move._id | avgStars }}</td>
       <td>{{ move | favoriteCount }}</td>
       <td time-ago="move.createdAt"></td>
     </tr>

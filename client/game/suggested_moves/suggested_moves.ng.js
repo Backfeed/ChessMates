@@ -13,15 +13,22 @@ function suggestedMoves() {
     templateUrl: "client/game/suggested_moves/suggested_moves.ng.html",
     controller: suggestedMovesController,
     restrict: 'E',
-    scope: { moves: '=', selectedMove: '=' }
+    scope: { gameId: '=', selectedMove: '=' }
   };
 }
 
-function suggestedMovesController($scope) {
+function suggestedMovesController($meteor) {
   var ctrl = this;
   angular.extend(ctrl, {
-    toggle: toggle
+    toggle: toggle,
+    suggestedMoves: {}
   });
+
+  init();
+
+  function init() {
+    ctrl.suggestedMoves = $meteor.collection(SuggestedMoves, { gameId: ctrl.gameId }).subscribe('suggestedMoves');
+  }
 
   function toggle(move) {
     if (ctrl.selectedMove === move)
