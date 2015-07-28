@@ -64,10 +64,7 @@ function GameController($scope, $state, GameService, GameModel, ChessBoard, Ches
   }
 
   function singleMove(e, notation) {
-    GameService.singleMove(notation)
-    .then(function(selectedMove) {
-      ctrl.selectedMove = selectedMove;
-    });
+    GameService.singleMove(notation);
   }
 
 }

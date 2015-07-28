@@ -58,16 +58,6 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, ToastService, Eval
     );
   }
 
-  function openSuggestMoveModal(notation) {
-    return $mdDialog.show({
-      bindToController: true,
-      controllerAs: 'ctrl',
-      templateUrl: "client/games/util/suggest_move_modal/suggest_move_modal.ng.html",
-      controller: 'suggestMoveModalController',
-      locals: { notation: notation, game: GameModel.game }
-    });
-  }
-
   function updateBoard() {
     console.log("history: updateBoard: ", ChessValidator.getHistory());
     ChessBoard.board.position(GameModel.game.fen);
@@ -104,60 +94,19 @@ function GameService($q, $meteor, $mdDialog, ProtocolService, ToastService, Eval
   }
 
   function singleMove(notation) {
-    var deferred = $q.defer();
+    movePieceBack();
+    if (!Meteor.userId())                     return ToastService.toast('Must be logged in to suggest a move');
+    if (getMoveBy('userId', Meteor.userId())) return ToastService.toast('Can only suggest one move per turn');
+    if (getMoveBy('notation', notation))      return ToastService.toast('move exists');
 
-    // TODO :: Delete this check
-    if (!Meteor.userId()) {
-      ToastService.toast('Must be logged in to suggest a move');
-      movePieceBack();
-      deferred.resolve({});
-      return deferred.promise;
-    }
-
-    if (getMoveBy('userId', Meteor.userId())) {
-      ToastService.toast('Can only suggest one move per turn');
-      deferred.resolve(getMoveBy('userId', Meteor.userId()));
-      movePieceBack();
-      return deferred.promise;
-    }
-
-    if (getMoveBy('notation', notation)) {
-      ToastService.toast('move exists');
-      deferred.resolve(getMoveBy('notation', notation));
-      movePieceBack();
-      return deferred.promise;
-    }
-
-    openSuggestMoveModal(notation)
-    .then(function(stars) {
-      if (getMoveBy('notation', notation)) {
-        EvaluationModel.create(getMoveBy('notation', notation, false), stars);
-        deferred.resolve(getMoveBy('notation', notation));
-        GameModel.gameNotAuto.save().then(function(){
-          ProtocolService.distributeReputation("1", move, stars);
-        });
-      } else {
-        var move = {
-          userId: Meteor.userId(),
-          notation: notation,
-          createdAt: Date.now(),
-          fen: ChessValidator.game.fen(),
-          evaluations: [],
-          comments: []
-        };
-        deferred.resolve(move);
-        EvaluationModel.create(move, stars);
-        GameModel.gameNotAuto.suggestedMoves.push(move);
-        GameModel.gameNotAuto.save().then(function(){
-          ProtocolService.distributeReputation("1", move, stars);
-        });
-      }
-    })
-    .finally(function() {
-      movePieceBack();
+    GameModel.suggestedMoves.push({
+      createdAt: Date.now(),
+      gameId: "1",
+      turnIndex: GameModel.getTurnIndex(),
+      notation: notation,
+      userId: Meteor.userId(),
+      fen: ChessValidator.game.fen()
     });
-
-    return deferred.promise;
   }
 
   function restart() {
