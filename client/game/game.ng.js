@@ -2,6 +2,7 @@ angular.module('blockchess.game', [
   'blockchess.game.routes',
   'blockchess.game.controller',
   'blockchess.game.model',
+  'blockchess.game.evaluationModel',
   // Components
   'blockchess.game.chess',
   // Services

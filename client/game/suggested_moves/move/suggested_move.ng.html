@@ -9,4 +9,6 @@
           move-id="{{ ctrl.move._id }}"
           my-rating></rating>
 </td>
-<td>Is my fav?</td>
+<td>
+  <input type="checkbox" ng-model="ctrl.isFavorite" ng-change="ctrl.favor()" ng-checked="ctrl.isFavorite">
+</td>

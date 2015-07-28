@@ -18,13 +18,17 @@ function suggestedMove() {
   };
 }
 
-function suggestedMoveController($meteor) {
+function suggestedMoveController($meteor, $scope) {
   var ctrl = this;
   angular.extend(ctrl, {
-    evaluations: []
+    evaluations: [],
+    favor: favor,
+    isFavorite: false
   });
 
-  init()
+  $scope.$watch('ctrl.evaluations', updateIsFavorite, true);
+
+  init();
 
   function init() {
     getEvaluations();
@@ -34,5 +38,18 @@ function suggestedMoveController($meteor) {
     $meteor.subscribe('evaluations').then(function() {
       ctrl.evaluations = $meteor.collection(Evaluations, { moveId: ctrl.move._id });
     });
+  }
+
+  function updateIsFavorite() {
+    if (ctrl.evaluations && ctrl.evaluations.length) {
+      $meteor.call('isFavoriteMove', ctrl.move._id).then(function(bool) {
+        console.log(bool);
+        ctrl.isFavorite = bool;
+      })
+    }
+  }
+
+  function favor() {
+    $meteor.call('favor', ctrl.move._id, ctrl.isFavorite);
   }
 }

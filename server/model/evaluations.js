@@ -3,7 +3,9 @@ Meteor.publish('evaluations', function (options, gameId) {
 });
 
 Meteor.methods({
-  rate: rate
+  rate: rate,
+  flagMove: flagMove,
+  isFavoriteMove: isFavoriteMove
 });
 
 function rate(moveId, stars) {
@@ -40,4 +42,36 @@ function createBy(moveId, stars) {
 
 function amICreatorOfMove(id) {
   return SuggestedMoves.findOne({ _id: id }).userId === Meteor.userId();
+}
+
+function isFavoriteMove(moveId) {
+  var evl = getBy(moveId);
+  if (!evl) return false;
+  return evl.favoriteMove;
+}
+
+function flagMove(moveId, flag) {
+  if (flag && getFavoriteMove())
+    unflagMove();
+
+  Evaluations.update(
+    {
+      moveId: moveId,
+      userId: Meteor.userId()
+    },
+    { $set: { favoriteMove: flag } }
+  )
+}
+
+function getFavoriteMove(userId) {
+  // SuggestedMoves.find({  })
+  // Evaluations.find({ 
+  //   userId: userId || Meteor.userId(),
+  //   moveId
+  //   favoriteMove: 
+  // })
+}
+
+function unflagMove() {
+
 }
