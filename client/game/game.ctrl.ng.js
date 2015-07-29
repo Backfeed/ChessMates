@@ -54,6 +54,7 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
 
   function onTurn() {
     if (ctrl.status) {
+      Session.set('turnIndex', ctrl.status.turnIndex);
       GameService.onMove(_.last(ctrl.game.pgn), ctrl.game.turn);
     }
   }

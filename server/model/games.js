@@ -11,7 +11,6 @@ Meteor.publish('status', function (options, gameId) {
 });
 
 Meteor.publish('suggestedMoves', function (options, gameId, turnIndex) {
-  //var turnIndex = parseInt(Status.findOne({ gameId: "1" }).turnIndex);
   if (!turnIndex)
     turnIndex = 1;
   return SuggestedMoves.find({"gameId": "1", "turnIndex": turnIndex});
@@ -129,37 +128,17 @@ function executeMove(gameId, move, turn) {
 function logTurn(gameId, move, turn, logTurnCB) {
   var game = Games.findOne({ gameId: gameId });
   var newFen = getFen(move);
-  //if (turn === "AI") {
-    Games.update(
-      { gameId: gameId },
-      {
-        $push: {
-          moves: move.from+move.to,
-          pgn: move
-        },
-        $set:  { fen:   newFen }
+  Games.update(
+    { gameId: gameId },
+    {
+      $push: {
+        moves: move.from+move.to,
+        pgn: move
       },
-      logTurnCB
-    );
-  //}
-  //if (turn === "clan") {
-  //  var suggestedMoves = SuggestedMoves.find({ gameId: gameId });
-  //  SuggestedMoves.update(
-  //    { gameId: gameId },
-  //    { $set: { moves: [] } }
-  //  );
-  //  Games.update(
-  //    { gameId: gameId },
-  //    {
-  //      $push: {
-  //        moves: move.from+move.to,
-  //        pgn: move
-  //      },
-  //      $set:  { fen: newFen }
-  //    },
-  //    logTurnCB
-  //  );
-  //}
+      $set:  { fen:   newFen }
+    },
+    logTurnCB
+  );
 }
 
 function startTurn(gameId) {
@@ -204,7 +183,7 @@ function clientDone(gameId) {
     { gameId: gameId },
     { $push: { playedThisTurn: Meteor.userId() } },
     function() { if (isAllClientsFinished(gameId)) { endTurn(gameId); } }
-  )
+  );
 
   function validateUniqueness() {
     var played = Games.findOne({gameId: gameId}).playedThisTurn;

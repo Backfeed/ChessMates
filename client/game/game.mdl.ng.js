@@ -28,8 +28,6 @@ function GameModel($meteor) {
       comments      : $meteor.collection(function() { return Comments.find({ gameId: id }) }).subscribe('comments')
     });
 
-    Session.set('turnIndex', 1);
-
     Tracker.autorun(function() {
       var turnIndex = Session.get('turnIndex');
       $meteor.subscribe('suggestedMoves', {}, id, turnIndex);
