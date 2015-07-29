@@ -7,7 +7,6 @@ function GameModel($meteor) {
     set: set,
     restart: restart,
     game: {},
-    gameNotAuto: {},
     timer: {},
     status: {},
     suggestedMoves: [],
@@ -20,7 +19,6 @@ function GameModel($meteor) {
   function set(id) {
     angular.extend(model, {
       game          : $meteor.object(Games,  { gameId: id }).subscribe('games'),
-      gameNotAuto   : $meteor.object(Games,  { gameId: id }, false).subscribe('games'),
       timer         : $meteor.object(Timers, { gameId: id }, false).subscribe('timers'),
       status        : $meteor.object(Status, { gameId: id }, false).subscribe('status'),
       suggestedMoves: $meteor.collection(SuggestedMoves),
