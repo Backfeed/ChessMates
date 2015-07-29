@@ -11,8 +11,9 @@ Meteor.publish('status', function (options, gameId) {
 });
 
 Meteor.publish('suggestedMoves', function (options, gameId, turnIndex) {
+  //var turnIndex = parseInt(Status.findOne({ gameId: "1" }).turnIndex);
   if (!turnIndex)
-      turnIndex = 1;
+    turnIndex = 1;
   return SuggestedMoves.find({"gameId": "1", "turnIndex": turnIndex});
 });
 
@@ -105,10 +106,11 @@ function executeMove(gameId, move, turn) {
   function logTurnCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
     moves = Games.findOne({ gameId: gameId }).moves.join(" ");
-    var status = Status.findOne({ gameId: gameId });
+    var newTurn = parseInt(Status.findOne({ gameId: gameId }).turnIndex);
+    newTurn++;
     Status.update(
       { gameId: gameId },
-      { $set: { turn: turn , turnIndex: status.turnIndex++} },
+      { $set: { turn: turn , turnIndex: newTurn } },
       initNextTurn
     );
   }
@@ -179,7 +181,8 @@ function updateTimer(gameId, timer) {
 function endTurn(gameId) {
   validateGame(gameId);
   Meteor.clearInterval(GameInterval);
-  var move = Meteor.call('protoEndTurn', gameId);
+  var turnIndex = Status.findOne({ gameId: gameId }).turnIndex;
+  var move = Meteor.call('protoEndTurn', gameId, turnIndex);
 }
 
 function resetPlayed(gameId) {

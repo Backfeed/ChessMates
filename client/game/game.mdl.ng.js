@@ -10,6 +10,7 @@ function GameModel($meteor) {
     gameNotAuto: {},
     timer: {},
     status: {},
+    suggestedMoves: [],
     evaluations: [],
     comments: []
   };
@@ -22,8 +23,16 @@ function GameModel($meteor) {
       gameNotAuto   : $meteor.object(Games,  { gameId: id }, false).subscribe('games'),
       timer         : $meteor.object(Timers, { gameId: id }, false).subscribe('timers'),
       status        : $meteor.object(Status, { gameId: id }, false).subscribe('status'),
+      suggestedMoves: $meteor.collection(SuggestedMoves),
       evaluations   : $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('evaluations'),
       comments      : $meteor.collection(function() { return Comments.find({ gameId: id }) }).subscribe('comments')
+    });
+
+    Session.set('turnIndex', 1);
+
+    Tracker.autorun(function() {
+      var turnIndex = Session.get('turnIndex');
+      $meteor.subscribe('suggestedMoves', {}, id, turnIndex);
     });
   }
 

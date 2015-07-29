@@ -67,7 +67,7 @@ Meteor.methods({
       }
 
   },
-  protoEndTurn: function protoEndTurn(gameId) {
+  protoEndTurn: function protoEndTurn(gameId, turnIndex) {
     var star, i, j;
     var stars = [1000, 0, 1, 3, 7, 15, 31];
     var turn = [];
@@ -75,7 +75,7 @@ Meteor.methods({
     log('endTurn');
 
 
-    var suggestedMoves = SuggestedMoves.find({ gameId: gameId }).fetch();
+    var suggestedMoves = SuggestedMoves.find({ gameId: gameId, turnIndex: turnIndex }).fetch();
 
     //iterate through each move
     for(j=0; j<suggestedMoves.length; j++) {

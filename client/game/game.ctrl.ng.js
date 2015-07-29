@@ -36,6 +36,7 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
     ctrl.game = GameModel.game;
     ctrl.timer = GameModel.timer;
     ctrl.status = GameModel.status;
+    ctrl.suggestedMoves = GameModel.suggestedMoves;
   }
 
   function startTurn()       { GameService.startTurn(gameId); }
