@@ -2,37 +2,17 @@ Meteor.publish('games', function (options, gameId) {
   return Games.find({"gameId": "1"});
 });
 
-Meteor.publish('timers', function (options, gameId) {
-  return Timers.find({"gameId": "1"});
-});
-
 Meteor.publish('status', function (options, gameId) {
   return Status.find({"gameId": "1"});
 });
-
-Meteor.publish('suggestedMoves', function (options, gameId, turnIndex) {
-  if (!turnIndex)
-    turnIndex = 1;
-  return SuggestedMoves.find({"gameId": "1", "turnIndex": turnIndex});
-});
-
-Meteor.publish('comments', function (options, gameId) {
-  return Comments.find({"gameId": "1"});
-});
-
-// TODO :: I think this will break with multiple games / clans
-GameInterval = {};
 
 Meteor.methods({
   AIEvaluationCB: AIEvaluationCB,
   validateGame: validateGame,
   AIGetMoveCb: AIGetMoveCb,
   executeMove: executeMove,
-  updateTimer: updateTimer,
   clientDone: clientDone,
-  startTurn: startTurn,
-  restart: restart,
-  endGame: endGame
+  restart: restart
 });
 
 
@@ -89,7 +69,7 @@ function resetGameData(gameId) {
 
   function restartCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
-    startTurn(gameId);
+    Meteor.call('startTurn',gameId);
     Status.update(
       { gameId: gameId },
       { $set: { restarted: false } }
@@ -98,13 +78,26 @@ function resetGameData(gameId) {
 }
 
 function executeMove(gameId, move, turn) {
-  var moves;
   console.log(turn, ": ", move);
-  logTurn(gameId, move, turn, logTurnCB);
+  logTurn();
 
+  function logTurn() {
+    var game = Games.findOne({ gameId: gameId });
+    var newFen = getFen(move);
+    Games.update(
+      { gameId: gameId },
+      {
+        $push: {
+          moves: move.from+move.to,
+          pgn: move
+        },
+        $set:  { fen:   newFen }
+      },
+      logTurnCB
+    );
+  }
   function logTurnCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
-    moves = Games.findOne({ gameId: gameId }).moves.join(" ");
     var newTurn = parseInt(Status.findOne({ gameId: gameId }).turnIndex);
     newTurn++;
     Status.update(
@@ -113,66 +106,15 @@ function executeMove(gameId, move, turn) {
       initNextTurn
     );
   }
-
   function initNextTurn () {
-    startTurn(gameId);
+    Meteor.call('startTurn',gameId);
     if (turn === 'clan') {
+      var moves = Games.findOne({ gameId: gameId }).moves.join(" ");
       Meteor.setTimeout(function() {
         Engine.getMove(moves);
       }, 2000);
     }
   }
-
-}
-
-function logTurn(gameId, move, turn, logTurnCB) {
-  var game = Games.findOne({ gameId: gameId });
-  var newFen = getFen(move);
-  Games.update(
-    { gameId: gameId },
-    {
-      $push: {
-        moves: move.from+move.to,
-        pgn: move
-      },
-      $set:  { fen:   newFen }
-    },
-    logTurnCB
-  );
-}
-
-function startTurn(gameId) {
-  resetPlayed(gameId);
-  var timer = Timers.findOne({ gameId: gameId });
-  timer.timeLeft = timer.timePerMove;
-  Meteor.clearInterval(GameInterval);
-  GameInterval = Meteor.setInterval(function() {
-    timer.timeLeft -= 1000;
-    if (timer.timeLeft <= 0) { endTurn(gameId); }
-    else                     { updateTimer(gameId, timer); }
-  }, 1000);
-}
-
-function updateTimer(gameId, timer) {
-  Timers.update({ gameId: gameId }, timer );
-}
-
-function endTurn(gameId) {
-  validateGame(gameId);
-  Meteor.clearInterval(GameInterval);
-  var turnIndex = Status.findOne({ gameId: gameId }).turnIndex;
-  var move = Meteor.call('protoEndTurn', gameId, turnIndex);
-}
-
-function resetPlayed(gameId) {
-  Games.update(
-    { gameId: gameId },
-    { $set: { playedThisTurn: [] } }
-  );
-}
-
-function endGame(gameId) {
-  Meteor.clearInterval(GameInterval);
 }
 
 function clientDone(gameId) {
@@ -182,7 +124,7 @@ function clientDone(gameId) {
   Games.update(
     { gameId: gameId },
     { $push: { playedThisTurn: Meteor.userId() } },
-    function() { if (isAllClientsFinished(gameId)) { endTurn(gameId); } }
+    function() { if (isAllClientsFinished(gameId)) { Meteor.call('endTurn' ,gameId); } }
   );
 
   function validateUniqueness() {
