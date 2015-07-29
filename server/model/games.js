@@ -80,7 +80,7 @@ function resetGameData(gameId) {
     }
   );
 
-  Evaluations.remove();
+  Evaluations.remove({});
   SuggestedMoves.remove({ gameId: gameId });
   Comments.remove({ gameId: gameId });
 
