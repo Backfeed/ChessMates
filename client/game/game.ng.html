@@ -14,17 +14,6 @@
     </div>
 
     <div flex>
-
-      <strong>DB:</strong> <br>
-      History: {{ ctrl.game.moves.join(" ") }} <br />
-      FEN: {{ ctrl.game.fen }} <br />
-      Turn: {{ ctrl.game.turn }} <br />
-      TurnIndex: {{ ctrl.game.turnIndex }} <br />
-      <strong>LOCAL:</strong> <br>
-      History: {{ ctrl.ChessValidator.game.history().join(" ") }} <br />
-      Turn: {{ ctrl.ChessValidator.game.turn() }} <br />
-      FEN: {{ ctrl.ChessValidator.game.fen() }} <br />
-
       <div board="{{ ctrl.gameId }}"></div>
       <button ng-click="ctrl.startTurn()">
           <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
@@ -39,15 +28,22 @@
       <button ng-click="ctrl.imDone()"
               ng-class="{ 'is-disabled': ctrl.isDone() }"
               ng-disabled="ctrl.isDone()">I'm Done</button>
-      <br>
-      <br>
-      <br>
 
       <!-- <players game="ctrl.game"></players> -->
 
-      <br>
+        <div ng-show="ctrl.showRawData()">
+            <strong>DB:</strong> <br>
+            History: {{ ctrl.game.moves.join(" ") }} <br />
+            FEN: {{ ctrl.game.fen }} <br />
+            Turn: {{ ctrl.game.turn }} <br />
+            TurnIndex: {{ ctrl.game.turnIndex }} <br />
+            <strong>LOCAL:</strong> <br>
+            History: {{ ctrl.ChessValidator.game.history().join(" ") }} <br />
+            Turn: {{ ctrl.ChessValidator.game.turn() }} <br />
+            FEN: {{ ctrl.ChessValidator.game.fen() }} <br />
 
-      History: {{ ctrl.game.pgn }}
+            History: {{ ctrl.game.pgn }}
+        </div>
     </div>
 
     <div flex="40">

@@ -16,10 +16,13 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
     pause: pause, // DEV
     isDone: isDone,
     imDone: imDone,
+    showRawData: showRawData,
     selectedMove: {},
     timer: {},
     game: {}
   });
+
+  Session.set('showRawData', false);
 
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
@@ -46,6 +49,10 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
       Session.set('turnIndex', ctrl.game.turnIndex);
       GameService.updateBoard();
     }
+  }
+
+  function showRawData() {
+    return Session.get('showRawData');
   }
 
   function singleMove(e, notation) {
