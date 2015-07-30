@@ -60,6 +60,14 @@ function resetGameData(gameId) {
   }
 }
 
+Games.before.update(function(userId, doc, fieldNames, modifier, options){
+  console.log('before game collection updated');
+});
+
+Games.after.update(function(userId, doc, fieldNames, modifier, options){
+  console.log('after game collection updated');
+});
+
 function executeMove(gameId, move, turn) {
   console.log(turn, ": ", move);
 
@@ -71,7 +79,6 @@ function executeMove(gameId, move, turn) {
   var moves = game.moves.join(" ") + " " + moveStr;
 
   setTurn();
-  initNextTurn();
 
   function setTurn() {
     Games.update(
@@ -81,8 +88,14 @@ function executeMove(gameId, move, turn) {
           moves: moveStr,
           pgn: move
         },
-        $set:  {  turn: turn ,turnIndex: newTurn, fen: newFen }
-      }
+        $set:  {
+          turn: turn,
+          turnIndex: newTurn,
+          playedThisTurn: [],
+          fen: newFen
+        }
+      },
+      initNextTurn
     );
   }
   function initNextTurn () {

@@ -18,7 +18,7 @@ function GameModel($meteor) {
 
   function set(id) {
     angular.extend(model, {
-      game          : $meteor.object(Games,  { gameId: id }).subscribe('games'),
+      game          : $meteor.object(Games,  { gameId: id }, false).subscribe('games'),
       timer         : $meteor.object(Timers, { gameId: id }, false).subscribe('timers'),
       suggestedMoves: $meteor.collection(SuggestedMoves),
       evaluations   : $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('evaluations'),

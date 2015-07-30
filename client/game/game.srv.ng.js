@@ -8,7 +8,6 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
     cancelMoveHighlights: cancelMoveHighlights,
     selectedMoveChanged: selectedMoveChanged,
     formatMoveFrom: formatMoveFrom,
-    movePieceBack: movePieceBack,
     updateBoard: updateBoard,
     singleMove: singleMove,
     getMoveBy: getMoveBy,
@@ -56,6 +55,10 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
     );
   }
 
+  function restart() {
+    Meteor.call('restart', gameId);
+  }
+
   function updateBoard() {
     console.log("history: updateBoard: ", ChessValidator.getHistory());
     ChessBoard.board.position(GameModel.game.fen);
@@ -93,6 +96,7 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
   }
 
   function singleMove(notation) {
+    var suggestedFen = ChessValidator.game.fen();
     movePieceBack();
     if (!Meteor.userId())                     return ToastService.toast('Must be logged in to suggest a move');
     if (getMoveBy('userId', Meteor.userId())) return ToastService.toast('Can only suggest one move per turn');
@@ -104,12 +108,8 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
       turnIndex: GameModel.game.turnIndex,
       notation: notation,
       userId: Meteor.userId(),
-      fen: ChessValidator.game.fen()
+      fen: suggestedFen
     });
-  }
-
-  function restart() {
-    Meteor.call('restart', gameId);
   }
 
 }

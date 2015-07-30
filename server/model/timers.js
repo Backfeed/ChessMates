@@ -13,7 +13,6 @@ Meteor.methods({
 });
 
 function startTurn(gameId) {
-  resetPlayed(gameId);
   var timer = Timers.findOne({ gameId: gameId });
   timer.timeLeft = timer.timePerMove;
   Meteor.clearInterval(GameInterval);
@@ -29,17 +28,9 @@ function updateTimer(gameId, timer) {
 }
 
 function endTurn(gameId) {
-  //validateGame(gameId);
   Meteor.clearInterval(GameInterval);
   var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
   var move = Meteor.call('protoEndTurn', gameId, turnIndex);
-}
-
-function resetPlayed(gameId) {
-  Games.update(
-    { gameId: gameId },
-    { $set: { playedThisTurn: [] } }
-  );
 }
 
 function endGame(gameId) {
