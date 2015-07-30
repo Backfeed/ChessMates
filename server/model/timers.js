@@ -31,7 +31,7 @@ function updateTimer(gameId, timer) {
 function endTurn(gameId) {
   //validateGame(gameId);
   Meteor.clearInterval(GameInterval);
-  var turnIndex = Status.findOne({ gameId: gameId }).turnIndex;
+  var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
   var move = Meteor.call('protoEndTurn', gameId, turnIndex);
 }
 

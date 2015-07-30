@@ -2,10 +2,6 @@ Meteor.publish('games', function (options, gameId) {
   return Games.find({"gameId": "1"});
 });
 
-Meteor.publish('status', function (options, gameId) {
-  return Status.find({"gameId": "1"});
-});
-
 Meteor.methods({
   AIEvaluationCB: AIEvaluationCB,
   validateGame: validateGame,
@@ -31,22 +27,13 @@ function restart(gameId) {
 }
 
 function resetGameData(gameId) {
-  Status.update(
-    { gameId: gameId },
-    { $set:  {
-        turn: 'start',
-        turnIndex: 1,
-        restarted: true
-      }
-    }
-  );
-
   Games.update(
     { gameId: gameId },
     { $set: {
         playedThisTurn: [],
         moves: [],
         pgn: [],
+        turnIndex: 1,
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
       }
     },
@@ -70,46 +57,37 @@ function resetGameData(gameId) {
   function restartCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
     Meteor.call('startTurn',gameId);
-    Status.update(
-      { gameId: gameId },
-      { $set: { restarted: false } }
-    );
   }
 }
 
 function executeMove(gameId, move, turn) {
   console.log(turn, ": ", move);
-  logTurn();
 
-  function logTurn() {
-    var game = Games.findOne({ gameId: gameId });
-    var newFen = getFen(move);
+  var game = Games.findOne({ gameId: gameId });
+  var newTurn = parseInt(game.turnIndex);
+  newTurn++;
+  var newFen = getFen(move);
+  var moveStr = move.from+move.to;
+  var moves = game.moves.join(" ") + " " + moveStr;
+
+  setTurn();
+  initNextTurn();
+
+  function setTurn() {
     Games.update(
       { gameId: gameId },
       {
         $push: {
-          moves: move.from+move.to,
+          moves: moveStr,
           pgn: move
         },
-        $set:  { fen:   newFen }
-      },
-      logTurnCB
-    );
-  }
-  function logTurnCB(err, result) {
-    if (err) throw new Meteor.Error(403, err);
-    var newTurn = parseInt(Status.findOne({ gameId: gameId }).turnIndex);
-    newTurn++;
-    Status.update(
-      { gameId: gameId },
-      { $set: { turn: turn , turnIndex: newTurn } },
-      initNextTurn
+        $set:  {  turn: turn ,turnIndex: newTurn, fen: newFen }
+      }
     );
   }
   function initNextTurn () {
     Meteor.call('startTurn',gameId);
     if (turn === 'clan') {
-      var moves = Games.findOne({ gameId: gameId }).moves.join(" ");
       Meteor.setTimeout(function() {
         Engine.getMove(moves);
       }, 2000);

@@ -1,7 +1,7 @@
 angular.module('blockchess.game.service', [])
   .service('GameService', GameService);
 
-function GameService($q, $meteor, ToastService, GameModel, ChessValidator, ChessBoard) {
+function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoard) {
   var gameId = "1"; // Dev
 
   return {
@@ -15,8 +15,6 @@ function GameService($q, $meteor, ToastService, GameModel, ChessValidator, Chess
     startTurn: startTurn,
     endGame: endGame,
     restart: restart,
-    onRestart: onRestart,
-    onMove: onMove,
     isDone: isDone,
     imDone: imDone,
     pause: pause
@@ -60,7 +58,6 @@ function GameService($q, $meteor, ToastService, GameModel, ChessValidator, Chess
 
   function updateBoard() {
     console.log("history: updateBoard: ", ChessValidator.getHistory());
-    if (!GameModel.game.fen) return;
     ChessBoard.board.position(GameModel.game.fen);
     ChessValidator.game.load(GameModel.game.fen);
     cancelMoveHighlights();
@@ -104,7 +101,7 @@ function GameService($q, $meteor, ToastService, GameModel, ChessValidator, Chess
     GameModel.suggestedMoves.push({
       createdAt: Date.now(),
       gameId: "1",
-      turnIndex: GameModel.status.turnIndex,
+      turnIndex: GameModel.game.turnIndex,
       notation: notation,
       userId: Meteor.userId(),
       fen: ChessValidator.game.fen()
@@ -113,19 +110,6 @@ function GameService($q, $meteor, ToastService, GameModel, ChessValidator, Chess
 
   function restart() {
     Meteor.call('restart', gameId);
-  }
-
-  function onMove(move, turn) {
-    console.log('Gameboard Moved! ', move, turn);
-    cancelMoveHighlights();
-    ToastService.toast('Turn changed');
-    ChessValidator.game.move(move);
-  }
-
-  function onRestart() {
-    console.log('onRestart called!');
-    cancelMoveHighlights();
-    ChessValidator.game.reset();
   }
 
 }

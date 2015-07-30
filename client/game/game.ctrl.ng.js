@@ -18,16 +18,12 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
     imDone: imDone,
     selectedMove: {},
     timer: {},
-    status: {},
     game: {}
   });
 
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
-  //TODO why use 'true' here? it's a string
   $scope.$watch('ctrl.game.fen', updateBoard, true);
-  $scope.$watch('ctrl.status.turn', onTurn, true);
-  $scope.$watch('ctrl.status.restarted', onRestart, true);
 
   init();
 
@@ -35,7 +31,6 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
     GameModel.set(gameId);
     ctrl.game = GameModel.game;
     ctrl.timer = GameModel.timer;
-    ctrl.status = GameModel.status;
     ctrl.suggestedMoves = GameModel.suggestedMoves;
   }
 
@@ -46,21 +41,9 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
   function imDone()          { GameService.imDone(gameId);    }
   function pause()           { GameService.pause(gameId);     }
 
-  function onRestart() {
-    if (ctrl.status) {
-      GameService.onRestart();
-    }
-  }
-
-  function onTurn() {
-    if (ctrl.status) {
-      Session.set('turnIndex', ctrl.status.turnIndex);
-      GameService.onMove(_.last(ctrl.game.pgn), ctrl.game.turn);
-    }
-  }
-
   function updateBoard() {
-    if (ctrl.game && ChessValidator.game) {
+    if (ctrl.game && ctrl.game.fen && ChessValidator.game) {
+      Session.set('turnIndex', ctrl.game.turnIndex);
       GameService.updateBoard();
     }
   }

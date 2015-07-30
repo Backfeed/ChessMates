@@ -22,6 +22,7 @@ function getBy(moveId) {
 }
 
 function updateBy(moveId, stars) {
+  //TODO why do you update this? only updating the stars is needed
   Evaluations.update(
     {
       moveId: moveId, userId:
@@ -65,10 +66,10 @@ function flagMove(moveId, flag) {
 
 function getFavoriteMove(userId) {
   // SuggestedMoves.find({  })
-  // Evaluations.find({ 
+  // Evaluations.find({
   //   userId: userId || Meteor.userId(),
   //   moveId
-  //   favoriteMove: 
+  //   favoriteMove:
   // })
 }
 

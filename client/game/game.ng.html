@@ -18,7 +18,8 @@
       <strong>DB:</strong> <br>
       History: {{ ctrl.game.moves.join(" ") }} <br />
       FEN: {{ ctrl.game.fen }} <br />
-      TURN: {{ ctrl.status.turn }} <br />
+      Turn: {{ ctrl.game.turn }} <br />
+      TurnIndex: {{ ctrl.game.turnIndex }} <br />
       <strong>LOCAL:</strong> <br>
       History: {{ ctrl.ChessValidator.game.history().join(" ") }} <br />
       Turn: {{ ctrl.ChessValidator.game.turn() }} <br />

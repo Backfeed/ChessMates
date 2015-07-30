@@ -6,7 +6,6 @@ Meteor.startup(function () {
   if (Meteor.users.find().count() === 0)   seedUsers();
   if (Clans.find().count() === 0)          seedClan();
   if (Timers.find().count() === 0)         seedTimer();
-  if (Status.find().count() === 0)         seedStatus();
   if (SuggestedMoves.find().count() === 0) seedSuggestedMoves();
   if (Evaluations.find().count() === 0)    seedEvaluations();
   if (Comments.find().count() === 0)       seedComments();
@@ -19,15 +18,6 @@ function seedTimer() {
     'inPlay': false,
     'timePerMove': 300000,
     'timeLeft': 300000
-  });
-}
-
-function seedStatus() {
-  Status.insert({
-    'gameId': '1',
-    'turn': 'start',
-    'turnIndex': 1,
-    'restarted': true
   });
 }
 
