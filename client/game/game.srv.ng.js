@@ -21,6 +21,7 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
 
   function isDone(id) {
     if (!GameModel.game.playedThisTurn) { return false; }
+    //if (GameModel.suggestedMoves.length < 1) { return false; }
     return GameModel.game.playedThisTurn.indexOf(id || Meteor.userId()) > -1;
   }
 

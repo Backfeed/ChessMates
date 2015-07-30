@@ -109,9 +109,10 @@ function executeMove(gameId, move, turn) {
 }
 
 function clientDone(gameId) {
-  validateGame(gameId);
+  var game = validateGame(gameId);
   validateUser(this.userId);
   validateUniqueness(gameId);
+  validateSuggestedMoves();
   Games.update(
     { gameId: gameId },
     { $push: { playedThisTurn: Meteor.userId() } },
@@ -119,9 +120,15 @@ function clientDone(gameId) {
   );
 
   function validateUniqueness() {
-    var played = Games.findOne({gameId: gameId}).playedThisTurn;
+    var played = game.playedThisTurn;
     if ( _.contains(played, Meteor.userId()) )
       throw new Meteor.Error(403, 'Already pressed "Im done"');
+  }
+
+  function validateSuggestedMoves() {
+    var moves = SuggestedMoves.find({gameId: gameId, turnIndex: game.turnIndex}).count();
+    if (moves < 1)
+      throw new Meteor.Error(403, 'No moves suggested');
   }
 
 }
@@ -137,6 +144,7 @@ function validateGame(gameId) {
   var game = Games.findOne({ gameId: gameId });
   if (! game)
     throw new Meteor.Error(404, "No such game");
+  return game;
 }
 
 function validateUser(userId) {
