@@ -1,7 +1,5 @@
-Meteor.publish('suggestedMoves', function (options, gameId) {
-  return SuggestedMoves.find({"gameId": "1"});
+Meteor.publish('suggestedMoves', function (options, gameId, turnIndex) {
+  if (!turnIndex)
+    turnIndex = 1;
+  return SuggestedMoves.find({"gameId": "1", "turnIndex": turnIndex});
 });
-
-// SuggestedMoves.after.insert(function(userId, doc) {
-//   Meteor.call('createFavoriteMove', doc.gameId, doc.turnIndex, doc._id);
-// });1
