@@ -2,92 +2,7 @@ var stupidarray = [];
 
 Meteor.methods({
   protoRate: protoRate,
-  protoEndTurn: function protoEndTurn(gameId, turnIndex) {
-    log('endTurn');
-    var star;
-    var stars = [1000, 0, 1, 3, 7, 15, 31]; // TODO :: WTF is this?
-    var turn = [];
-    var suggestedMoves = getSuggestedMove(gameId, turnIndex);
-
-    _.each(suggestedMoves, function(move) {
-      var evals = getEvalsBy(move._id);
-      var formattedEvaluations = getFormatted(evals);
-      log("checking out move: " + move.notation);
-      var score = 0;
-      var totalRep = 0;
-
-      //iterate through each star
-      for (star = 1; star < 6; star++) {
-        if (!stupidarray[move.notation][star])
-          continue;
-
-        var starEvals = formattedEvaluations[star-1];
-        var funds = stupidarray[move.notation][star];
-        log("Total amount of funds collected for Star " + star + " = " + funds);
-
-        var fullstake = calcFullStake(starEvals);
-        distributeStakeToEvaluators(starEvals, funds, fullstake);
-        var rep = calcRep(starEvals);
-        //add the ponderated value of the star
-        score += stars[star] * rep;
-
-        //update the total (played) reputation for that move
-        totalRep += rep;
-      }
-
-      //calculate the average value of the move
-      turn[move.notation] = calcAvgMoveVal(totalRep, score);
-      logTurn(move.notation, totalRep, score);
-    });
-
-    //select the move to be played
-    log(turn);
-    var winner;
-
-
-    //first sort the move by the amount of value
-    var sorted = [];
-    for(move in turn) {
-      sorted.push( [ move, turn[move].value ] );
-    }
-    sorted.sort(function(a, b) { return b[1] - a[1]; });
-    log(sorted);
-
-
-    //then identify the one with the highest overall score * rep || highest score || highest reputation
-    winner = {value: sorted[0][1], move: sorted[0][0]}; //get the highest score
-    for(var i = 1; i<sorted.length; i++) {
-      if(sorted[i][1] === winner.value) {
-        if(turn[sorted[i][0]].credits > turn[winner.move].credits) {
-          winner = { value: sorted[i][1], move: sorted[i][0] };
-        }
-        else if(turn[sorted[i][0]].credits === turn[winner.move].credits) {
-          if(turn[sorted[i][0]].reputation > turn[winner.move].reputation) {
-            winner = { value: sorted[i][1], move: sorted[i][0] };
-          }
-        }
-      }
-    }
-
-    log("AND THE WINNER MOVE IS: " + winner.move);
-    var m = _.find(suggestedMoves, function(move) { return move.notation === winner.move });
-    log("winning user = " + Common.displayNameOf(m.userId));
-
-    //distribute  tokens to the contributor who picked the winning move !
-    var win = getUserBy(m.userId);
-    win.tokens += turn[winner.move].credits;
-    Meteor.users.update( { _id: win._id}, { $set: { tokens: win.tokens }} );
-
-    //return winner.move;
-    var move = { from: winner.move.substr(0,2), to: winner.move.substr(2) };
-    //return move;
-
-    Meteor.call('executeMove',gameId, move, 'clan');
-
-    stupidarray = [];
-
-  }
-
+  protoEndTurn: protoEndTurn
 });
 
 function getFormatted(evaluations) {
@@ -195,4 +110,93 @@ function calcAvgMoveVal(totalRep, score) {
 
 function logTurn(notation, totalRep, score) {
   log("move " + notation + " = " + score + " ( " + score / totalRep + " ) with " + totalRep + " reputation");
+}
+
+// getWinnerUser :: [Object], String -> Object
+function getWinnerUser(moves, winningNotation) {
+  var m = _.find(moves, function(move) { return move.notation === winningNotation });
+  return getUserBy(m.userId);
+}
+
+
+function AwardWinner(moves, winningNotation, credits) {
+  var winningUser = getWinnerUser(moves, winningNotation);
+  log("winning user = " + Common.displayNameOf(winningUser));
+  winningUser.tokens += credits;
+  Meteor.users.update( { _id: winningUser._id}, { $set: { tokens: winningUser.tokens }} );
+}
+
+function protoEndTurn(gameId, turnIndex) {
+  log('endTurn');
+  var star;
+  var stars = [1000, 0, 1, 3, 7, 15, 31]; // TODO :: WTF is this?
+  var turn = [];
+  var moves = getSuggestedMove(gameId, turnIndex);
+
+  _.each(moves, function(move) {
+    var evals = getEvalsBy(move._id);
+    var formattedEvaluations = getFormatted(evals);
+    log("checking out move: " + move.notation);
+    var score = 0;
+    var totalRep = 0;
+
+    //iterate through each star
+    for (star = 1; star < 6; star++) {
+      if (!stupidarray[move.notation][star])
+        continue;
+
+      var starEvals = formattedEvaluations[star-1];
+      var funds = stupidarray[move.notation][star];
+      log("Total amount of funds collected for Star " + star + " = " + funds);
+
+      var fullstake = calcFullStake(starEvals);
+      distributeStakeToEvaluators(starEvals, funds, fullstake);
+      var rep = calcRep(starEvals);
+      //add the ponderated value of the star
+      score += stars[star] * rep;
+
+      //update the total (played) reputation for that move
+      totalRep += rep;
+    }
+
+    //calculate the average value of the move
+    turn[move.notation] = calcAvgMoveVal(totalRep, score);
+    logTurn(move.notation, totalRep, score);
+  });
+
+  //select the move to be played
+  log(turn);
+  var winner;
+
+
+  //first sort the move by the amount of value
+  var sorted = [];
+  for(move in turn) {
+    sorted.push( [ move, turn[move].value ] );
+  }
+  sorted.sort(function(a, b) { return b[1] - a[1]; });
+  log(sorted);
+
+
+  //then identify the one with the highest overall score * rep || highest score || highest reputation
+  winner = {value: sorted[0][1], move: sorted[0][0]}; //get the highest score
+  for(var i = 1; i<sorted.length; i++) {
+    if(sorted[i][1] === winner.value) {
+      if(turn[sorted[i][0]].credits > turn[winner.move].credits) {
+        winner = { value: sorted[i][1], move: sorted[i][0] };
+      }
+      else if(turn[sorted[i][0]].credits === turn[winner.move].credits) {
+        if(turn[sorted[i][0]].reputation > turn[winner.move].reputation) {
+          winner = { value: sorted[i][1], move: sorted[i][0] };
+        }
+      }
+    }
+  }
+
+  log("AND THE WINNER MOVE IS: " + winner.move);
+  
+  AwardWinner(moves, winner.move, turn[winner.move].credits);
+  var move = { from: winner.move.substr(0,2), to: winner.move.substr(2) };
+  Meteor.call('executeMove',gameId, move, 'clan');
+  stupidarray = [];
 }
