@@ -76,7 +76,7 @@ minimongo@1.0.8
 mizzao:timesync@0.3.3
 mizzao:user-status@0.6.5
 mobile-status-bar@1.0.3
-momentjs:moment@2.10.5
+momentjs:moment@2.10.6
 mongo@1.1.0
 mongo-livedata@1.0.8
 msavin:jetsetter@1.0.19
@@ -104,7 +104,7 @@ spacebars@1.0.6
 spacebars-compiler@1.0.6
 srp@1.0.3
 templating@1.1.1
-tmeasday:publish-counts@0.4.0
+tmeasday:publish-counts@0.5.0
 tracker@1.0.7
 twitter@1.1.4
 ui@1.0.6

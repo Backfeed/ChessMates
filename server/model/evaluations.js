@@ -3,17 +3,15 @@ Meteor.publish('evaluations', function (options, gameId) {
 });
 
 Meteor.methods({
-  rate: rate,
-  flagMove: flagMove,
-  isFavoriteMove: isFavoriteMove
+  rate: rate
 });
 
 function rate(moveId, stars) {
   var myEvaluation = getBy(moveId);
   if (myEvaluation)
-    updateBy(moveId, stars);
+    update(moveId, stars);
   else
-    createBy(moveId, stars);
+    create(moveId, stars);
   Meteor.call("protoRate", moveId, stars);
 }
 
@@ -21,8 +19,8 @@ function getBy(moveId) {
   return Evaluations.findOne({ moveId: moveId, userId: Meteor.userId() });
 }
 
-function updateBy(moveId, stars) {
   //TODO why do you update this? only updating the stars is needed
+function update(moveId, stars) {
   Evaluations.update(
     {
       moveId: moveId, userId:
@@ -32,11 +30,10 @@ function updateBy(moveId, stars) {
   )
 }
 
-function createBy(moveId, stars) {
+function create(moveId, stars) {
   Evaluations.insert({
     moveId: moveId,
     userId: Meteor.userId(),
-    favoriteMove: amICreatorOfMove(moveId),
     stars: stars
   });
 }

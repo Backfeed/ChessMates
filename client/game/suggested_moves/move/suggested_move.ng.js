@@ -26,30 +26,32 @@ function suggestedMoveController($meteor, $scope) {
     isFavorite: false
   });
 
-  $scope.$watch('ctrl.evaluations', updateIsFavorite, true);
-
   init();
 
   function init() {
-    getEvaluations();
+    ctrl.evaluations = $meteor.collection(Evaluations, { moveId: ctrl.move._id }).subscribe('evaluations');
+    setIsFavorite();
   }
 
-  function getEvaluations() {
-    $meteor.subscribe('evaluations').then(function() {
-      ctrl.evaluations = $meteor.collection(Evaluations, { moveId: ctrl.move._id });
-    });
+  function setIsFavorite() {
+    isFavorite().then(function(bool) {
+      ctrl.isFavorite = bool;
+    })
   }
 
-  function updateIsFavorite() {
-    if (ctrl.evaluations && ctrl.evaluations.length) {
-      $meteor.call('isFavoriteMove', ctrl.move._id).then(function(bool) {
-        console.log(bool);
-        ctrl.isFavorite = bool;
-      })
-    }
+  function isFavorite() {
+    return $meteor.call('isFavorite', ctrl.move._id);
   }
 
   function favor() {
-    $meteor.call('favor', ctrl.move._id, ctrl.isFavorite);
+    debugger;
+    if (ctrl.isFavorite) {
+      if (ctrl.myFavMove._id) { ctrl.myFavMove.moveId = ctrl.move._id }
+      else           { $meteor.call('createFavoriteMove', ctrl.move.gameId, ctrl.move.turnIndex, ctrl.move._id) }
+    } 
+    else {
+      $meteor.call('destroyFavoriteMove', ctrl.move._id);
+    }
   }
+
 }

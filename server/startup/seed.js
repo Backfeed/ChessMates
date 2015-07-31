@@ -51,14 +51,12 @@ function seedEvaluations() {
       'moveId': '1',
       'userId': '1',
       'createdAt': '1435857130718',
-      'favoriteMove': false,
       'stars': 4
     },
     {
       'moveId': '2',
       'userId': '1',
       'createdAt': '1435857130718',
-      'favoriteMove': false,
       'stars': 2
     }
   ];

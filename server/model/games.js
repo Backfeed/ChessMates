@@ -52,6 +52,7 @@ function resetGameData(gameId) {
 
   Evaluations.remove({});
   SuggestedMoves.remove({ gameId: gameId });
+  FavoriteMoves.remove({ gameId: gameId });
   Comments.remove({ gameId: gameId });
 
   function restartCB(err, result) {
