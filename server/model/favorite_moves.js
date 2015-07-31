@@ -4,7 +4,7 @@ Meteor.publish('favoriteMoves', function (options, gameId) {
 
 Meteor.methods({
   createFavoriteMove: create,
-  destroyFavoriteMove: destroy
+  destroyFavoriteMove: destroy,
   isFavorite: isFavorite
 });
 
