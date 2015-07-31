@@ -45,10 +45,10 @@ function create(moveId, stars) {
 }
 
 function afterInsert(userId, evl) {
-  Meteor.call("protoRate", evl.moveId, evl.stars);
+  Meteor.call("protoRate", userId, evl.moveId, evl.stars);
 }
 
 function afterUpdate(userId, evl, fieldNames, modifier, options) {
   if (fieldNames.length === 1 && fieldNames[0] === 'stars' )
-    Meteor.call("protoRate", evl.moveId, evl.stars);
+    Meteor.call("protoRate", userId, evl.moveId, evl.stars);
 }
