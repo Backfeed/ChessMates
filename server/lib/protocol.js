@@ -16,7 +16,7 @@ Meteor.methods({
       var formattedEvaluations = getFormatted(evals);
       log("checking out move: " + move.notation);
       var score = 0;
-      var totalrep = 0;
+      var totalRep = 0;
 
       //iterate through each star
       for (star = 1; star < 6; star++) {
@@ -34,23 +34,18 @@ Meteor.methods({
         score += stars[star] * rep;
 
         //update the total (played) reputation for that move
-        totalrep += rep;
+        totalRep += rep;
       }
 
       //calculate the average value of the move
-      turn[move.notation] = {reputation: totalrep, credits: score / totalrep, value: score}
-      log("move " + move.notation + " = " + score + " ( " + score / totalrep + " ) with " + totalrep + " reputation");
-
+      turn[move.notation] = calcAvgMoveVal(totalRep, score);
+      logTurn(move.notation, totalRep, score);
     }
 
-    //select the movie to be played
+    //select the move to be played
     log(turn);
     var winner;
 
-    //check if there is only one evaluation on that movie/star
-    if(turn.length === 1) {
-      log("only one....... ");
-    }
 
     //first sort the move by the amount of value
     var sorted = [];
@@ -176,14 +171,11 @@ function getStakeBy(user) {
 
 // calcFullStake :: [Object] -> Number
 function calcFullStake(evals) {
-  var fullstake = 0;
-  var i;
-  var u;
-  for (i = 0; i < evals.length; i++) {
-    u = getUserBy(evals[i].userId);
-    fullstake += getStakeBy(u);
+  return _.reduce(evals, addStake, 0);
+  function addStake(memo, evl) { 
+    var u = getUserBy(evl.userId);
+    return memo + getStakeBy(u);
   }
-  return fullstake;
 }
 
 function updateUserReputation(id, reputation) {
@@ -192,15 +184,24 @@ function updateUserReputation(id, reputation) {
 
 // calcRep :: [Object] -> Number
 function calcRep (starEvals) {
-  var rep = 0;
-  for (i = 0; i < starEvals.length ; i++) {
-    var u = getUserBy(starEvals[i].userId);
-    rep += u.reputation;
-  }
-  return rep;
+  return _.reduce(starEvals, addRep, 0);
+  function addRep(memo, evl) { return memo + getUserBy(evl.userId).reputation; }
 }
 
 // :: String, Number -> [Object]
 function getSuggestedMove(gameId, turnIndex) {
   return SuggestedMoves.find({ gameId: gameId, turnIndex: turnIndex }).fetch();
+}
+
+// calcAvgMoveVal :: Number, Number -> Object
+function calcAvgMoveVal(totalRep, score) {
+  return {
+    reputation: totalRep, 
+    credits: score / totalRep, 
+    value: score
+  };
+}
+
+function logTurn(notation, totalRep, score) {
+  log("move " + notation + " = " + score + " ( " + score / totalRep + " ) with " + totalRep + " reputation");
 }
