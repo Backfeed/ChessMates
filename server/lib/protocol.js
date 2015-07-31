@@ -1,127 +1,35 @@
 var stupidarray = [];
 
-function getMoveBy(moveId) {
-  return SuggestedMoves.findOne({ _id: moveId });
-}
-
-function getEvalsBy(moveId) {
-  return Evaluations.find({ moveId: moveId }).fetch();
-}
-
 Meteor.methods({
-  protoRate: function protoRate(moveId, stars) {
-    // Redistribute reputation after move
-
-    log('distributeReputation');
-
-    var evaluations = getEvalsBy(moveId);
-    var notation = getMoveBy(moveId).notation;
-
-    var evarray = (function buildOtherStupidArray(stars) {
-      var starSpecificEvaluations = [];
-      evaluations.forEach(function (evl) {
-        if (evl.stars === stars)
-          starSpecificEvaluations.push(evl);
-      });
-      return starSpecificEvaluations;
-    })(stars);
-
-    var curreval = _.last(evarray);
-    log('user: ', Common.displayNameOf(user), ' stars: ', curreval.stars);
-
-    // pay reputation at stake
-    var user = Meteor.users.findOne(curreval.userId);
-    var stake = user.reputation * 0.1;
-    user.reputation -= stake;
-    Meteor.users.update( { _id: curreval.userId}, { $set: { 'reputation': user.reputation }} );
-
-    log("updating " + Common.displayNameOf(user) + " reputation to = " + user.reputation);
-
-    //check if it's the first evaluation, to prepare the dummy user
-    if(!stupidarray[notation]) {
-      stupidarray[notation] = [undefined, undefined, undefined, undefined, undefined];
-    }
-
-      // redistribute the stake to all other evaluators
-      var i;
-      var fullstake = 0;
-      for (i = 0; i < evarray.length; i++) {
-        var u = Meteor.users.findOne(evarray[i].userId);
-        fullstake += u.reputation * 0.1;
-      }
-      //add the stake of the dummy user, arbitrarily set at 3
-      fullstake += 3;
-
-      for (i = 0; i < evarray.length; i++) {
-        var u = Meteor.users.findOne(evarray[i].userId);
-        u.reputation += Math.round(stake * (u.reputation * 0.1) / fullstake * 100) / 100;
-        Meteor.users.update({_id: u._id}, {$set: {'reputation': u.reputation}});
-      }
-      //redistribute some of the stake also to the dummy user
-     if(!stupidarray[notation][curreval.stars]) { stupidarray[notation][curreval.stars] = 0;}
-      stupidarray[notation][curreval.stars] += Math.round( stake * 3 / fullstake * 100) /100;
-
-      for (i = 0; i < evarray.length; i++) {
-        var u = Meteor.users.findOne(evarray[i].userId);
-        log(u.emails + " ===  " + u.reputation);
-      }
-
-  },
+  protoRate: protoRate,
   protoEndTurn: function protoEndTurn(gameId, turnIndex) {
+    log('endTurn');
     var star, i, j;
     var stars = [1000, 0, 1, 3, 7, 15, 31];
     var turn = [];
-
-    log('endTurn');
-
-
-    var suggestedMoves = SuggestedMoves.find({ gameId: gameId, turnIndex: turnIndex }).fetch();
+    var suggestedMoves = getSuggestedMove(gameId, turnIndex);
 
     //iterate through each move
-    for(j=0; j<suggestedMoves.length; j++) {
-      var move = suggestedMoves[j];
-      var evaluations = getEvalsBy(move._id);
-      var formattedEvaluations = getFormatted(evaluations);
+    for(i = 0; i<suggestedMoves.length; i++) {
+      var move = suggestedMoves[i];
+      var evals = getEvalsBy(move._id);
+      var formattedEvaluations = getFormatted(evals);
       log("checking out move: " + move.notation);
       var score = 0;
       var totalrep = 0;
 
       //iterate through each star
       for (star = 1; star < 6; star++) {
-
-        if (!stupidarray[move.notation][star]) {
+        if (!stupidarray[move.notation][star])
           continue;
-        }
 
-        var evarray = formattedEvaluations[star-1];
-
-        //re-allocate the Funds to all players
+        var starEvals = formattedEvaluations[star-1];
         var funds = stupidarray[move.notation][star];
         log("Total amount of funds collected for Star " + star + " = " + funds);
-        var k, fullstake = 0;
 
-        //redistribute the stake to other evaluators of the same move/star
-        for (k = 0; k < evarray.length; k++) {
-          var u = Meteor.users.findOne(evarray[k].userId);
-          fullstake += u.reputation * 0.1;
-        }
-
-        for (k = 0; k < evarray.length; k++) {
-          var u = Meteor.users.findOne(evarray[k].userId);
-          u.reputation += Math.round(funds * (u.reputation * 0.1) / fullstake * 100) / 100;
-          Meteor.users.update({_id: u._id}, {$set: {'reputation': u.reputation}});
-        }
-
-
-
-        //calculate the weight of each star
-        var rep = 0;
-        for (i = 0; i < evarray.length ; i++) {
-
-          var u = Meteor.users.findOne(evarray[i].userId);
-          rep += u.reputation;
-        }
-
+        var fullstake = calcFullStake(starEvals);
+        distributeStakeToEvaluators(starEvals, funds, fullstake);
+        var rep = calcRep(starEvals);
         //add the ponderated value of the star
         score += stars[star] * rep;
 
@@ -155,14 +63,14 @@ Meteor.methods({
 
     //then identify the one with the highest overall score * rep || highest score || highest reputation
     winner = {value: sorted[0][1], move: sorted[0][0]}; //get the highest score
-    for(i=1; i<sorted.length; i++) {
-      if(sorted[i][1] === winner.value) {
-        if(turn[sorted[i][0]].credits > turn[winner.move].credits) {
-          winner = { value: sorted[i][1], move: sorted[i][0] };
+    for(j=1; j<sorted.length; j++) {
+      if(sorted[j][1] === winner.value) {
+        if(turn[sorted[j][0]].credits > turn[winner.move].credits) {
+          winner = { value: sorted[j][1], move: sorted[j][0] };
         }
-        else if(turn[sorted[i][0]].credits === turn[winner.move].credits) {
-          if(turn[sorted[i][0]].reputation > turn[winner.move].reputation) {
-            winner = { value: sorted[i][1], move: sorted[i][0] };
+        else if(turn[sorted[j][0]].credits === turn[winner.move].credits) {
+          if(turn[sorted[j][0]].reputation > turn[winner.move].reputation) {
+            winner = { value: sorted[j][1], move: sorted[j][0] };
           }
         }
       }
@@ -178,7 +86,7 @@ Meteor.methods({
 
 
     //distribute  tokens to the contributor who picked the winning move !
-    var win = Meteor.users.findOne(m[0].userId);
+    var win = getUserBy(m[0].userId);
     win.tokens += turn[winner.move].credits;
     Meteor.users.update( { _id: win._id}, { $set: { 'tokens': win.tokens }} );
 
@@ -204,3 +112,95 @@ function getFormatted(evaluations) {
 }
 
 function log(msg) { console.log("PROTCOL: ", msg); }
+
+function protoRate(userId, moveId, stars) {
+  log('rate');
+  var user = getUserBy(userId);
+  var stake = getStakeBy(user);
+  var evals = getEvalsBy(moveId, stars);
+  var dummyUserStake = 3;// Arbitrarily
+  var fullstake = calcFullStake(evals) + dummyUserStake;
+  var notation = getNotationBy(moveId);
+  
+  payReputationAtStake(user, stake);
+  distributeStakeToEvaluators(evals, stake, fullstake);
+  distributeStakeToDummyUser(notation, stars, stake, fullstake);
+}
+
+function payReputationAtStake(user, stake) {
+  user.reputation -= stake;
+  log("updating " + Common.displayNameOf(user) + " reputation to = " + user.reputation);
+  updateUserReputation(user._id, user.reputation);
+}
+
+function distributeStakeToEvaluators(evals, stake, fullstake) {
+  var i;
+  var u;
+  for (i = 0; i < evals.length; i++) {
+    u = getUserBy(evals[i].userId);
+    u.reputation += Math.round(stake * getStakeBy(u) / fullstake * 100) / 100;
+    log("updating " + Common.displayNameOf(u) + " reputation to = " + u.reputation);
+    updateUserReputation(u._id, u.reputation);
+  }
+}
+
+function prepareDummy(notation, stars) {
+  stupidarray[notation] = stupidarray[notation] || [undefined, undefined, undefined, undefined, undefined];
+  stupidarray[notation][stars] = stupidarray[notation][stars] || 0;
+}
+
+function distributeStakeToDummyUser(notation, stars, stake, fullstake) {
+  prepareDummy(notation, stars);
+  stupidarray[notation][stars] += Math.round( stake * 3 / fullstake * 100) / 100;
+}
+
+// getMoveBy :: String -> Object
+function getMoveBy(moveId) {
+  return SuggestedMoves.findOne({ _id: moveId });
+}
+
+// getEvalsBy :: String, Number -> [Object]
+function getEvalsBy(moveId, stars) {
+  return Evaluations.find({ moveId: moveId, stars: stars }).fetch();
+}
+
+// getNotationBy :: String -> String
+function getNotationBy(moveId) {
+  return getMoveBy(moveId).notation;
+}
+
+// getStakeBy :: Object -> Number
+function getStakeBy(user) {
+  return user.reputation * 0.1;
+}
+
+// calcFullStake :: [Object] -> Number
+function calcFullStake(evals) {
+  var fullstake = 0;
+  var i;
+  var u;
+  for (i = 0; i < evals.length; i++) {
+    u = getUserBy(evals[i].userId);
+    fullstake += getStakeBy(u);
+  }
+  return fullstake;
+}
+
+function updateUserReputation(id, reputation) {
+  Meteor.users.update({ _id: id }, { $set: { reputation: reputation } });
+}
+
+// calcRep :: [Object] -> Number
+function calcRep (starEvals) {
+  var rep = 0;
+  for (i = 0; i < starEvals.length ; i++) {
+    var u = getUserBy(starEvals[i].userId);
+    rep += u.reputation;
+  }
+  return rep;
+}
+
+// :: String, Number -> [Object]
+function getSuggestedMove(gameId, turnIndex) {
+  return SuggestedMoves.find({ gameId: gameId, turnIndex: turnIndex }).fetch();
+}
