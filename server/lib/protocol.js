@@ -129,7 +129,7 @@ function protoRate(userId, moveId, stars) {
 
 function payReputationAtStake(user, stake) {
   user.reputation -= stake;
-  log("updating " + Common.displayNameOf(user) + " reputation to = " + user.reputation);
+  log("stake: updating " + Common.displayNameOf(user) + " reputation to = " + user.reputation);
   updateUserReputation(user._id, user.reputation);
 }
 
@@ -139,7 +139,7 @@ function distributeStakeToEvaluators(evals, stake, fullstake) {
   for (i = 0; i < evals.length; i++) {
     u = getUserBy(evals[i].userId);
     u.reputation += Math.round(stake * getStakeBy(u) / fullstake * 100) / 100;
-    log("updating " + Common.displayNameOf(u) + " reputation to = " + u.reputation);
+    log("distribution: updating " + Common.displayNameOf(u) + " reputation to = " + u.reputation);
     updateUserReputation(u._id, u.reputation);
   }
 }
