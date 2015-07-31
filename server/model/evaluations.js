@@ -1,5 +1,5 @@
 Meteor.publish('evaluations', function (options, gameId) {
-  return Evaluations.find({}, { fields: { stars: 1, moveId: 1, userId: 1, favoriteMove: 1 } });
+  return Evaluations.find({}, { fields: { stars: 1, moveId: 1, userId: 1 } });
 });
 
 Meteor.methods({
@@ -36,40 +36,4 @@ function create(moveId, stars) {
     userId: Meteor.userId(),
     stars: stars
   });
-}
-
-function amICreatorOfMove(id) {
-  return SuggestedMoves.findOne({ _id: id }).userId === Meteor.userId();
-}
-
-function isFavoriteMove(moveId) {
-  var evl = getBy(moveId);
-  if (!evl) return false;
-  return evl.favoriteMove;
-}
-
-function flagMove(moveId, flag) {
-  if (flag && getFavoriteMove())
-    unflagMove();
-
-  Evaluations.update(
-    {
-      moveId: moveId,
-      userId: Meteor.userId()
-    },
-    { $set: { favoriteMove: flag } }
-  )
-}
-
-function getFavoriteMove(userId) {
-  // SuggestedMoves.find({  })
-  // Evaluations.find({
-  //   userId: userId || Meteor.userId(),
-  //   moveId
-  //   favoriteMove:
-  // })
-}
-
-function unflagMove() {
-
 }
