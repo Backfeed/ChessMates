@@ -3,24 +3,22 @@ Meteor.publish('favoriteMoves', function (options, gameId) {
 });
 
 Meteor.methods({
-  createFavoriteMove: create,
-  destroyFavoriteMove: destroy,
-  isFavorite: isFavorite
+  favor: favor
 });
 
-function create(gameId, turnIndex, moveId) {
+function create(moveId, turnIndex, gameId) {
   FavoriteMoves.insert({
-    gameId: gameId,
-    moveId: moveId,
     userId: Meteor.userId(),
-    turnIndex: turnIndex
+    turnIndex: turnIndex,
+    moveId: moveId,
+    gameId: gameId
   });
 }
 
-function destroy(moveId) {
-  FavoriteMoves.remove({ moveId: moveId, userId: Meteor.userId() });
-}
-
-function isFavorite(moveId) {
-  return !!FavoriteMoves.findOne({ moveId: moveId, userId: Meteor.userId() });
+function favor(moveId, turnIndex, gameId) {
+  var myFavMove = FavoriteMoves.findOne({ turnIndex: turnIndex, userId: Meteor.userId() });
+  if (myFavMove)
+    FavoriteMoves.update({ _id: myFavMove._id }, { $set: { moveId: moveId } });
+  else
+    create(moveId, turnIndex, gameId);
 }

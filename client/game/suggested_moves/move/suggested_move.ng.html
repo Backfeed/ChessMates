@@ -10,5 +10,10 @@
           my-rating></rating>
 </td>
 <td>
-  <input type="checkbox" ng-model="ctrl.isFavorite" ng-change="ctrl.favor()" ng-checked="ctrl.isFavorite">
+  <input type="radio" 
+         name="myFavMove" 
+         ng-model="ctrl.myFavMove" 
+         ng-value="ctrl.move" 
+         ng-change="ctrl.favor()" 
+         ng-checked="ctrl.myFavMove.moveId === ctrl.move._id">
 </td>

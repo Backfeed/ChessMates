@@ -47,7 +47,7 @@
     </div>
 
     <div flex="40">
-        <suggested-moves game-id="'1'" selected-move="ctrl.selectedMove" suggested-moves="ctrl.suggestedMoves"></suggested-moves>
+        <suggested-moves turn-index="ctrl.game.turnIndex" selected-move="ctrl.selectedMove" suggested-moves="ctrl.suggestedMoves" ng-if="ctrl.game.turnIndex"></suggested-moves>
     </div>
   </section>
 </div>

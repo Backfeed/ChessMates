@@ -14,33 +14,24 @@ function suggestedMove() {
     templateUrl: "client/game/suggested_moves/move/suggested_move.ng.html",
     controller: suggestedMoveController,
     restrict: 'A',
-    scope: { move: '=' }
+    scope: { move: '=', myFavMove: '=' }
   };
 }
 
 function suggestedMoveController($meteor, $scope) {
   var ctrl = this;
   angular.extend(ctrl, {
-    evaluations: [],
-    turnIndex: ctrl.move.turnIndex,
-    isFavorite: false
+    favor: favor,
+    evaluations: []
   });
-
-
-
-  // $meteor.autorun($scope, function() {
-  //   $meteor.subscribe('favoriteMoves').then(function() {
-  //     ctrl.favoriteMove = $meteor.object(FavoriteMoves, { 
-  //       userId: Meteor.userId(),
-  //       turnIndex: $scope.getReactively('ctrl.turnIndex')
-  //     });
-  //   });
-  // });
 
   init();
 
   function init() {
-    ctrl.evaluations = $meteor.collection(function() { return Evaluations.find({ moveId: ctrl.move._id }) }).subscribe('evaluations');
+    ctrl.evaluations = $meteor.collection(function() { return Evaluations.find({ moveId: ctrl.move._id }); }).subscribe('evaluations');
   }
 
+  function favor() {
+    $meteor.call('favor', ctrl.move._id, ctrl.move.turnIndex, ctrl.move.gameId);
+  }
 }
