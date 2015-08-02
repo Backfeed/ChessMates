@@ -1,5 +1,5 @@
-Meteor.publish('evaluations', function (options, gameId) {
-  return Evaluations.find({}, { fields: { stars: 1, moveId: 1, userId: 1 } });
+Meteor.publish('evaluations', function (options) {
+  return Evaluations.find({});
 });
 
 Evaluations.after.insert(afterInsert);
