@@ -103,6 +103,7 @@ function seedGame() {
     {
       'gameId': '1',
       'moves': [],
+      'turnIndex': 1,
       'playedThisTurn': [],
       'pgn': [],
       'fen': 'start',
