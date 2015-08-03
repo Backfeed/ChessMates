@@ -1,4 +1,3 @@
-Meteor.publish('comments', function (options, gameId) {
-  return Comments.find({"gameId": "1"});
+Meteor.publish('comments', function (options, moveId, gameId) {
+  return Comments.find({moveId: moveId});
 });
-
