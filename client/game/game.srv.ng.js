@@ -57,6 +57,7 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
   }
 
   function restart() {
+    cancelMoveHighlights();
     Meteor.call('restart', gameId);
   }
 
