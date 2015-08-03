@@ -1,6 +1,6 @@
 <div>
   <section class="area game-area" layout="row" layout-margin>
-    <div class="game-sidebar" flex="15">
+    <div class="game-sidebar" flex="10">
         <timer settings="ctrl.timer"></timer>
         <dl class="game-metadata">
           <dt>Clan's Score:</dt>
@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <div flex="40">
+    <div flex="60">
         <suggested-moves turn-index="ctrl.game.turnIndex" selected-move="ctrl.selectedMove" suggested-moves="ctrl.suggestedMoves" ng-if="ctrl.game.turnIndex"></suggested-moves>
     </div>
   </section>
