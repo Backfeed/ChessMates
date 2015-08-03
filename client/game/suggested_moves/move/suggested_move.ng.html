@@ -18,3 +18,9 @@
          ng-change="ctrl.favor()" 
          ng-checked="ctrl.myFavMove.moveId === ctrl.move._id">
 </td>
+<td class="relative">
+  <md-icon md-svg-icon="communication:ic_comment_24px" 
+           aria-label="Move Comments"></md-icon>
+           {{ ctrl.comments.length }}
+  <div class="move-comments">Comments!</div>
+</td>

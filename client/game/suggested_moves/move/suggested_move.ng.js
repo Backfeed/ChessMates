@@ -38,6 +38,7 @@ function suggestedMoveController($meteor, $scope) {
 
   function init() {
     ctrl.evaluations = $meteor.collection(function() { return Evaluations.find({ moveId: ctrl.move._id }); }).subscribe('evaluations');
+    ctrl.comments = $meteor.collection(function() { return Comments.find({ moveId: ctrl.move._id }); }).subscribe('comments');
   }
 
   function favor() {
