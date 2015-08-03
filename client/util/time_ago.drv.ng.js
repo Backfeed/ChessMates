@@ -20,17 +20,13 @@ function timeAgoCtrl($scope, $interval) {
 
   $scope.$on('destroy', destroyInterval);
 
-  init()
+  init();
 
   function init() {
     updateText();
   }
 
-  function destroyInterval() {
-    $interval.cancel(interval);
-  }
+  function destroyInterval() { $interval.cancel(interval); }
+  function updateText() { ctrl.text = moment(ctrl.timeAgo).fromNow(); }
 
-  function updateText() {
-    ctrl.text = moment(parseInt($scope.timeAgo)).fromNow();
-  }
 }
