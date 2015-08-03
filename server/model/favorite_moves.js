@@ -1,6 +1,12 @@
-Meteor.publish('favoriteMoves', function (options, gameId) {
-  return FavoriteMoves.find({});
+Meteor.publish('favoriteMoves', function (options, moveId) {
+  // TODO :: Make Count work
+  // console.log(moveId);
+  // console.log(FavoriteMoves.find({ "moveId": moveId }).count());
+  Counts.publish(this, 'favoriteMovesCount', FavoriteMoves.find({ "moveId": moveId }), { noReady: true });
+
+  return FavoriteMoves.find({ "moveId": moveId });
 });
+
 
 Meteor.methods({
   favor: favor

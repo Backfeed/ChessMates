@@ -22,10 +22,19 @@ function suggestedMoveController($meteor, $scope) {
   var ctrl = this;
   angular.extend(ctrl, {
     favor: favor,
+    count: 0,
     evaluations: []
   });
 
   init();
+
+  $meteor.autorun($scope, function() {
+    $meteor.subscribe('favoriteMoves', {}, ctrl.move._id).then(function() {
+      // ctrl.count = $meteor.object(Counts ,'favoriteMovesCount', false);
+      // TOdo :: Remove this once counts works
+      ctrl.favMoves = $meteor.collection(function () { return FavoriteMoves.find({ moveId: ctrl.move._id }) });
+    });
+  });
 
   function init() {
     ctrl.evaluations = $meteor.collection(function() { return Evaluations.find({ moveId: ctrl.move._id }); }).subscribe('evaluations');
