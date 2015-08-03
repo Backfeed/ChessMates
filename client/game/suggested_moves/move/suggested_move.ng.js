@@ -28,20 +28,30 @@ function suggestedMoveController($meteor, $scope) {
 
   init();
 
-  $meteor.autorun($scope, function() {
+  function init() {
+    getEvaluations();
+    getFavMoves();
+    getComments();
+  }
+
+  function getFavMoves() {
     $meteor.subscribe('favoriteMoves', {}, ctrl.move._id).then(function() {
       // ctrl.count = $meteor.object(Counts ,'favoriteMovesCount', false);
       // TOdo :: Remove this once counts works
       ctrl.favMoves = $meteor.collection(function () { return FavoriteMoves.find({ moveId: ctrl.move._id }) });
     });
-  });
+  }
 
-  function init() {
+  function getEvaluations() {
     ctrl.evaluations = $meteor.collection(function() { return Evaluations.find({ moveId: ctrl.move._id }); }).subscribe('evaluations');
+  }
+
+  function getComments() {
     ctrl.comments = $meteor.collection(function() { return Comments.find({ moveId: ctrl.move._id }); }).subscribe('comments');
   }
 
   function favor() {
     $meteor.call('favor', ctrl.move._id, ctrl.move.turnIndex, ctrl.move.gameId);
   }
+
 }
