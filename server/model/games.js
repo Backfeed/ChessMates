@@ -44,8 +44,8 @@ function resetGameData(gameId) {
     { gameId: gameId },
     { $set: {
         inPlay: false,
-        timePerMove: 300000,
-        timeLeft: 300000
+        timePerMove: 90000,
+        timeLeft: 90000
       }
     }
   );
