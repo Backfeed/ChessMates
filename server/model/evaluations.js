@@ -10,10 +10,10 @@ Meteor.methods({
 });
 
 function rate(moveId, stars) { 
-  findOrCrate(moveId, stars); 
+  updateOrCreate(moveId, stars); 
 }
 
-function findOrCrate(moveId, stars) {
+function updateOrCreate(moveId, stars) {
   var myEvaluation = getBy(moveId);
   if (myEvaluation)
     update(moveId, stars);
