@@ -7,7 +7,7 @@ Meteor.startup(function () {
   if (Clans.find().count() === 0)          seedClan();
   if (Timers.find().count() === 0)         seedTimer();
   if (SuggestedMoves.find().count() === 0) seedSuggestedMoves();
-  if (Evaluations.find().count() === 0)    seedEvaluations();
+  //if (Evaluations.find().count() === 0)    seedEvaluations(); //Cause a bug on startup
   if (Comments.find().count() === 0)       seedComments();
   if (Games.find().count() === 0)          seedGame();
 });

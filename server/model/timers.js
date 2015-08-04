@@ -29,11 +29,21 @@ function updateTimer(gameId, timer) {
 
 function endTurn(gameId) {
   Meteor.clearInterval(GameInterval);
-  var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
-  var move = Meteor.call('protoEndTurn', gameId, turnIndex);
+  var timer = Timers.findOne({ gameId: gameId });
+  if (timer.inPlay) {
+    var game = Games.findOne({ gameId: gameId });
+    var move = Meteor.call('protoEndTurn', gameId, game.turnIndex);
+  }
 }
 
 function endGame(gameId) {
   Meteor.clearInterval(GameInterval);
+  Timers.update({ gameId: gameId },
+    {
+      $set:  {
+        inPlay: false
+      }
+    }
+ );
 }
 

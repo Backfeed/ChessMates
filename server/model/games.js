@@ -43,7 +43,7 @@ function resetGameData(gameId) {
   Timers.update(
     { gameId: gameId },
     { $set: {
-        inPlay: false,
+        inPlay: true,
         timePerMove: 90000,
         timeLeft: 90000
       }
