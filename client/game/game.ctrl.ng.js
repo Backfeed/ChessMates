@@ -19,6 +19,7 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
     showRawData: showRawData,
     selectedMove: {},
     timer: {},
+    user: Meteor.user(),
     game: {}
   });
 

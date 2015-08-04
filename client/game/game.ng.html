@@ -3,13 +3,11 @@
     <div class="game-sidebar" flex="10">
         <timer settings="ctrl.timer"></timer>
         <dl class="game-metadata">
-          <dt>Clan's Score:</dt>
-          <dd>240</dd>
           <img src="img/logo.png" alt="">
-          <dt>Tal's Score:</dt>
-          <dd>59</dd>
+          <dt>{{ ctrl.user.username }}'s Reps:</dt>
+          <dd>{{ ctrl.user.reputation | number:2 }}</dd>
           <dt>Tokens:</dt>
-          <dd>532</dd>
+          <dd>{{ ctrl.user.tokens | number:2 }}</dd>
         </dl>
     </div>
 
