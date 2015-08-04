@@ -21,6 +21,8 @@ function suggestedMove() {
 function suggestedMoveController($meteor, $scope) {
   var ctrl = this;
   angular.extend(ctrl, {
+    getDisabledRateText: getDisabledRateText,
+    canRate: canRate,
     favor: favor,
     count: 0,
     evaluations: []
@@ -52,6 +54,17 @@ function suggestedMoveController($meteor, $scope) {
 
   function favor() {
     $meteor.call('favor', ctrl.move._id, ctrl.move.turnIndex, ctrl.move.gameId);
+  }
+
+  function canRate() {
+    return !!Meteor.userId() && Meteor.user().reputation;
+  }
+
+  function getDisabledRateText() {
+    if (!Meteor.userId())
+      return 'Must be logged in to evaluate moves'
+    if (!Meteor.user().reputation)
+      return 'Must have reputation to evluate moves'
   }
 
 }

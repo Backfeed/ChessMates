@@ -19,7 +19,10 @@ function myRating($meteor) {
         });
       }
       
-      function rate() { Meteor.call('rate', attrs.moveId, scope.myRating); }
+      function rate() { 
+        if (scope.ctrl.canRate())
+          Meteor.call('rate', attrs.moveId, scope.myRating);
+      }
 
       function getEval() {
         return $meteor.object(Evaluations, { moveId: attrs.moveId, userId: Meteor.userId() });

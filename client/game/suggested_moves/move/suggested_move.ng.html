@@ -7,7 +7,9 @@
 <td time-ago="ctrl.move.createdAt"></td>
 <td>
   <rating ng-model="myRating"
+          readonly="!ctrl.canRate()"
           move-id="{{ ctrl.move._id }}"
+          title="{{ ctrl.getDisabledRateText() }}"
           my-rating></rating>
 </td>
 <td>
