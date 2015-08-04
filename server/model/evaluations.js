@@ -32,7 +32,11 @@ function update(moveId, stars) {
       moveId: moveId, 
       userId: Meteor.userId()
     },
-    { $set: { stars: stars } }
+    { $set: { 
+        stars: stars, 
+        reputation: Meteor.user().reputation
+      } 
+    }
   )
 }
 
@@ -40,6 +44,7 @@ function create(moveId, stars) {
   Evaluations.insert({
     moveId: moveId,
     userId: Meteor.userId(),
+    reputation: Meteor.user().reputation,
     stars: stars
   });
 }
@@ -49,6 +54,6 @@ function afterInsert(userId, evl) {
 }
 
 function afterUpdate(userId, evl, fieldNames, modifier, options) {
-  if (fieldNames.length === 1 && fieldNames[0] === 'stars' )
+  if (fieldNames.length === 2 && fieldNames[0] === 'stars', fieldNames[1] === 'reputation' )
     Meteor.call("protoRate", userId, evl.moveId, evl.stars);
 }
