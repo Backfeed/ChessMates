@@ -98,19 +98,15 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
   }
 
   function singleMove(notation) {
-    var suggestedFen = ChessValidator.game.fen();
     movePieceBack();
-    if (!Meteor.userId())                     return ToastService.toast('Must be logged in to suggest a move');
-    if (getMoveBy('userId', Meteor.userId())) return ToastService.toast('Can only suggest one move per turn');
-    if (getMoveBy('notation', notation))      return ToastService.toast('move exists');
 
     GameModel.suggestedMoves.push({
-      createdAt: Date.now(),
-      gameId: "1",
       turnIndex: GameModel.game.turnIndex,
+      createdAt: Date.now(),
       notation: notation,
       userId: Meteor.userId(),
-      fen: suggestedFen
+      gameId: "1",
+      fen: ChessValidator.game.fen()
     });
   }
 
