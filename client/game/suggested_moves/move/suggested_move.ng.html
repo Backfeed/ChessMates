@@ -2,8 +2,10 @@
 <td>{{ ctrl.evaluations.length }}</td>
 <td>{{ ::ctrl.move.userId | displayNameById }}</td>
 <td>{{ ctrl.evaluations | avgStars }}</td>
-<!-- TODO :: Chnange to countes -->
-<td>{{ ctrl.favMoves.length }}</td>
+<td>
+  {{ ctrl.favMoves.length }} <!-- TODO :: Chnange to countes -->
+  ({{ ctrl.favMoves | favoriteCountByRep }}%)
+</td>
 <td time-ago="ctrl.move.createdAt"></td>
 <td>
   <rating ng-model="myRating"

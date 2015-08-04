@@ -2,7 +2,7 @@ angular.module('blockchess.game.suggestedMoves.move', [
   // Directives
   'blockchess.game.suggestedMoves.move.myRating',
   // Filters
-  'blockchess.game.suggestedMoves.move.favoriteCount',
+  'blockchess.game.suggestedMoves.move.favoriteCountByRep',
   'blockchess.game.suggestedMoves.move.avgStars'
 ])
 .directive('suggestedMove', suggestedMove);
