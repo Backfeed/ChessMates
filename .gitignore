@@ -1,3 +1,5 @@
 .idea
 packages/
 npm-debug.log
+mup.json
+settings.json
