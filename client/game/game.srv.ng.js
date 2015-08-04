@@ -93,8 +93,10 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
   }
 
   function movePieceBack() {
-    ChessValidator.game.undo();
-    ChessBoard.board.position(ChessValidator.game.fen());
+    setTimeout(function(){
+      ChessValidator.game.undo();
+      ChessBoard.board.position(ChessValidator.game.fen())
+    }, 1500);
   }
 
   function singleMove(notation) {
