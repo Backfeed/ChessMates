@@ -1,5 +1,5 @@
-var stupidarray = [];
-
+var dummyUserStake = 3;// Arbitrarily
+ 
 Meteor.methods({
   protoRate: protoRate,
   protoEndTurn: protoEndTurn
@@ -20,13 +20,11 @@ function protoRate(userId, moveId, stars) {
   var user = getUserBy(userId);
   var stake = getStakeBy(user);
   var evals = getEvalsBy(moveId, stars);
-  var dummyUserStake = 3;// Arbitrarily
   var fullstake = calcFullStake(evals) + dummyUserStake;
   var notation = getNotationBy(moveId);
   
   payReputationAtStake(user, stake);
   distributeStakeToEvaluators(evals, stake, fullstake);
-  distributeStakeToDummyUser(notation, stars, stake, fullstake);
 }
 
 function payReputationAtStake(user, stake) {
@@ -45,16 +43,6 @@ function distributeStakeToEvaluators(evals, stake, fullstake) {
   });
 }
 
-function prepareDummy(notation, stars) {
-  stupidarray[notation] = stupidarray[notation] || [undefined, undefined, undefined, undefined, undefined];
-  stupidarray[notation][stars] = stupidarray[notation][stars] || 0;
-}
-
-function distributeStakeToDummyUser(notation, stars, stake, fullstake) {
-  prepareDummy(notation, stars);
-  stupidarray[notation][stars] += Math.round( stake * 3 / fullstake * 100) / 100;
-}
-
 // getMoveBy :: String -> Object
 function getMoveBy(moveId) {
   return SuggestedMoves.findOne({ _id: moveId });
@@ -62,7 +50,10 @@ function getMoveBy(moveId) {
 
 // getEvalsBy :: String, Number -> [Object]
 function getEvalsBy(moveId, stars) {
-  return Evaluations.find({ moveId: moveId, stars: stars }).fetch();
+  var query = { moveId: moveId };
+  if (stars)
+    query.stars = stars;
+  return Evaluations.find(query).fetch();
 }
 
 // getNotationBy :: String -> String
@@ -119,7 +110,7 @@ function getWinnerUser(moves, winningNotation) {
 }
 
 
-function AwardWinner(moves, winningNotation, credits) {
+function awardWinner(moves, winningNotation, credits) {
   var winningUser = getWinnerUser(moves, winningNotation);
   log("winning user = " + Common.displayNameOf(winningUser));
   winningUser.tokens += credits;
@@ -130,7 +121,7 @@ function protoEndTurn(gameId, turnIndex) {
   log('endTurn');
   var star;
   var stars = [1000, 0, 1, 3, 7, 15, 31]; // TODO :: WTF is this?
-  var turn = [];
+  var turn = {};
   var moves = getSuggestedMove(gameId, turnIndex);
 
   _.each(moves, function(move) {
@@ -141,12 +132,12 @@ function protoEndTurn(gameId, turnIndex) {
     var totalRep = 0;
 
     //iterate through each star
-    for (star = 1; star < 6; star++) {
-      if (!stupidarray[move.notation][star])
-        continue;
+    for (star = 1; star <= 5; star++) {
 
       var starEvals = formattedEvaluations[star-1];
-      var funds = stupidarray[move.notation][star];
+      if (starEvals.length === 0) 
+        continue;
+      var funds = calcFunds(move, star);
       log("Total amount of funds collected for Star " + star + " = " + funds);
 
       var fullstake = calcFullStake(starEvals);
@@ -195,8 +186,21 @@ function protoEndTurn(gameId, turnIndex) {
 
   log("AND THE WINNER MOVE IS: " + winner.move);
   
-  AwardWinner(moves, winner.move, turn[winner.move].credits);
+  awardWinner(moves, winner.move, turn[winner.move].credits);
   var move = { from: winner.move.substr(0,2), to: winner.move.substr(2) };
   Meteor.call('executeMove',gameId, move, 'clan');
-  stupidarray = [];
+}
+
+// calcFunds :: Object, Number -> Number
+function calcFunds(move, stars) {
+  var funds = 0;
+  var evals = getEvalsBy(move._id, stars);
+  var upToNowEvals = [];
+  _.each(evals, function(evl) {
+    upToNowEvals.push(evl);
+    var stake = evl.reputation * 0.1;
+    var fullstake = calcFullStake(upToNowEvals) + dummyUserStake;
+    funds += Math.round( stake * 3 / fullstake * 100) / 100;
+  });
+  return funds;
 }
