@@ -6,6 +6,7 @@ Meteor.methods({
   AIGetMoveCb: AIGetMoveCb,
   executeMove: executeMove,
   clientDone: clientDone,
+  endTurn: endTurn,
   restart: restart
 });
 
@@ -58,7 +59,7 @@ function resetGameData(gameId) {
 
   function restartCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
-    Meteor.call('startTurn',gameId);
+    Meteor.call('startTurnTimer',gameId);
   }
 }
 
@@ -72,41 +73,53 @@ Games.after.update(function(userId, doc, fieldNames, modifier, options){
 
 function executeMove(gameId, move, turn) {
   console.log(turn, ": ", move);
-
   var game = Games.findOne({ gameId: gameId });
-  var newTurn = parseInt(game.turnIndex);
-  newTurn++;
-  var newFen = getFen(move);
-  var moveStr = move.from+move.to;
-  var moves = game.moves.join(" ") + " " + moveStr;
+  var notation = move.from + move.to;
 
-  setTurn();
-
-  function setTurn() {
-    Games.update(
-      { gameId: gameId },
-      {
-        $push: {
-          moves: moveStr,
-          pgn: move
-        },
-        $set:  {
-          turn: turn,
-          turnIndex: newTurn,
-          playedThisTurn: [],
-          fen: newFen
-        }
+  Games.update(
+    { gameId: gameId },
+    {
+      $push: {
+        moves: notation,
+        pgn: move
       },
-      initNextTurn
-    );
+      $set:  {
+        turn: turn,
+        turnIndex: game.turnIndex + 1,
+        playedThisTurn: [],
+        fen: getFen(move)
+      }
+    },
+    executeMoveCB(game, turn, notation)
+  );
+
+}
+
+function endTurn(gameId) {
+  console.log('endTurn');
+  Meteor.call('clearTimerInterval', gameId);
+  console.log(Meteor.call('isTimerInPlay', gameId));
+
+  if (Meteor.call('isTimerInPlay', gameId)) {
+    var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
+    var move = Meteor.call('protoEndTurn', gameId, turnIndex);
+    executeMove(gameId, move, 'clan');
   }
-  function initNextTurn () {
-    Meteor.call('startTurn',gameId);
-    if (turn === 'clan') {
-      Meteor.setTimeout(function() {
-        Engine.getMove(moves);
-      }, 2000);
-    }
+}
+
+function executeMoveCB(game, turn, notation) {
+  // if not over
+  startTurn(game, turn, notation);
+  // else end game
+}
+
+function startTurn (game, turn, notation) {
+  Meteor.call('startTurnTimer', game.gameId);
+  if (turn === 'clan')
+    Meteor.setTimeout(promptEngine, 2000);
+
+  function promptEngine() {
+    Engine.getMove(game.moves.join(" ") + " " + notation);
   }
 }
 
@@ -115,10 +128,11 @@ function clientDone(gameId) {
   validateUser(this.userId);
   validateUniqueness(gameId);
   validateSuggestedMoves();
+
   Games.update(
     { gameId: gameId },
     { $push: { playedThisTurn: Meteor.userId() } },
-    function() { if (isAllClientsFinished(gameId)) { Meteor.call('endTurn' ,gameId); } }
+    function() { if (isAllClientsFinished(gameId)) { endTurn(gameId); } }
   );
 
   function validateUniqueness() {

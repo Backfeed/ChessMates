@@ -187,8 +187,11 @@ function protoEndTurn(gameId, turnIndex) {
   log("AND THE WINNER MOVE IS: " + winner.move);
   
   awardWinner(moves, winner.move, turn[winner.move].credits);
-  var move = { from: winner.move.substr(0,2), to: winner.move.substr(2) };
-  Meteor.call('executeMove',gameId, move, 'clan');
+  return { 
+    from: winner.move.substr(0,2), 
+    to: winner.move.substr(2) 
+  };
+  
 }
 
 // calcFunds :: Object, Number -> Number

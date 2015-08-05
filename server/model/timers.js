@@ -5,8 +5,9 @@ GameInterval = {};
 
 Meteor.methods({
   updateTimer: update,
-  startTurn: startTurn,
-  endTurn: endTurn,
+  startTurnTimer: startTurnTimer,
+  isTimerInPlay: isTimerInPlay,
+  clearTimerInterval: clear,
   endTimer: endTimer
 });
 
@@ -14,31 +15,32 @@ function publish(options, gameId) {
   return Timers.find({ "gameId": "1" });
 }
 
-function startTurn(gameId) {
+function startTurnTimer(gameId) {
+  clear();
   var timer = Timers.findOne({ gameId: gameId });
   timer.timeLeft = timer.timePerMove;
-  Meteor.clearInterval(GameInterval);
-  GameInterval = Meteor.setInterval(function() {
+  GameInterval = Meteor.setInterval(timerInt, 1000);
+
+  function timerInt() {
     timer.timeLeft -= 1000;
-    if (timer.timeLeft <= 0) { endTurn(gameId); }
+    if (timer.timeLeft <= 0) { Meteor.call('endTurn', gameId); }
     else                     { update(gameId, timer); }
-  }, 1000);
+  }
 }
 
 function update(gameId, query) {
   Timers.update({ gameId: gameId }, query );
 }
 
-function endTurn(gameId) {
-  Meteor.clearInterval(GameInterval);
-  var timer = Timers.findOne({ gameId: gameId });
-  if (timer.inPlay) {
-    var game = Games.findOne({ gameId: gameId });
-    var move = Meteor.call('protoEndTurn', gameId, game.turnIndex);
-  }
+function endTimer(gameId) {
+  clear();
+  update(gameId, { $set: { inPlay: false } });
 }
 
-function endTimer(gameId) {
+function clear() {
   Meteor.clearInterval(GameInterval);
-  update(gameId, { $set: { inPlay: false } });
+}
+
+function isTimerInPlay(gameId) {
+  return Timers.findOne({ gameId: gameId }).inPlay;
 }
