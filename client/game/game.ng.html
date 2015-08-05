@@ -5,9 +5,9 @@
         <dl class="game-metadata">
           <img src="img/logo.png" alt="">
           <dt>{{ ctrl.user.username }}'s Reps:</dt>
-          <dd>{{ ctrl.user.reputation | number:2 }}</dd>
+          <dd>{{ ctrl.user.reputation | decimel: 2 }}</dd>
           <dt>Tokens:</dt>
-          <dd>{{ ctrl.user.tokens | number:2 }}</dd>
+          <dd>{{ ctrl.user.tokens | decimel: 2 }}</dd>
         </dl>
     </div>
 
