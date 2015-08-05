@@ -98,7 +98,6 @@ function executeMove(gameId, move, turn) {
 function endTurn(gameId) {
   console.log('endTurn');
   Meteor.call('clearTimerInterval', gameId);
-  console.log(Meteor.call('isTimerInPlay', gameId));
 
   if (Meteor.call('isTimerInPlay', gameId)) {
     var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
@@ -108,9 +107,10 @@ function endTurn(gameId) {
 }
 
 function executeMoveCB(game, turn, notation) {
-  // if not over
-  startTurn(game, turn, notation);
-  // else end game
+  if (Chess.game_over())
+    endGame(game.gameId)
+  else
+    startTurn(game, turn, notation);
 }
 
 function startTurn (game, turn, notation) {
@@ -174,3 +174,7 @@ function getFen(move) {
   return Chess.fen();
 }
 
+function endGame(gameId) {
+  Meteor.call('endTimer', gameId);
+  
+}
