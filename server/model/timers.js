@@ -4,7 +4,6 @@ Meteor.publish('timers', publish);
 GameInterval = {};
 
 Meteor.methods({
-  updateTimer: update,
   startTurnTimer: startTurnTimer,
   isTimerInPlay: isTimerInPlay,
   clearTimerInterval: clear,
