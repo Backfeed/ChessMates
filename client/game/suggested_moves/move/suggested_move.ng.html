@@ -11,8 +11,8 @@
           my-rating></rating>
 </td>
 <td class="relative">
-  <md-icon md-svg-icon="communication:ic_comment_24px" 
+  <md-icon md-svg-icon="communication:ic_comment_24px"
            aria-label="Move Comments"></md-icon>
            {{ ctrl.comments.length }}
-  <div class="move-comments">Comments!</div>
+  <comments class="move-comments" comments="ctrl.comments" move="ctrl.move">Comments!</comments>
 </td>

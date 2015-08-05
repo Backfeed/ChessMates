@@ -21,10 +21,11 @@ function commentsController() {
 
   function getUserById(userId) {
     return Meteor.users.findOne(userId);
-  };
+  }
 
   function create() {
     ctrl.comments.push({
+      moveId: ctrl.move._id,
       userId: Meteor.userId(),
       createdAt: Date.now(),
       text: ctrl.newComment.body

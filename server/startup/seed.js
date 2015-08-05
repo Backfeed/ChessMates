@@ -68,27 +68,27 @@ function seedEvaluations() {
 function seedComments() {
   var comments = [
     {
-      'suggestedMoveId': '1',
+      'moveId': '1',
       'userId': '1',
       'text': 'This one will cause us to loose the diagonal'
     },
     {
-      'suggestedMoveId': '1',
+      'moveId': '1',
       'userId': '1',
       'text': 'davay davay das vedanya'
     },
     {
-      'suggestedMoveId': '1',
+      'moveId': '1',
       'userId': '1',
       'text': 'whats goin on'
     },
     {
-      'suggestedMoveId': '2',
+      'moveId': '2',
       'userId': '1',
       'text': 'second move s bitch'
     },
     {
-      'suggestedMoveId': '3',
+      'moveId': '3',
       'userId': '1',
       'text': 'this is a comment for third move'
     }
@@ -106,7 +106,7 @@ function seedGame() {
       'turnIndex': 1,
       'playedThisTurn': [],
       'pgn': [],
-      'fen': 'start',
+      'fen': 'start'
     }
   ];
   _.each(newGame, function(game) {
