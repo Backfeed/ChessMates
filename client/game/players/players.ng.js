@@ -14,24 +14,20 @@ function players() {
 function playersController($scope, $meteor, GameService, EvaluationModel) {
   var ctrl = this;
   angular.extend(ctrl, {
+    isDone: isDone,
     totalReputation: 0,
-    totalFavorited: 0,
     totalTokens: 0,
     totalDone: 0,
-    isFavorited: isFavorited,
-    isDone: isDone,
     usersList: [],
     users: []
   });
 
   $scope.$watch('ctrl.game.playedThisTurn', updateTotalDone);
-  $scope.$watch('ctrl.suggestedMoves', updateTotalFavorited, true);
-
-  $meteor.subscribe('userStatus');
 
   init();
 
   function init() {
+    $meteor.subscribe('userStatus');
     updateUsers();
   }
 
@@ -59,24 +55,9 @@ function playersController($scope, $meteor, GameService, EvaluationModel) {
     return GameService.isDone(id);
   }
 
-  function isFavorited(id) {
-    return !!EvaluationModel.getFavoriteByUser(id);
-  }
-
   function updateTotalDone(ids) {
     if (!ids) { return 0; }
     ctrl.totalDone = ids.length;
-  }
-
-  function updateTotalFavorited(suggestedMoves) {
-    if (!suggestedMoves || !suggestedMoves.length) { return 0; }
-    ctrl.totalFavorited = 0;
-    _.each(suggestedMoves, function(sugMove) {
-      _.each(sugMove.evaluations, function(evl) {
-        if (evl.favoriteMove)
-          ctrl.totalFavorited += 1;
-      });
-    });
   }
 
 }

@@ -22,7 +22,6 @@ function suggestedMoveController($meteor, $scope) {
   angular.extend(ctrl, {
     getDisabledRateText: getDisabledRateText,
     canRate: canRate,
-    favor: favor,
     count: 0,
     evaluations: []
   });

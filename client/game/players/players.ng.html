@@ -4,7 +4,6 @@
       <th>User</th>
       <th>Reputation</th>
       <th>Tokens</th>
-      <th>Favorite</th>
       <th>Done</th>
     </tr>
   </thead>
@@ -13,7 +12,6 @@
       <td>{{ ::user | displayName }}</td>
       <td>{{ user.reputation }}</td>
       <td>{{ user.tokens }}</td>
-      <td>{{ ctrl.isFavorited(user._id) }}</td>
       <td>{{ ctrl.isDone(user._id) }}</td>
     </tr>
   </tbody>
@@ -22,7 +20,6 @@
       <td>{{ ctrl.usersList.length }}</td>
       <td>{{ ctrl.totalReputation }}</td>
       <td>{{ ctrl.totalTokens }}</td>
-      <td>{{ ctrl.totalFavorited }}</td>
       <td>{{ ctrl.totalDone }}</td>
     </tr>
   </tfoot>
