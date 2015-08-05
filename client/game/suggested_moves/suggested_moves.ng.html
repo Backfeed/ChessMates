@@ -29,7 +29,8 @@
         move="move"
         my-fav-move="ctrl.myFavMove"
         ng-class="{ 'active': ctrl.selectedMove.notation == move.notation }"
-        ng-mouseover="ctrl.toggle(move)">
+        ng-mouseover="ctrl.highlight(move)"
+        ng-mouseleave="ctrl.unhighlight()">
     </tr>
   </tbody>
 </table>

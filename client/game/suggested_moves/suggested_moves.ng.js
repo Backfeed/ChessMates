@@ -18,8 +18,9 @@ function suggestedMoves() {
 function suggestedMovesController($meteor) {
   var ctrl = this;
   angular.extend(ctrl, {
-    myFavMove: {},
-    toggle: toggle
+    unhighlight: unhighlight,
+    highlight: highlight,
+    myFavMove: {}
   });
 
   init();
@@ -34,11 +35,12 @@ function suggestedMovesController($meteor) {
     });
   }
 
-  function toggle(move) {
-    if (ctrl.selectedMove._id === move._id)
-      ctrl.selectedMove = {};
-    else
-      ctrl.selectedMove = move;
+  function highlight(move) {
+    ctrl.selectedMove = move;
+  }
+  
+  function unhighlight() {
+    ctrl.selectedMove = {};
   }
 
 }
