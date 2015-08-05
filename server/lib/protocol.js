@@ -7,7 +7,7 @@ Meteor.methods({
 
 function getFormatted(evaluations) {
   var formattedArray = [[],[],[],[],[]];
-  evaluations.forEach(function(evl) {
+  _.each(evaluations, function(evl) {
     formattedArray[evl.stars-1].push(evl);
   });
   return formattedArray;

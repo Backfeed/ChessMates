@@ -39,8 +39,7 @@ function playersController($scope, $meteor, GameService, EvaluationModel) {
     resetStats();
     ctrl.usersList = [];
     // TODO :: Remove users, only usersList shall prevail
-    ctrl.users = Meteor.users.find({ "status.online": true });
-    ctrl.users.forEach(function(user) {
+    _.each(Meteor.users.find({ "status.online": true }), function(user) {
       ctrl.usersList.push(user);
       addToTotalFrom(user);
     });
@@ -72,8 +71,8 @@ function playersController($scope, $meteor, GameService, EvaluationModel) {
   function updateTotalFavorited(suggestedMoves) {
     if (!suggestedMoves || !suggestedMoves.length) { return 0; }
     ctrl.totalFavorited = 0;
-    suggestedMoves.forEach(function(sugMove) {
-      sugMove.evaluations.forEach(function(evl) {
+    _.each(suggestedMoves, function(sugMove) {
+      _.each(sugMove.evaluations, function(evl) {
         if (evl.favoriteMove)
           ctrl.totalFavorited += 1;
       });

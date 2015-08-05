@@ -40,7 +40,7 @@ function seedSuggestedMoves() {
       'notation': 'd4'
     }
   ];
-  _.forEach(suggestedMoves, function(sugMove) {
+  _.each(suggestedMoves, function(sugMove) {
     SuggestedMoves.insert(sugMove);
   });
 }
@@ -60,7 +60,7 @@ function seedEvaluations() {
       'stars': 2
     }
   ];
-  _.forEach(evaluations, function(evaluation) {
+  _.each(evaluations, function(evaluation) {
     Evaluations.insert(evaluation);
   });
 }
@@ -93,7 +93,7 @@ function seedComments() {
       'text': 'this is a comment for third move'
     }
   ];
-  _.forEach(comments, function(comment) {
+  _.each(comments, function(comment) {
     Comments.insert(comment);
   });
 }
@@ -109,7 +109,7 @@ function seedGame() {
       'fen': 'start',
     }
   ];
-  _.forEach(newGame, function(game) {
+  _.each(newGame, function(game) {
     Games.insert(game);
   });
 }
@@ -395,7 +395,7 @@ function seedUsers() {
     }
   ];
 
-  _.forEach(users, function(user) {
+  _.each(users, function(user) {
     user.username = user.emails[0].address.split('@')[0];
     var id = Accounts.createUser(user);
     Meteor.users.update({_id:id}, user);
