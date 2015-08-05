@@ -1,7 +1,7 @@
 angular.module('blockchess.game.service', [])
   .service('GameService', GameService);
 
-function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoard) {
+function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
   var gameId = "1"; // Dev
 
   return {
@@ -27,7 +27,7 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
 
   function imDone(gameId) {
     $meteor.call('clientDone', gameId).then(
-      function()    { ToastService.toast('Waitin fo the gang, ya'); },
+      function()    { Toast.toast('Waitin fo the gang, ya'); },
       function(err) { console.log('failed', err); }
     );
   }
@@ -36,7 +36,7 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
     $meteor.call('pauseGame', gameId).then(
       function() {
         GameModel.timer.inPlay = !GameModel.timer.inPlay;
-        ToastService.toast('game paused');
+        Toast.toast('game paused');
       },
       function(err) { console.log('failed', err); }
     );
@@ -44,14 +44,14 @@ function GameService($meteor, ToastService, GameModel, ChessValidator, ChessBoar
 
   function startTurn(gameId) {
     $meteor.call('startTurn', gameId).then(
-      function()    { ToastService.toast('turn started'); },
+      function()    { Toast.toast('turn started'); },
       function(err) { console.log('failed', err); }
     );
   }
 
   function endGame(gameId) {
     $meteor.call('endGame', gameId).then(
-      function()    { ToastService.toast('No Move Suggested. Game Over!!'); },
+      function()    { Toast.toast('No Move Suggested. Game Over!!'); },
       function(err) { console.log('failed', err); }
     );
   }

@@ -1,7 +1,7 @@
 angular.module('blockchess.util.common', [])
-.service('ToastService', ToastService)
+.service('Toast', Toast)
 
-function ToastService($mdToast) {
+function Toast($mdToast) {
     
   return {
     toast: toast
