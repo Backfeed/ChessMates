@@ -4,10 +4,10 @@ Meteor.publish('timers', publish);
 GameInterval = {};
 
 Meteor.methods({
-  updateTimer: updateTimer,
+  updateTimer: update,
   startTurn: startTurn,
   endTurn: endTurn,
-  endGame: endGame
+  endTimer: endTimer
 });
 
 function publish(options, gameId) {
@@ -21,12 +21,12 @@ function startTurn(gameId) {
   GameInterval = Meteor.setInterval(function() {
     timer.timeLeft -= 1000;
     if (timer.timeLeft <= 0) { endTurn(gameId); }
-    else                     { updateTimer(gameId, timer); }
+    else                     { update(gameId, timer); }
   }, 1000);
 }
 
-function updateTimer(gameId, timer) {
-  Timers.update({ gameId: gameId }, timer );
+function update(gameId, query) {
+  Timers.update({ gameId: gameId }, query );
 }
 
 function endTurn(gameId) {
@@ -38,14 +38,7 @@ function endTurn(gameId) {
   }
 }
 
-function endGame(gameId) {
+function endTimer(gameId) {
   Meteor.clearInterval(GameInterval);
-  Timers.update({ gameId: gameId },
-    {
-      $set:  {
-        inPlay: false
-      }
-    }
- );
+  update(gameId, { $set: { inPlay: false } });
 }
-
