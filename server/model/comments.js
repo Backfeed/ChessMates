@@ -1,3 +1,5 @@
-Meteor.publish('comments', function (options, moveId, gameId) {
-  return Comments.find({moveId: moveId});
-});
+Meteor.publish('comments', publish);
+
+function publish(options, moveId, gameId) {
+  return Comments.find({ moveId: moveId });
+}

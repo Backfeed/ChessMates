@@ -1,6 +1,4 @@
-Meteor.publish('games', function (options, gameId) {
-  return Games.find({"gameId": "1"});
-});
+Meteor.publish('games', publish);
 
 Meteor.methods({
   AIEvaluationCB: AIEvaluationCB,
@@ -11,6 +9,9 @@ Meteor.methods({
   restart: restart
 });
 
+function publish(options, gameId) {
+  return Games.find({"gameId": "1"});
+}
 
 function AIEvaluationCB(score) {
   console.log("score is: ", score);

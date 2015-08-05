@@ -1,12 +1,17 @@
-Meteor.publish(null, function () {
+Meteor.publish(null, publish);
+Meteor.publish("userStatus", publishStatus);
+
+Accounts.onCreateUser(onCreate);
+
+function publish() {
   return Meteor.users.find({}, { fields: { emails: 1, status: 1, reputation: 1, tokens: 1 } });
-});
+}
 
-Meteor.publish("userStatus", function() {
+function publishStatus() {
   return Meteor.users.find({ 'status.online': true }, { fields: {emails: 1, status: 1} });
-});
+}
 
-Accounts.onCreateUser(function (options, user) {
+function onCreate (options, user) {
   // We still want the default hook's 'profile' behavior.
   if (options.profile)
     user.profile = options.profile;
@@ -14,4 +19,4 @@ Accounts.onCreateUser(function (options, user) {
   user.tokens = 100;
 
   return user;
-});
+}

@@ -1,6 +1,4 @@
-Meteor.publish('timers', function (options, gameId) {
-  return Timers.find({"gameId": "1"});
-});
+Meteor.publish('timers', publish);
 
 // TODO :: I think this will break with multiple games / clans
 GameInterval = {};
@@ -11,6 +9,10 @@ Meteor.methods({
   endTurn: endTurn,
   endGame: endGame
 });
+
+function publish(options, gameId) {
+  return Timers.find({ "gameId": "1" });
+}
 
 function startTurn(gameId) {
   var timer = Timers.findOne({ gameId: gameId });

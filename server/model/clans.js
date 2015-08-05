@@ -1,6 +1,5 @@
-Meteor.publish('clans', function (options, clanId) {
-  return Clans.find({});
-});
+Meteor.publish('clans', publish);
 
-Meteor.methods({
-});
+function publish(options, clanId) {
+  return Clans.find({});
+}

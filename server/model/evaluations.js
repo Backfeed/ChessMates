@@ -1,12 +1,14 @@
-Meteor.publish('evaluations', function (options) {
-  return Evaluations.find({});
-});
+Meteor.publish('evaluations', publish);
 
 Evaluations.after.insert(afterInsert);
 
 Meteor.methods({
   rate: create
 });
+
+function publish(options) {
+  return Evaluations.find({});
+}
 
 function getBy(moveId) {
   return Evaluations.findOne({ moveId: moveId, userId: Meteor.userId() });
