@@ -1,7 +1,7 @@
 angular.module('blockchess.game.controller', [])
 .controller('GameController', GameController)
 
-function GameController($scope, GameService, GameModel, ChessBoard, ChessValidator) {
+function GameController($scope, GameService, GameModel, ChessBoard, ChessValidator, Toast) {
   var gameId = "1";
   var ctrl = this;
 
@@ -28,6 +28,7 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
   $scope.$on('singleMove', singleMove);
   $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard, true);
+  $scope.$watch('ctrl.game.turnIndex', checkIsGameOver);
 
   init();
 
@@ -58,6 +59,11 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
 
   function singleMove(e, notation) {
     GameService.singleMove(notation);
+  }
+
+  function checkIsGameOver() {
+    if (ChessValidator.game.game_over())
+      Toast.toast('Game over!');
   }
 
 }
