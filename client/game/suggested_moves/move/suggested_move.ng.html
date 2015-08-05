@@ -2,10 +2,6 @@
 <td>{{ ctrl.evaluations.length }}</td>
 <td>{{ ::ctrl.move.userId | displayNameById }}</td>
 <td>{{ ctrl.evaluations | avgStars }}</td>
-<td>
-  {{ ctrl.favMoves.length }} <!-- TODO :: Chnange to countes -->
-  ({{ ctrl.favMoves | favoriteCountByRep }}%)
-</td>
 <td time-ago="ctrl.move.createdAt"></td>
 <td>
   <rating ng-model="myRating"
@@ -13,14 +9,6 @@
           move-id="{{ ctrl.move._id }}"
           title="{{ ctrl.getDisabledRateText() }}"
           my-rating></rating>
-</td>
-<td>
-  <input type="radio" 
-         name="myFavMove" 
-         ng-model="ctrl.myFavMove" 
-         ng-value="ctrl.move" 
-         ng-change="ctrl.favor()" 
-         ng-checked="ctrl.myFavMove.moveId === ctrl.move._id">
 </td>
 <td class="relative">
   <md-icon md-svg-icon="communication:ic_comment_24px" 

@@ -19,28 +19,10 @@ function suggestedMovesController($meteor) {
   var ctrl = this;
   angular.extend(ctrl, {
     unhighlight: unhighlight,
-    highlight: highlight,
-    myFavMove: {}
+    highlight: highlight
   });
 
-  init();
-
-  function init() {
-    getFavMove();
-  }
-
-  function getFavMove() {
-    $meteor.subscribe('favoriteMoves').then(function() {
-      ctrl.myFavMove = FavoriteMoves.findOne({ turnIndex: ctrl.turnIndex, userId: Meteor.userId() });
-    });
-  }
-
-  function highlight(move) {
-    ctrl.selectedMove = move;
-  }
-  
-  function unhighlight() {
-    ctrl.selectedMove = {};
-  }
+  function highlight(move) { ctrl.selectedMove = move; }
+  function unhighlight()   { ctrl.selectedMove = {};   }
 
 }
