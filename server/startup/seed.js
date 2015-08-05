@@ -3,7 +3,7 @@ Meteor.startup(function () {
   console.log('==========\n\n\n\n\n\n');
 
   if (Roles.getAllRoles().length === 0)    seedRoles();
-  if (Meteor.users.find().count() === 0)   seedUsers();
+  if (getUsersBy().count() === 0)   seedUsers();
   if (Clans.find().count() === 0)          seedClan();
   if (Timers.find().count() === 0)         seedTimer();
   if (SuggestedMoves.find().count() === 0) seedSuggestedMoves();

@@ -39,7 +39,7 @@ function playersController($scope, $meteor, GameService, EvaluationModel) {
     resetStats();
     ctrl.usersList = [];
     // TODO :: Remove users, only usersList shall prevail
-    _.each(Meteor.users.find({ "status.online": true }), function(user) {
+    _.each(getUsersBy({ "status.online": true }), function(user) {
       ctrl.usersList.push(user);
       addToTotalFrom(user);
     });

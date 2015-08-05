@@ -150,7 +150,7 @@ function clientDone(gameId) {
 }
 
 function isAllClientsFinished(gameId) {
-  playersN = Meteor.users.find({ "status.online": true }).count();
+  playersN = getUsersBy({ "status.online": true }).count();
   playedN = Games.findOne({gameId: gameId}).playedThisTurn.length;
   return playersN === playedN;
 }
