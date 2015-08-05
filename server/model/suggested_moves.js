@@ -6,7 +6,7 @@ SuggestedMoves.after.insert(afterInsert);
 function publish(options, gameId, turnIndex) {
   turnIndex = turnIndex || 1;
   return SuggestedMoves.find({ "gameId": "1", "turnIndex": turnIndex });
-})
+}
 
 function beforeInsert(userId, move) {
   if (!userId) return;
