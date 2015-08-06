@@ -8,6 +8,7 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
     cancelMoveHighlights: cancelMoveHighlights,
     selectedMoveChanged: selectedMoveChanged,
     formatMoveFrom: formatMoveFrom,
+    movePieceBack: movePieceBack,
     updateBoard: updateBoard,
     singleMove: singleMove,
     getMoveBy: getMoveBy,
@@ -100,8 +101,6 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
   }
 
   function singleMove(notation) {
-    movePieceBack();
-
     GameModel.suggestedMoves.push({
       turnIndex: GameModel.game.turnIndex,
       createdAt: Date.now(),

@@ -58,6 +58,12 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
   }
 
   function singleMove(e, notation) {
+    GameService.movePieceBack();
+    if (GameService.getMoveBy('notation', notation)) {
+      Toast.toast('move exists');
+      ctrl.selectedMove = GameService.getMoveBy('notation', notation);
+      return false;
+    }
     GameService.singleMove(notation);
   }
 

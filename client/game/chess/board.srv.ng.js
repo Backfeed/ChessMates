@@ -49,11 +49,6 @@ function ChessBoard($rootScope, $window, $injector, GameModel, ChessValidator, T
   function onDrop(source, target) {
     var notation = source + target;
 
-    if (getMoveBy('notation', notation)) {
-      Toast.toast('move exists');
-      return false;
-    }
-
     var move = ChessValidator.game.move({
         from: source,
         to: target,
