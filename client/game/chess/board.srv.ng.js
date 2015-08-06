@@ -1,7 +1,7 @@
 angular.module('blockchess.game.chess.boardService', [])
 .service('ChessBoard', ChessBoard);
 
-function ChessBoard($rootScope, $window, $injector, GameModel, ChessValidator, Toast) {
+function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
   var getMoveBy;
   var cfg = {
     draggable: true,
@@ -36,7 +36,7 @@ function ChessBoard($rootScope, $window, $injector, GameModel, ChessValidator, T
     if (getMoveBy('userId', Meteor.userId())) {
       Toast.toast('Can only suggest one move per turn');
       return false;
-    } 
+    }
 
     if (Meteor.user().tokens < 1) {
       Toast.toast('Suggesting a move costs 1 token, you have ' + Meteor.user().tokens);
@@ -44,7 +44,7 @@ function ChessBoard($rootScope, $window, $injector, GameModel, ChessValidator, T
     }
 
     return true;
-  };
+  }
 
   function onDrop(source, target) {
     var notation = source + target;
@@ -58,10 +58,10 @@ function ChessBoard($rootScope, $window, $injector, GameModel, ChessValidator, T
     // illegal move
     if (move === null) { return 'snapback'; }
     $rootScope.$broadcast('singleMove', notation);
-  };
+  }
 
   function onSnapEnd() {
       Board.board.position(ChessValidator.game.fen());
-  };
+  }
 
 }

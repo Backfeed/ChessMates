@@ -18,6 +18,7 @@
   border: 2px solid #404040;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
+  width: 400px;
 }
 
 /* square */
@@ -36,13 +37,13 @@
 
 /* white square */
 .white-1e1d7 {
-  background-color: #f0d9b5;
+  background-color: rgb(178,178,179);
   color: #b58863;
 }
 
 /* black square */
 .black-3c85d {
-  background-color: #b58863;
+  background-color: rgb(135,135,136);
   color: #f0d9b5;
 }
 

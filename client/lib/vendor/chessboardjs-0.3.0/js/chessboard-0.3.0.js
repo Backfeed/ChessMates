@@ -499,7 +499,6 @@ function expandConfig() {
 // fudge factor, and then keep reducing until we find an exact mod 8 for
 // our square size
 function calculateSquareSize() {
-  return 40;
   var containerWidth = parseInt(containerEl.css('width'), 10);
 
   // defensive, prevent infinite loop

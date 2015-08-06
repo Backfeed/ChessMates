@@ -1,5 +1,5 @@
 angular.module('blockchess.game.chess.board', [])
-.directive('board', board)
+.directive('board', board);
 
 function board(ChessBoard) {
   return {
