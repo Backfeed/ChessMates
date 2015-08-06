@@ -47,9 +47,9 @@ function suggestedMoveController($meteor, $scope) {
 
   function getDisabledRateText() {
     if (!Meteor.userId())
-      return 'Must be logged in to evaluate moves'
+      return 'Must be logged in to evaluate moves';
     if (!Meteor.user().reputation)
-      return 'Must have reputation to evluate moves'
+      return 'Must have reputation to evaluate moves';
   }
 
 }
