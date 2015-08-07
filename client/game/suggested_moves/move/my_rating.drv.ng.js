@@ -1,7 +1,7 @@
 angular.module('blockchess.game.suggestedMoves.move.myRating', [])
 .directive('myRating', myRating);
 
-function myRating($meteor) {
+function myRating($meteor, Toast) {
   return {
     link: function(scope, elem, attrs) {
       elem.on('click', rate);
@@ -22,6 +22,8 @@ function myRating($meteor) {
       function rate() { 
         if (scope.ctrl.canRate())
           Meteor.call('rate', attrs.moveId, scope.myRating);
+        else
+          Toast.toast(scope.ctrl.getDisabledRateText());
       }
 
       function getEval() {
