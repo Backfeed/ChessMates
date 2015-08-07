@@ -68,7 +68,7 @@ function getStakeBy(user) {
 
 // calcFullStake :: [Object] -> Number
 function calcFullStake(evals) {
-  return compose(sum, map(getStakeBy), map(getUserBy), map(property('userId')))(evals);
+  return compose(sum, map(getStakeBy), mapUsersBy, mapUid)(evals);
 }
 
 function updateUserReputation(id, reputation) {
@@ -77,7 +77,7 @@ function updateUserReputation(id, reputation) {
 
 // calcRep :: [Object] -> Number
 function calcRep (starEvals) {
-  return compose(sum, map(property('reputation')), map(getUserBy), map(property('userId')))(starEvals);
+  return compose(sum, map(property('reputation')), mapUsersBy, mapUid)(starEvals);
 }
 
 // :: String, Number -> [Object]
@@ -100,10 +100,8 @@ function logTurn(notation, totalRep, score) {
 
 // getWinnerUser :: [Object], String -> Object
 function getWinnerUser(moves, winningNotation) {
-  var m = _.find(moves, function(move) { return move.notation === winningNotation });
-  return getUserBy(m.userId);
+  return compose(getUserBy, toUid, find(isNotationEquals(winningNotation)))(moves);
 }
-
 
 function awardWinner(moves, winningNotation, credits) {
   var winningUser = getWinnerUser(moves, winningNotation);
