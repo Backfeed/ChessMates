@@ -30,17 +30,16 @@ function protoRate(userId, moveId, stars) {
 function payReputationAtStake(user, stake) {
   user.reputation -= stake;
   log("stake: updating " + Common.displayNameOf(user) + " reputation to = " + user.reputation);
-  updateUserReputation(user._id, user.reputation);
+  updateReputation(user);
 }
 
 function distributeStakeToEvaluators(evals, stake, fullstake) {
-  var u;
-  _.each(evals, function(evl) {
-    u = getUserBy(evl.userId);
+  compose(each(updateReputation), map(addStake), mapUsersBy, mapUids)(evals);
+
+  function addStake(u) {
     u.reputation += Math.round(stake * getStakeBy(u) / fullstake * 100) / 100;
-    log("distribution: updating " + Common.displayNameOf(u) + " reputation to = " + u.reputation);
-    updateUserReputation(u._id, u.reputation);
-  });
+    return u;
+  }
 }
 
 // getMoveBy :: String -> Object
@@ -68,16 +67,16 @@ function getStakeBy(user) {
 
 // calcFullStake :: [Object] -> Number
 function calcFullStake(evals) {
-  return compose(sum, map(getStakeBy), mapUsersBy, mapUid)(evals);
+  return compose(sum, map(getStakeBy), mapUsersBy, mapUids)(evals);
 }
 
-function updateUserReputation(id, reputation) {
-  Meteor.users.update({ _id: id }, { $set: { reputation: reputation } });
+function updateReputation(user) {
+  Meteor.users.update({ _id: user._id }, { $set: { reputation: user.reputation } });
 }
 
 // calcRep :: [Object] -> Number
 function calcRep (starEvals) {
-  return compose(sum, map(property('reputation')), mapUsersBy, mapUid)(starEvals);
+  return compose(sum, map(property('reputation')), mapUsersBy, mapUids)(starEvals);
 }
 
 // :: String, Number -> [Object]
