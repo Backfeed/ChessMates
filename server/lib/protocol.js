@@ -77,8 +77,7 @@ function updateUserReputation(id, reputation) {
 
 // calcRep :: [Object] -> Number
 function calcRep (starEvals) {
-  return _.reduce(starEvals, addRep, 0);
-  function addRep(memo, evl) { return memo + getUserBy(evl.userId).reputation; }
+  return compose(sum, map(property('reputation')), map(getUserBy), map(property('userId')))(starEvals);
 }
 
 // :: String, Number -> [Object]
