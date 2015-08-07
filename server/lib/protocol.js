@@ -68,11 +68,7 @@ function getStakeBy(user) {
 
 // calcFullStake :: [Object] -> Number
 function calcFullStake(evals) {
-  return _.reduce(evals, addStake, 0);
-  function addStake(memo, evl) { 
-    var u = getUserBy(evl.userId);
-    return memo + getStakeBy(u);
-  }
+  return compose(sum, map(getStakeBy), map(getUserBy), map(property('userId')))(evals);
 }
 
 function updateUserReputation(id, reputation) {
