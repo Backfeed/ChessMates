@@ -1,4 +1,4 @@
-var dummyUserStake = 3;// Arbitrarily
+var dummyStake = 3;// Arbitrarily
  
 Meteor.methods({
   protoRate: protoRate,
@@ -19,11 +19,10 @@ function protoRate(userId, moveId, stars) {
   log('rate');
   var user = getUserBy(userId);
   var stake = getStakeBy(user);
-  var evals = getEvalsBy(moveId, stars);
-  var fullstake = calcFullStake(evals) + dummyUserStake;
-  var notation = getNotationBy(moveId);
-  
   payReputationAtStake(user, stake);
+
+  var evals = getEvalsBy(moveId, stars);
+  var fullstake = calcFullStake(evals) + dummyStake;
   distributeStakeToEvaluators(evals, stake, fullstake);
 }
 
@@ -32,8 +31,12 @@ function payReputationAtStake(user, stake) {
 }
 
 function distributeStakeToEvaluators(evals, stake, fullstake) {
-  addStake = compose(addToRep, Math.round, multiply(stake * 100 / fullstake), getStakeBy);
   compose(each(updateReputation), map(addStake), mapUsersBy, mapUids)(evals);
+
+  function addStake(u) {
+    u.reputation += compose(trace('TRACE: divide'), divide(100), trace('TRACE: round'), Math.round, trace('TRACE: multiply'), multiply(stake * 100 / fullstake), trace('TRACE: getStakeBy'), getStakeBy, trace('TRACE: init'))(u);
+    return u;
+  }
 }
 
 // getMoveBy :: String -> Object
@@ -65,6 +68,7 @@ function calcFullStake(evals) {
 }
 
 function updateReputation(user) {
+  console.log('updating reputation to: ', user)
   Meteor.users.update({ _id: user._id }, { $set: { reputation: user.reputation } });
 }
 
@@ -111,16 +115,15 @@ function protoEndTurn(gameId, turnIndex) {
   var moves = getSuggestedMove(gameId, turnIndex);
 
   _.each(moves, function(move) {
-    var evals = getEvalsBy(move._id);
-    var formattedEvaluations = getFormatted(evals);
     log("checking out move: " + move.notation);
     var score = 0;
     var totalRep = 0;
+    var formattedEvals = compose(getFormatted, getEvalsBy)(move._id);
 
     //iterate through each star
     for (star = 1; star <= 5; star++) {
 
-      var starEvals = formattedEvaluations[star-1];
+      var starEvals = formattedEvals[star-1];
       if (starEvals.length === 0) 
         continue;
       var funds = calcFunds(move, star);
@@ -188,7 +191,7 @@ function calcFunds(move, stars) {
   _.each(evals, function(evl) {
     upToNowEvals.push(evl);
     var stake = evl.reputation * 0.1;
-    var fullstake = calcFullStake(upToNowEvals) + dummyUserStake;
+    var fullstake = calcFullStake(upToNowEvals) + dummyStake;
     funds += Math.round( stake * 3 / fullstake * 100) / 100;
   });
   return funds;
