@@ -28,18 +28,12 @@ function protoRate(userId, moveId, stars) {
 }
 
 function payReputationAtStake(user, stake) {
-  user.reputation -= stake;
-  log("stake: updating " + Common.displayNameOf(user) + " reputation to = " + user.reputation);
-  updateReputation(user);
+  compose(updateReputation, addToRep(-stake))(user);
 }
 
 function distributeStakeToEvaluators(evals, stake, fullstake) {
+  addStake = compose(addToRep, Math.round, multiply(stake * 100 / fullstake), getStakeBy);
   compose(each(updateReputation), map(addStake), mapUsersBy, mapUids)(evals);
-
-  function addStake(u) {
-    u.reputation += Math.round(stake * getStakeBy(u) / fullstake * 100) / 100;
-    return u;
-  }
 }
 
 // getMoveBy :: String -> Object
