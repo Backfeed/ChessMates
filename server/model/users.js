@@ -4,11 +4,11 @@ Meteor.publish("userStatus", publishStatus);
 Accounts.onCreateUser(onCreate);
 
 function publish() {
-  return getUsersBy({}, { fields: { emails: 1, status: 1, reputation: 1, tokens: 1 } });
+  return getUsersBy({}, ["emails", "status", "reputation", "tokens"]);
 }
 
 function publishStatus() {
-  return getUsersBy({ 'status.online': true }, { fields: { emails: 1, status: 1 } });
+  return getUsersBy({ 'status.online': true }, ["emails", "status"]);
 }
 
 function onCreate (options, user) {
