@@ -15,12 +15,15 @@ function comments() {
 function commentsController() {
   var ctrl = this;
   angular.extend(ctrl, {
-    getUserById: getUserById,
-    create: create
+    getUserBy: getUserBy,
+    create: create,
+    mover: {}
   });
 
-  function getUserById(userId) {
-    return Meteor.users.findOne(userId);
+  init();
+
+  function init() {
+    ctrl.mover = getUserBy(ctrl.move.userId);
   }
 
   function create() {
