@@ -15,7 +15,6 @@ function bottomBar() {
 function bottomBarController($meteor) {
   var ctrl = this;
   angular.extend(ctrl, {
-    player: {},
     players: []
   });
 
@@ -23,11 +22,6 @@ function bottomBarController($meteor) {
 
   function init() {
     getPlayers();
-    getPlayer();
-  }
-
-  function getPlayer() {
-    ctrl.player = Meteor.user();
   }
 
   function getPlayers() {

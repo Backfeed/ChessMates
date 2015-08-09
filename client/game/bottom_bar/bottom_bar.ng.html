@@ -1,18 +1,18 @@
 <md-toolbar md-scroll-shrink layout="row" layout-align="start center" layout-padding>
   <div flex="10">
-    {{ ctrl.player | displayName }}
+    {{ $root.currentUser | displayName }}
   </div>
   <div flex="10">
     <i class="icon icon-coins"></i> 
-    {{ ctrl.player.tokens }}
+    {{ $root.currentUser.tokens }}
   </div>
   <div flex="10">
     <i class="icon icon-reputation"></i>
-    {{ ctrl.player.reputation | decimel: 1 }}
+    {{ $root.currentUser.reputation | decimel: 1 }}
   </div>
   <div flex="10">
     <i class="icon icon-rank"></i>
-    {{ ctrl.player.rank }}
+    {{ $root.currentUser.rank }}
     MY RANK
   </div>
   <div flex="40">
