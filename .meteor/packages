@@ -30,6 +30,6 @@ erasaur:meteor-lodash
 
 
 npm-container
-meteortoys:allthings
+meteortoys:allthings@1.2.3
 alanning:roles
 meteorhacks:kadira-profiler
