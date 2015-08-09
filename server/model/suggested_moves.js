@@ -10,6 +10,7 @@ function publish(options, gameId, turnIndex) {
 
 function beforeInsert(userId, move) {
   if (!userId) return;
+  validateUniqueMove(move);
   validateSufficientTokens(userId);
 }
 
@@ -25,4 +26,10 @@ function validateSufficientTokens(userId) {
   var userTokens = getUserBy(userId).tokens;
   if (userTokens < 1)
     throw new Meteor.Error(404, 'Insufficient funds: Suggesting a move costs 1 token, you have ' + userTokens + 'tokens');
+}
+
+function validateUniqueMove(move) {
+  var suggested = SuggestedMoves.find({ "gameId": "1", "fen": move.fen });
+  if (suggested.count() > 0)
+    throw new Meteor.Error(404, 'Move Already Suggested');
 }

@@ -107,7 +107,7 @@ function endTurn(gameId) {
 
 function executeMoveCB(game, turn, notation) {
   if (Chess.game_over())
-    endGame(game.gameId)
+    endGame(game.gameId);
   else
     startTurn(game, turn, notation);
 }
@@ -175,5 +175,5 @@ function getFen(move) {
 
 function endGame(gameId) {
   Meteor.call('endTimer', gameId);
-  
+
 }
