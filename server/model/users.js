@@ -8,7 +8,7 @@ function publish() {
 }
 
 function publishStatus() {
-  return getUsersBy({ 'status.online': true }, { fields: {emails: 1, status: 1} });
+  return getUsersBy({ 'status.online': true }, { fields: { emails: 1, status: 1 } });
 }
 
 function onCreate (options, user) {

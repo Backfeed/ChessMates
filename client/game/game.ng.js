@@ -8,6 +8,7 @@ angular.module('blockchess.game', [
   'blockchess.game.service',
   // Directives
   'blockchess.game.suggestedMoves',
+  'blockchess.game.bottomBar',
   'blockchess.game.comments',
   'blockchess.game.players',
   'blockchess.game.timer'

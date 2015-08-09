@@ -1,0 +1,26 @@
+<md-toolbar md-scroll-shrink layout="row" layout-align="start center" layout-padding>
+  <div flex="10">
+    {{ ctrl.player | displayName }}
+  </div>
+  <div flex="10">
+    <i class="icon icon-coins"></i> 
+    {{ ctrl.player.tokens }}
+  </div>
+  <div flex="10">
+    <i class="icon icon-reputation"></i>
+    {{ ctrl.player.reputation | decimel: 1 }}
+  </div>
+  <div flex="10">
+    <i class="icon icon-rank"></i>
+    {{ ctrl.player.rank }}
+    MY RANK
+  </div>
+  <div flex="40">
+    <i class="icon icon-divider"></i>
+    What is supposed to be displayed here?
+    22
+  </div>
+  <div flex="10">
+    {{ ctrl.players.length }} playing
+  </div>
+</md-toolbar>
