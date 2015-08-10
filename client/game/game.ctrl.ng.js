@@ -42,7 +42,8 @@ function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, 
       },
       {
         label: 'I\'m done',
-        click: imDone
+        click: imDone,
+        isDisabled: isDone
       }
     ]
   }
