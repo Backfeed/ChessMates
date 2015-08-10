@@ -1,21 +1,61 @@
 Meteor.publish('games', publish);
+Games.before.update(beforeUpdate);
+Games.after.update(afterUpdate);
+
 
 Meteor.methods({
-  AIEvaluationCB: AIEvaluationCB,
-  validateGame: validateGame,
-  AIGetMoveCb: AIGetMoveCb,
-  executeMove: executeMove,
   clientDone: clientDone,
   endTurn: endTurn,
-  restart: restart
+  executeMove: executeMove,
+  AIGetMoveCb: AIGetMoveCb,
+  validateGame: validateGame,
+  restart: restart,
+  AIEvaluationCB: AIEvaluationCB
 });
 
-function publish(options, gameId) {
-  return Games.find({"gameId": "1"});
+function clientDone(gameId) {
+  var game = validateGame(gameId);
+  validateUser(this.userId);
+  validateUniqueness(game.playedThisTurn);
+  validateSuggestedMoves(gameId, game.turnIndex);
+
+  Games.update(
+    { gameId: gameId },
+    { $push: { playedThisTurn: Meteor.userId() } },
+    function() { if (isAllClientsFinished(gameId)) { endTurn(gameId); } }
+  );
+
 }
 
-function AIEvaluationCB(score) {
-  console.log("score is: ", score);
+function endTurn(gameId) {
+  Meteor.call('clearTimerInterval', gameId);
+  
+  if (Meteor.call('isTimerInPlay', gameId))
+    executeClanMove(gameId);
+}
+
+function executeMove(gameId, move, turn) {
+  var notation = move.from + move.to;
+
+  Games.update(
+    { gameId: gameId },
+    {
+      $push: {
+        moves: notation,
+        pgn: move
+      },
+      $set: {
+        turn: turn,
+        playedThisTurn: [],
+        fen: getFen(move)
+      },
+      $inc: {
+        turnIndex: 1
+      }
+    },
+    executeMoveCB(gameId, turn, notation)
+  );
+
 }
 
 function AIGetMoveCb(move) {
@@ -23,9 +63,33 @@ function AIGetMoveCb(move) {
   executeMove("1", move, "AI");
 }
 
+function validateGame(gameId) {
+  check(gameId, String);
+  var game = Games.findOne({ gameId: gameId });
+  if (! game)
+    throw new Meteor.Error(404, "No such game");
+  return game;
+}
+
 function restart(gameId) {
   Chess.reset();
   resetGameData(gameId);
+}
+
+function AIEvaluationCB(score) {
+  console.log("score is: ", score);
+}
+
+/********* Helper methods *********/
+function validateUniqueness(playedThisTurn) {
+  if ( _.contains(playedThisTurn, Meteor.userId()) )
+    throw new Meteor.Error(403, 'Already pressed "Im done"');
+}
+
+function validateSuggestedMoves(gameId, turnIndex) {
+  var moveCount = SuggestedMoves.find({gameId: gameId, turnIndex: turnIndex}).count();
+  if (moveCount < 1)
+    throw new Meteor.Error(403, 'No moves suggested');
 }
 
 function resetGameData(gameId) {
@@ -62,48 +126,10 @@ function resetGameData(gameId) {
   }
 }
 
-Games.before.update(function(userId, doc, fieldNames, modifier, options){
-  console.log('before game collection updated');
-});
-
-Games.after.update(function(userId, doc, fieldNames, modifier, options){
-  console.log('after game collection updated');
-});
-
-function executeMove(gameId, move, turn) {
-  console.log(turn, ": ", move);
-  var notation = move.from + move.to;
-
-  Games.update(
-    { gameId: gameId },
-    {
-      $push: {
-        moves: notation,
-        pgn: move
-      },
-      $set: {
-        turn: turn,
-        playedThisTurn: [],
-        fen: getFen(move)
-      },
-      $inc: {
-        turnIndex: 1
-      }
-    },
-    executeMoveCB(gameId, turn, notation)
-  );
-
-}
-
-function endTurn(gameId) {
-  console.log('endTurn');
-  Meteor.call('clearTimerInterval', gameId);
-
-  if (Meteor.call('isTimerInPlay', gameId)) {
-    var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
-    var move = Meteor.call('protoEndTurn', gameId, turnIndex);
-    executeMove(gameId, move, 'clan');
-  }
+function executeClanMove(gameId) {
+  var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
+  var move = Meteor.call('protoEndTurn', gameId, turnIndex);
+  executeMove(gameId, move, 'clan');
 }
 
 function executeMoveCB(gameId, turn, notation) {
@@ -128,44 +154,10 @@ function getMoves(gameId, notation) {
   return Games.findOne({ gameId: gameId }).moves.join(" ") + " " + notation;
 }
 
-function clientDone(gameId) {
-  var game = validateGame(gameId);
-  validateUser(this.userId);
-  validateUniqueness(gameId);
-  validateSuggestedMoves();
-
-  Games.update(
-    { gameId: gameId },
-    { $push: { playedThisTurn: Meteor.userId() } },
-    function() { if (isAllClientsFinished(gameId)) { endTurn(gameId); } }
-  );
-
-  function validateUniqueness() {
-    var played = game.playedThisTurn;
-    if ( _.contains(played, Meteor.userId()) )
-      throw new Meteor.Error(403, 'Already pressed "Im done"');
-  }
-
-  function validateSuggestedMoves() {
-    var moves = SuggestedMoves.find({gameId: gameId, turnIndex: game.turnIndex}).count();
-    if (moves < 1)
-      throw new Meteor.Error(403, 'No moves suggested');
-  }
-
-}
-
 function isAllClientsFinished(gameId) {
   playersN = getUsersBy({ "status.online": true }).count();
   playedN = Games.findOne({gameId: gameId}).playedThisTurn.length;
   return playersN === playedN;
-}
-
-function validateGame(gameId) {
-  check(gameId, String);
-  var game = Games.findOne({ gameId: gameId });
-  if (! game)
-    throw new Meteor.Error(404, "No such game");
-  return game;
 }
 
 function validateUser(userId) {
@@ -181,5 +173,17 @@ function getFen(move) {
 
 function endGame(gameId) {
   Meteor.call('endTimer', gameId);
+}
 
+/********* Publish and hooks *********/
+function publish(options, gameId) {
+  return Games.find({"gameId": "1"});
+}
+
+function beforeUpdate(userId, doc, fieldNames, modifier, options){
+  console.log('before game collection updated');
+}
+
+function afterUpdate(userId, doc, fieldNames, modifier, options){
+  console.log('after game collection updated');
 }
