@@ -1,12 +1,14 @@
-<span class="bold">{{ ::ctrl.move.notation }}</span>
+<span class="bold" flex="5">{{ ::ctrl.move.notation }}</span>
 <!-- <span>{{ ctrl.evaluations.length }}</span> -->
 <!-- <span>{{ ::ctrl.move.userId | displayNameById }}</span> -->
 <!-- <span>{{ ctrl.evaluations | avgStars }}</span> -->
 <!-- <span time-ago="ctrl.move.createdAt"></span> -->
-<div flex="20">
-   <md-progress-linear class="md-accent" md-mode="determinate" value="{{ ctrl.getConfidence() }}"></md-progress-linear>
+<div flex="20" class="progressbar-adjust" layout="row">
+  <div flex="80">
+     <md-progress-linear class="md-accent" md-mode="determinate" value="{{ ctrl.getConfidence() }}"></md-progress-linear>
+  </div>
 </div>
-<span>
+<span flex="10">
   <rating ng-model="myRating"
           readonly="!ctrl.canRate()"
           move-id="{{ ctrl.move._id }}"
@@ -19,3 +21,4 @@
            {{ ctrl.comments.length }}
   <comments class="move-comments" comments="ctrl.comments" move="ctrl.move">Comments!</comments>
 </span>
+<md-divider></md-divider>
