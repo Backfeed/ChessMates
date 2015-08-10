@@ -1,4 +1,7 @@
-<md-toolbar md-scroll-shrink layout="row" layout-align="start center" layout-padding class="bottom-bar">
+<md-toolbar md-scroll-shrink 
+            layout="row" 
+            layout-align="start center" 
+            layout-padding class="bottom-bar">
   <div flex="10">
     {{ $root.currentUser | displayName }}
   </div>
@@ -8,17 +11,17 @@
   </div>
   <div flex="10">
     <i class="sprite-rep"></i>
-    {{ $root.currentUser.reputation | decimel: 1 }}
+    {{ $root.currentUser.reputation | decimel: 1 }}%
   </div>
   <div flex="10">
-    <i class="sprite-rank"></i>
+    <!-- <i class="sprite-rank"></i>
     {{ $root.currentUser.rank }}
-    MY RANK
+    MY RANK -->
   </div>
   <div flex="40">
-    <i class="sprite-divider"></i>
+    <!-- <i class="sprite-divider"></i>
     What is supposed to be displayed here?
-    22
+    22 -->
   </div>
   <div flex="10">
     {{ ctrl.players.length }} playing
