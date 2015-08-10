@@ -1,10 +1,25 @@
 .timer {
-  
+
   md-progress-circular:before {
     content: attr(data-time-left);
     top: 13px;
     position: absolute;
     left: 7px;
   }
-
+  .md-inner .md-right .md-half-circle {
+    border-top-color: rgb(244,185,0);
+  }
+  md-progress-circular .md-inner .md-right .md-half-circle {
+    border-right-color: rgb(244,185,0);
+  }
+  md-progress-circular .md-inner .md-left .md-half-circle {
+    border-top-color: rgb(244,185,0);
+  }
+  md-progress-circular .md-inner .md-left .md-half-circle {
+    border-left-color: rgb(244,185,0);
+  }
+  md-progress-circular .md-inner .md-gap {
+    border-top-color: rgb(244,185,0);
+    border-bottom-color: rgb(244,185,0);
+  }
 }
