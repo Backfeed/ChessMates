@@ -36,7 +36,6 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
   }
 
   function updateBoard() {
-    console.log("history: updateBoard: ", ChessValidator.getHistory());
     ChessBoard.board.position(GameModel.game.fen);
     ChessValidator.game.load(GameModel.game.fen);
     cancelMoveHighlights();
