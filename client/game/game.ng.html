@@ -1,15 +1,5 @@
 <div>
   <section class="area game-area" layout="row" layout-margin>
-    <div class="game-sidebar" flex="10">
-        <timer settings="ctrl.timer"></timer>
-        <dl class="game-metadata">
-          <img src="img/logo.png" alt="">
-          <dt>{{ ctrl.user.username }}'s Reps:</dt>
-          <dd>{{ ctrl.user.reputation | decimel: 2 }}</dd>
-          <dt>Tokens:</dt>
-          <dd>{{ ctrl.user.tokens | decimel: 2 }}</dd>
-        </dl>
-    </div>
 
     <div flex>
       <div board="{{ ctrl.gameId }}"></div>
@@ -45,6 +35,7 @@
     </div>
 
     <div flex="60">
+        <timer settings="ctrl.timer"></timer>
         <suggested-moves turn-index="ctrl.game.turnIndex" selected-move="ctrl.selectedMove" suggested-moves="ctrl.suggestedMoves" ng-if="ctrl.game.turnIndex"></suggested-moves>
     </div>
   </section>

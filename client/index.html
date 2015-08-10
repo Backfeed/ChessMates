@@ -5,12 +5,13 @@
 
 <body layout="column">
 
-  <md-toolbar md-scroll-shrink layout="row" layout-align="start center" layout-padding>
-      <span>ChessMates</span>
+  <md-toolbar md-scroll-shrink layout="row" layout-align="start center" layout-padding class="topBar">
       <div class="navbar-right navbar-text">
           <meteor-include src="loginButtons"></meteor-include>
       </div>
+      <span class="topTitle">CHESSMATES vs CASPAROV</span>
   </md-toolbar>
+  <div class="hr"><hr /></div>
 
   <div ui-view></div>
 </body>
