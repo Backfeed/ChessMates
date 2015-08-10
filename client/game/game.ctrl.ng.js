@@ -37,10 +37,12 @@ function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, 
 
     $rootScope.menuItems = [
       {
-        label: 'Restart'
+        label: 'Restart',
+        click: restart
       },
       {
-        label: 'I\'m done'
+        label: 'I\'m done',
+        click: imDone
       }
     ]
   }
