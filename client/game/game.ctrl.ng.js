@@ -44,13 +44,19 @@ function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, 
         label: 'I\'m done',
         click: imDone,
         isDisabled: isDone
+      },
+      {
+        label: 'End turn',
+        click: endTurn
       }
+
     ]
   }
 
-  function restart()         { GameService.restart();         }
-  function isDone()   { return GameService.isDone();          }
-  function imDone()          { GameService.imDone(gameId);    }
+  function restart() { GameService.restart();          }
+  function isDone()  { return GameService.isDone();    }
+  function imDone()  { GameService.imDone(gameId);     }
+  function endTurn() { Meteor.call('endTurn', gameId); }
 
   function updateBoard() {
     if (ctrl.game && ctrl.game.fen && ChessValidator.game) {
