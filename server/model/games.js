@@ -72,7 +72,6 @@ Games.after.update(function(userId, doc, fieldNames, modifier, options){
 
 function executeMove(gameId, move, turn) {
   console.log(turn, ": ", move);
-  var game = Games.findOne({ gameId: gameId });
   var notation = move.from + move.to;
 
   Games.update(
@@ -91,7 +90,7 @@ function executeMove(gameId, move, turn) {
         turnIndex: 1
       }
     },
-    executeMoveCB(game, turn, notation)
+    executeMoveCB(gameId, turn, notation)
   );
 
 }
@@ -107,21 +106,26 @@ function endTurn(gameId) {
   }
 }
 
-function executeMoveCB(game, turn, notation) {
+function executeMoveCB(gameId, turn, notation) {
   if (Chess.game_over())
-    endGame(game.gameId);
+    endGame(gameId);
   else
-    startTurn(game, turn, notation);
+    startTurn(gameId, turn, notation);
 }
 
-function startTurn (game, turn, notation) {
-  Meteor.call('startTurnTimer', game.gameId);
+function startTurn (gameId, turn, notation) {
+  Meteor.call('startTurnTimer', gameId);
   if (turn === 'clan')
-    Meteor.setTimeout(promptEngine, 2000);
+    Meteor.setTimeout(promptEngine, 2000); // TODO :: timeout is here due to weird bug
 
   function promptEngine() {
-    Engine.getMove(game.moves.join(" ") + " " + notation);
+    var moves = getMoves(gameId, notation);
+    Engine.getMove(moves);
   }
+}
+
+function getMoves(gameId, notation) {
+  return Games.findOne({ gameId: gameId }).moves.join(" ") + " " + notation;
 }
 
 function clientDone(gameId) {
