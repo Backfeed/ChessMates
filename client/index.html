@@ -4,23 +4,6 @@
 </head>
 
 <body layout="column">
-
-  <md-toolbar md-scroll-shrink layout="row" layout-align="start center" layout-padding class="top-bar">
-      <md-menu>
-          <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Open sample menu">
-              <md-icon md-svg-icon="navigation:ic_menu_24px"></md-icon>
-          </md-button>
-          <md-menu-content>
-              <md-menu-item><meteor-include src="loginButtons"></meteor-include></md-menu-item>
-              <md-menu-item><md-button ng-click="doSomething()">Restart</md-button></md-menu-item>
-              <md-menu-item><md-button ng-click="doSomething()">I'm Done</md-button></md-menu-item>
-          </md-menu-content>
-      </md-menu>
-      <div class="navbar-right navbar-text">
-      </div>
-      <span class="top-title">CHESSMATES vs CASPAROV</span>
-  </md-toolbar>
-  <div class="hr"><hr /></div>
-
+  <top-bar></top-bar>
   <div ui-view></div>
 </body>

@@ -1,0 +1,18 @@
+<md-toolbar md-scroll-shrink layout="row" layout-align="start center" layout-padding class="top-bar">
+    <md-menu>
+        <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Open sample menu">
+            <md-icon md-svg-icon="navigation:ic_menu_24px"></md-icon>
+        </md-button>
+        <md-menu-content>
+            <md-menu-item><meteor-include src="loginButtons"></meteor-include></md-menu-item>
+            <md-menu-item ng-repeat="item in $root.menuItems">
+                <md-button ng-click="doSomething()">{{ item.label }}</md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
+    <div class="navbar-right navbar-text">
+    </div>
+    <span class="top-title">CHESSMATES vs CASPAROV</span>
+</md-toolbar>
+<div class="hr"><hr /></div>
+

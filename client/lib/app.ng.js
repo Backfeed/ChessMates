@@ -9,7 +9,8 @@ angular.module('blockchess', [
     'blockchess.clan',
     'blockchess.clans',
     'blockchess.game',
-    'blockchess.games'
+    'blockchess.games',
+    'blockchess.topBar'
 ]);
 
 function onReady() {

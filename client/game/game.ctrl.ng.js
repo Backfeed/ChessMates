@@ -1,7 +1,7 @@
 angular.module('blockchess.game.controller', [])
 .controller('GameController', GameController)
 
-function GameController($scope, GameService, GameModel, ChessBoard, ChessValidator, Toast) {
+function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, ChessValidator, Toast) {
   var gameId = "1";
   var ctrl = this;
 
@@ -34,6 +34,15 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
     ctrl.game = GameModel.game;
     ctrl.timer = GameModel.timer;
     ctrl.suggestedMoves = GameModel.suggestedMoves;
+
+    $rootScope.menuItems = [
+      {
+        label: 'Restart'
+      },
+      {
+        label: 'I\'m done'
+      }
+    ]
   }
 
   function restart()         { GameService.restart();         }
