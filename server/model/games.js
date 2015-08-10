@@ -22,7 +22,7 @@ function clientDone(gameId) {
   Games.update(
     { gameId: gameId },
     { $push: { playedThisTurn: Meteor.userId() } },
-    function() { if (isAllClientsFinished(gameId)) { endTurn(gameId); } }
+    endTurnIfAllPlayed(gameId)
   );
 
 }
@@ -90,6 +90,11 @@ function validateSuggestedMoves(gameId, turnIndex) {
   var moveCount = SuggestedMoves.find({gameId: gameId, turnIndex: turnIndex}).count();
   if (moveCount < 1)
     throw new Meteor.Error(403, 'No moves suggested');
+}
+
+function endTurnIfAllPlayed(gameId) { 
+  if (isAllClientsFinished(gameId)) 
+    endTurn(gameId)
 }
 
 function resetGameData(gameId) {
