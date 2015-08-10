@@ -12,12 +12,9 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
     updateBoard: updateBoard,
     singleMove: singleMove,
     getMoveBy: getMoveBy,
-    startTurn: startTurn,
-    endGame: endGame,
     restart: restart,
     isDone: isDone,
-    imDone: imDone,
-    pause: pause
+    imDone: imDone
   };
 
   function isDone(id) {
@@ -29,30 +26,6 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
   function imDone(gameId) {
     $meteor.call('clientDone', gameId).then(
       function()    { Toast.toast('Waitin fo the gang, ya'); },
-      function(err) { console.log('failed', err); }
-    );
-  }
-
-  function pause(gameId) {
-    $meteor.call('pauseGame', gameId).then(
-      function() {
-        GameModel.timer.inPlay = !GameModel.timer.inPlay;
-        Toast.toast('game paused');
-      },
-      function(err) { console.log('failed', err); }
-    );
-  }
-
-  function startTurn(gameId) {
-    $meteor.call('startTurn', gameId).then(
-      function()    { Toast.toast('turn started'); },
-      function(err) { console.log('failed', err); }
-    );
-  }
-
-  function endGame(gameId) {
-    $meteor.call('endGame', gameId).then(
-      function()    { Toast.toast('No Move Suggested. Game Over!!'); },
       function(err) { console.log('failed', err); }
     );
   }

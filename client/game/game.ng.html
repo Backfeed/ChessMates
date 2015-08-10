@@ -3,15 +3,6 @@
 
     <div flex>
       <div board="{{ ctrl.gameId }}"></div>
-      <button ng-click="ctrl.startTurn()">
-          <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-      </button>
-      <button ng-click="ctrl.endGame()">
-          <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
-      </button>
-      <button ng-click="ctrl.pause()">
-          <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
-      </button>
       <button ng-click="ctrl.restart()">Restart</button>
       <button ng-click="ctrl.imDone()"
               ng-class="{ 'is-disabled': ctrl.isDone() }"

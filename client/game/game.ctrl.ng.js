@@ -9,11 +9,8 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
     ChessValidator: ChessValidator, // DEV
     ChessBoard: ChessBoard, // DEV
     GameModel: GameModel, // DEV
-    startTurn: startTurn, // DEV
-    endGame: endGame, // DEV
     restart: restart, // DEV
     gameId: gameId, // DEV
-    pause: pause, // DEV
     isDone: isDone,
     imDone: imDone,
     showRawData: showRawData,
@@ -39,12 +36,9 @@ function GameController($scope, GameService, GameModel, ChessBoard, ChessValidat
     ctrl.suggestedMoves = GameModel.suggestedMoves;
   }
 
-  function startTurn()       { GameService.startTurn(gameId); }
-  function endGame()         { GameService.endGame(gameId);   }
   function restart()         { GameService.restart();         }
   function isDone()   { return GameService.isDone();          }
   function imDone()          { GameService.imDone(gameId);    }
-  function pause()           { GameService.pause(gameId);     }
 
   function updateBoard() {
     if (ctrl.game && ctrl.game.fen && ChessValidator.game) {
