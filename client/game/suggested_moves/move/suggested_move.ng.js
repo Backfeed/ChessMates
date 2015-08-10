@@ -21,6 +21,7 @@ function suggestedMoveController($meteor, $scope) {
   var ctrl = this;
   angular.extend(ctrl, {
     getDisabledRateText: getDisabledRateText,
+    getConfidence: getConfidence,
     canRate: canRate,
     count: 0,
     evaluations: []
@@ -50,6 +51,10 @@ function suggestedMoveController($meteor, $scope) {
       return 'Must be logged in to evaluate moves';
     if (!Meteor.user().reputation)
       return 'Must have reputation to evaluate moves';
+  }
+
+  function getConfidence() {
+    return Protocol.getMoveStats(ctrl.move).confidence;
   }
 
 }

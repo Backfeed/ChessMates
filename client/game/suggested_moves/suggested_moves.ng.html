@@ -1,32 +1,10 @@
-<div id="filter-dropdown">
-  <md-select ng-model="ctrl.sorting" placeholder="Sort by..." class="pull-right">
-      <md-option ng-value="relevance_score">Relevance</md-option>
-      <md-option ng-value="reputation_sum">Reputation</md-option>
-      <md-option ng-value="avg_stars">Stars</md-option>
-      <md-option ng-value="createdAt">Created At</md-option>
-  </md-select>
-</div>
-
-<table class="table table-bordered table-hover">
-  <thead>
-    <tr>
-      <td>Move</td>
-      <td>Evalutions</td>
-      <td>User</td>
-      <td>Stars</td>
-      <td>Created</td>
-      <td>Rate</td>
-      <td>Comments</td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="move in ctrl.suggestedMoves | orderBy : sorting"
-        suggested-move
-        move="move"
-        my-fav-move="ctrl.myFavMove"
-        ng-class="{ 'active': ctrl.selectedMove.notation == move.notation }"
-        ng-mouseover="ctrl.highlight(move)"
-        ng-mouseleave="ctrl.unhighlight()">
-    </tr>
-  </tbody>
-</table>
+<md-list>
+  <md-list-item ng-repeat="move in ctrl.suggestedMoves"
+                suggested-move
+                move="move"
+                my-fav-move="ctrl.myFavMove"
+                ng-class="{ 'active': ctrl.selectedMove.notation == move.notation }"
+                ng-mouseover="ctrl.highlight(move)"
+                ng-mouseleave="ctrl.unhighlight()">
+  </md-list-item>
+</md-list>
