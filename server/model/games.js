@@ -82,11 +82,13 @@ function executeMove(gameId, move, turn) {
         moves: notation,
         pgn: move
       },
-      $set:  {
+      $set: {
         turn: turn,
-        turnIndex: game.turnIndex + 1,
         playedThisTurn: [],
         fen: getFen(move)
+      },
+      $inc: {
+        turnIndex: 1
       }
     },
     executeMoveCB(game, turn, notation)
