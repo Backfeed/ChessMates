@@ -7,12 +7,9 @@ Meteor.methods({
   startTurnTimer: startTurnTimer,
   isTimerInPlay: isTimerInPlay,
   clearTimerInterval: clear,
-  endTimer: endTimer
+  endTimer: endTimer,
+  timerResetGame: timerResetGame
 });
-
-function publish(options, gameId) {
-  return Timers.find({ "gameId": "1" });
-}
 
 function startTurnTimer(gameId) {
   clear();
@@ -27,8 +24,12 @@ function startTurnTimer(gameId) {
   }
 }
 
-function update(gameId, query) {
-  Timers.update({ gameId: gameId }, query );
+function isTimerInPlay(gameId) {
+  return Timers.findOne({ gameId: gameId }).inPlay;
+}
+
+function clear() {
+  Meteor.clearInterval(GameInterval);
 }
 
 function endTimer(gameId) {
@@ -36,10 +37,26 @@ function endTimer(gameId) {
   update(gameId, { $set: { inPlay: false } });
 }
 
-function clear() {
-  Meteor.clearInterval(GameInterval);
+function timerResetGame(gameId) {
+  update(gameId,
+    { 
+      $set: {
+        inPlay: true,
+        timePerMove: 90000,
+        timeLeft: 90000
+      }
+    }
+  );
 }
 
-function isTimerInPlay(gameId) {
-  return Timers.findOne({ gameId: gameId }).inPlay;
+
+/********* Helper methods *********/
+function update(gameId, query) {
+  Timers.update({ gameId: gameId }, query );
+}
+
+
+/********* Publish and hooks *********/
+function publish(options, gameId) {
+  return Timers.find({ "gameId": "1" });
 }

@@ -1,14 +1,11 @@
-var dummyStake = 3;// Arbitrarily
- 
+var dummyStake = 3; // Arbitrarily
+
 Meteor.methods({
   protoRate: protoRate,
   protoEndTurn: protoEndTurn
 });
 
-function log(msg) { console.log("PROTCOL: ", msg); }
-
 function protoRate(userId, moveId, stars) {
-  log('rate');
   var user = getUserBy(userId);
   var stake = Protocol.getStakeBy(user);
   payReputationAtStake(user, stake);
@@ -18,6 +15,19 @@ function protoRate(userId, moveId, stars) {
   Protocol.distributeStakeToEvaluators(evals, stake, fullstake);
 }
 
+function protoEndTurn(gameId, turnIndex) {
+  var winningMove = compose(max(property('value')), map(Protocol.getMoveStats), getSuggestedMove)(gameId, turnIndex)
+  awardWinner(winningMove);
+
+  return { 
+    from: winningMove.notation.substr(0,2), 
+    to: winningMove.notation.substr(2) 
+  };
+  
+}
+
+
+/********* Helper methods *********/
 function payReputationAtStake(user, stake) {
   compose(Protocol.updateReputation, addToRep(-stake))(user);
 }
@@ -46,10 +56,6 @@ function calcAvgMoveVal(totalRep, score) {
   };
 }
 
-function logTurn(notation, totalRep, score) {
-  log("move " + notation + " = " + score + " ( " + score / totalRep + " ) with " + totalRep + " reputation");
-}
-
 // getWinnerUser :: [Object], String -> Object
 function getWinnerUser(moves, winningNotation) {
   return compose(getUserBy, toUid, find(isNotationEquals(winningNotation)))(moves);
@@ -57,18 +63,4 @@ function getWinnerUser(moves, winningNotation) {
 
 function awardWinner(winningMove) {
   Meteor.users.update( { _id: winningMove.userId }, { $inc: { tokens: winningMove.tokens } } );
-}
-
-function protoEndTurn(gameId, turnIndex) {
-  log('endTurn');
-  var winningMove = compose(max(property('value')), map(Protocol.getMoveStats), getSuggestedMove)(gameId, turnIndex)
-  log("AND THE WINNER MOVE IS: " + winningMove.notation);
-  
-  awardWinner(winningMove);
-
-  return { 
-    from: winningMove.notation.substr(0,2), 
-    to: winningMove.notation.substr(2) 
-  };
-  
 }

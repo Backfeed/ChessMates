@@ -1,18 +1,9 @@
 Meteor.publish('evaluations', publish);
-
 Evaluations.after.insert(afterInsert);
 
 Meteor.methods({
   rate: create
 });
-
-function publish(options) {
-  return Evaluations.find({});
-}
-
-function getBy(moveId) {
-  return Evaluations.findOne({ moveId: moveId, userId: Meteor.userId() });
-}
 
 function create(moveId, stars) {
   Evaluations.insert({
@@ -21,6 +12,18 @@ function create(moveId, stars) {
     reputation: Meteor.user().reputation,
     stars: stars
   });
+}
+
+
+/********* Helper methods *********/
+function getBy(moveId) {
+  return Evaluations.findOne({ moveId: moveId, userId: Meteor.userId() });
+}
+
+
+/********* Publish and hooks *********/
+function publish(options) {
+  return Evaluations.find({});
 }
 
 function afterInsert(userId, evl) {

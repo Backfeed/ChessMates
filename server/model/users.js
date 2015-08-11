@@ -1,8 +1,12 @@
 Meteor.publish(null, publish);
 Meteor.publish("userStatus", publishStatus);
-
 Accounts.onCreateUser(onCreate);
 
+
+/********* Helper methods *********/
+
+
+/********* Publish and hooks *********/
 function publish() {
   return getUsersBy({}, ["emails", "status", "reputation", "tokens"]);
 }

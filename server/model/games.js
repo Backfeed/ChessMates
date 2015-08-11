@@ -2,7 +2,6 @@ Meteor.publish('games', publish);
 Games.before.update(beforeUpdate);
 Games.after.update(afterUpdate);
 
-
 Meteor.methods({
   clientDone: clientDone,
   endTurn: endTurn,
@@ -17,7 +16,7 @@ function clientDone(gameId) {
   var game = validateGame(gameId);
   validateUser(this.userId);
   validateUniqueness(game.playedThisTurn);
-  validateSuggestedMoves(gameId, game.turnIndex);
+  Meteor.call('validateExists', gameId, game.turnIndex);
 
   Games.update(
     { gameId: gameId },
@@ -59,7 +58,6 @@ function executeMove(gameId, move, turn) {
 }
 
 function AIGetMoveCb(move) {
-  console.log('AI Move: ', move);
   executeMove("1", move, "AI");
 }
 
@@ -80,16 +78,11 @@ function AIEvaluationCB(score) {
   console.log("score is: ", score);
 }
 
+
 /********* Helper methods *********/
 function validateUniqueness(playedThisTurn) {
   if ( _.contains(playedThisTurn, Meteor.userId()) )
     throw new Meteor.Error(403, 'Already pressed "Im done"');
-}
-
-function validateSuggestedMoves(gameId, turnIndex) {
-  var moveCount = SuggestedMoves.find({gameId: gameId, turnIndex: turnIndex}).count();
-  if (moveCount < 1)
-    throw new Meteor.Error(403, 'No moves suggested');
 }
 
 function endTurnIfAllPlayed(gameId) { 
@@ -111,16 +104,7 @@ function resetGameData(gameId) {
     restartCB
   );
 
-  Timers.update(
-    { gameId: gameId },
-    { $set: {
-        inPlay: true,
-        timePerMove: 90000,
-        timeLeft: 90000
-      }
-    }
-  );
-
+  Meteor.call('timerResetGame', gameId);
   Evaluations.remove({});
   SuggestedMoves.remove({ gameId: gameId });
   Comments.remove({ gameId: gameId });
@@ -179,6 +163,7 @@ function getFen(move) {
 function endGame(gameId) {
   Meteor.call('endTimer', gameId);
 }
+
 
 /********* Publish and hooks *********/
 function publish(options, gameId) {
