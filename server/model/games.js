@@ -8,6 +8,7 @@ Meteor.methods({
   executeMove: executeMove,
   AIGetMoveCb: AIGetMoveCb,
   validateGame: validateGame,
+  endGame: endGame,
   restart: restart,
   AIEvaluationCB: AIEvaluationCB
 });
@@ -16,7 +17,7 @@ function clientDone(gameId) {
   var game = validateGame(gameId);
   validateUser(this.userId);
   validateUniqueness(game.playedThisTurn);
-  Meteor.call('validateExists', gameId, game.turnIndex);
+  Meteor.call('validateSugMovExists', gameId, game.turnIndex);
 
   Games.update(
     { gameId: gameId },
@@ -29,8 +30,13 @@ function clientDone(gameId) {
 function endTurn(gameId) {
   Meteor.call('clearTimerInterval', gameId);
   
-  if (Meteor.call('isTimerInPlay', gameId))
+  var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
+  if (Meteor.call('noSugMov', gameId, turnIndex))
+    return endGame(gameId, 'AI');
+
+  if (Meteor.call('isTimerInPlay', gameId)) {
     executeClanMove(gameId);
+  }
 }
 
 function executeMove(gameId, move, turn) {
@@ -93,13 +99,16 @@ function endTurnIfAllPlayed(gameId) {
 function resetGameData(gameId) {
   Games.update(
     { gameId: gameId },
-    { $set: {
+    { 
+      $set: {
         playedThisTurn: [],
         moves: [],
         pgn: [],
         turnIndex: 1,
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
-      }
+      },
+
+      $unset: { winner: "" }
     },
     restartCB
   );
@@ -160,8 +169,10 @@ function getFen(move) {
   return Chess.fen();
 }
 
-function endGame(gameId) {
+function endGame(gameId, winner) {
+  console.log('GAME OVER! WINNER: ', winner);
   Meteor.call('endTimer', gameId);
+  Games.update({ gameId: gameId }, { $set: { winner: winner } });
 }
 
 

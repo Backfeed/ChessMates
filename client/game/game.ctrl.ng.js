@@ -26,6 +26,7 @@ function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, 
   $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard, true);
   $scope.$watch('ctrl.game.turnIndex', checkIsGameOver);
+  $scope.$watch('ctrl.game.winner', declareWinner);
 
   init();
 
@@ -82,6 +83,10 @@ function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, 
   function checkIsGameOver() {
     if (ChessValidator.game.game_over())
       Toast.toast('Game over!');
+  }
+
+  function declareWinner(winner) {
+    Toast.toast(winner + " is the winner!");
   }
 
 }
