@@ -16,7 +16,8 @@ function protoRate(userId, moveId, stars) {
 }
 
 function protoEndTurn(gameId, turnIndex) {
-  var winningMove = compose(max(property('value')), map(Protocol.getMoveStats), getSuggestedMove)(gameId, turnIndex)
+  console.log('protoEndTurn: ' ,gameId, turnIndex);
+  var winningMove = R.compose(max(R.prop('value')), trace('YO! '), R.map(Protocol.getMoveStats), trace('YO! '), getSuggestedMove)(gameId, turnIndex)
   awardWinner(winningMove);
 
   return { 
@@ -29,7 +30,7 @@ function protoEndTurn(gameId, turnIndex) {
 
 /********* Helper methods *********/
 function payReputationAtStake(user, stake) {
-  compose(Protocol.updateReputation, addToRep(-stake))(user);
+  R.compose(Protocol.updateReputation, addToRep(-stake))(user);
 }
 
 // getMoveBy :: String -> Object
@@ -58,7 +59,7 @@ function calcAvgMoveVal(totalRep, score) {
 
 // getWinnerUser :: [Object], String -> Object
 function getWinnerUser(moves, winningNotation) {
-  return compose(getUserBy, toUid, find(isNotationEquals(winningNotation)))(moves);
+  return R.compose(getUserBy, toUid, find(isNotationEquals(winningNotation)))(moves);
 }
 
 function awardWinner(winningMove) {

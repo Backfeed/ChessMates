@@ -44,6 +44,7 @@ http@1.1.0
 id-map@1.0.3
 jquery@1.11.3_2
 json@1.0.3
+kevohagan:ramda@0.13.0
 lai:collection-extensions@0.1.4
 launch-screen@1.0.2
 less@1.0.14
