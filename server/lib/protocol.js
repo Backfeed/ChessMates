@@ -17,7 +17,7 @@ function protoRate(userId, moveId, stars) {
 
 function protoEndTurn(gameId, turnIndex) {
   console.log('protoEndTurn: ' ,gameId, turnIndex);
-  var winningMove = R.compose(max(R.prop('value')), trace('YO! '), R.map(Protocol.getMoveStats), trace('YO! '), getSuggestedMove)(gameId, turnIndex)
+  var winningMove = R.compose(max(R.prop('value')), R.map(Protocol.getMoveStats), getSuggestedMove)(gameId, turnIndex);
   awardWinner(winningMove);
 
   return { 
