@@ -1,24 +1,7 @@
 <div>
   <section class="area game-area" layout="row" layout-margin>
-
     <div flex>
       <div board="{{ ctrl.gameId }}"></div>
-
-      <!-- <players game="ctrl.game"></players> -->
-
-        <div ng-show="ctrl.showRawData()">
-            <strong>DB:</strong> <br>
-            History: {{ ctrl.game.moves.join(" ") }} <br />
-            FEN: {{ ctrl.game.fen }} <br />
-            Turn: {{ ctrl.game.turn }} <br />
-            TurnIndex: {{ ctrl.game.turnIndex }} <br />
-            <strong>LOCAL:</strong> <br>
-            History: {{ ctrl.ChessValidator.game.history().join(" ") }} <br />
-            Turn: {{ ctrl.ChessValidator.game.turn() }} <br />
-            FEN: {{ ctrl.ChessValidator.game.fen() }} <br />
-
-            History: {{ ctrl.game.pgn }}
-        </div>
     </div>
 
     <div flex="60">
