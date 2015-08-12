@@ -19,8 +19,8 @@ function isBlank(gameId, turnIndex) {
 
 
 /********* Helper methods *********/
-function validateSufficientTokens(userId) {
-  var userTokens = getUserBy(userId).tokens;
+function validateSufficientTokens(uid) {
+  var userTokens = getUserBy(uid).tokens;
   if (userTokens < 1)
     throw new Meteor.Error(404, 'Insufficient funds: Suggesting a move costs 1 token, you have ' + userTokens + 'tokens');
 }
@@ -42,16 +42,16 @@ function publish(options, gameId, turnIndex) {
   return SuggestedMoves.find({ "gameId": "1", "turnIndex": turnIndex });
 }
 
-function beforeInsert(userId, move) {
-  if (!userId) return;
+function beforeInsert(uid, move) {
+  if (!uid) return;
   validateUniqueness(move);
-  validateSufficientTokens(userId);
+  validateSufficientTokens(uid);
 }
 
-function afterInsert(userId, move) {
-  if (!userId) return;
+function afterInsert(uid, move) {
+  if (!uid) return;
   Meteor.users.update(
-    { _id: userId },
+    { _id: uid },
     { $inc: { tokens: -1 } }
   );
 }

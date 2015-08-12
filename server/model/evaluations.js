@@ -8,7 +8,7 @@ Meteor.methods({
 function create(moveId, stars) {
   Evaluations.insert({
     moveId: moveId,
-    userId: Meteor.userId(),
+    uid: Meteor.userId(),
     reputation: Meteor.user().reputation,
     stars: stars
   });
@@ -17,7 +17,7 @@ function create(moveId, stars) {
 
 /********* Helper methods *********/
 function getBy(moveId) {
-  return Evaluations.findOne({ moveId: moveId, userId: Meteor.userId() });
+  return Evaluations.findOne({ moveId: moveId, uid: Meteor.userId() });
 }
 
 
@@ -26,6 +26,6 @@ function publish(options) {
   return Evaluations.find({});
 }
 
-function afterInsert(userId, evl) {
-  Meteor.call("protoRate", userId, evl.moveId, evl.stars);
+function afterInsert(uid, evl) {
+  Meteor.call("protoRate", uid, evl.moveId, evl.stars);
 }

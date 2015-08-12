@@ -27,7 +27,7 @@ function myRating($meteor, Toast) {
       }
 
       function getEval() {
-        return $meteor.object(Evaluations, { moveId: attrs.moveId, userId: Meteor.userId() });
+        return $meteor.object(Evaluations, { moveId: attrs.moveId, uid: Meteor.userId() });
       }
     }
   }

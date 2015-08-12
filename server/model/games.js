@@ -15,7 +15,7 @@ Meteor.methods({
 
 function clientDone(gameId) {
   var game = validateGame(gameId);
-  validateUser(this.userId);
+  validateUser(this.uid);
   validateUniqueness(game.playedThisTurn);
   Meteor.call('validateSugMovExists', gameId, game.turnIndex);
 
@@ -158,9 +158,9 @@ function isAllClientsFinished(gameId) {
   return playersN === playedN;
 }
 
-function validateUser(userId) {
-  check(userId, String);
-  if (! userId)
+function validateUser(uid) {
+  check(uid, String);
+  if (! uid)
     throw new Meteor.Error(403, "You must be logged in");
 }
 
@@ -181,10 +181,10 @@ function publish(options, gameId) {
   return Games.find({"gameId": "1"});
 }
 
-function beforeUpdate(userId, doc, fieldNames, modifier, options){
+function beforeUpdate(uid, doc, fieldNames, modifier, options){
   console.log('before game collection updated');
 }
 
-function afterUpdate(userId, doc, fieldNames, modifier, options){
+function afterUpdate(uid, doc, fieldNames, modifier, options){
   console.log('after game collection updated');
 }

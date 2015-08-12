@@ -23,13 +23,13 @@ function commentsController() {
   init();
 
   function init() {
-    ctrl.mover = getUserBy(ctrl.move.userId);
+    ctrl.mover = getUserBy(ctrl.move.uid);
   }
 
   function create() {
     ctrl.comments.push({
       moveId: ctrl.move._id,
-      userId: Meteor.userId(),
+      uid: Meteor.userId(),
       createdAt: Date.now(),
       text: ctrl.newComment.body
     });

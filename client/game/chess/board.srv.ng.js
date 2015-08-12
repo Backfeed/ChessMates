@@ -33,7 +33,7 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
       return false;
     }
 
-    if (getMoveBy('userId', Meteor.userId())) {
+    if (getMoveBy('uid', Meteor.userId())) {
       Toast.toast('Can only suggest one move per turn');
       return false;
     }

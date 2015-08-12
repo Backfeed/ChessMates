@@ -26,7 +26,7 @@ function seedSuggestedMoves() {
     {
       'gameId': '1',
       'turnIndex': 1,
-      'userId': '1',
+      'uid': '1',
       'createdAt': '1435857130718',
       'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
       'notation': 'e4'
@@ -34,7 +34,7 @@ function seedSuggestedMoves() {
     {
       'gameId': '1',
       'turnIndex': 2,
-      'userId': '1',
+      'uid': '1',
       'createdAt': '1435857130718',
       'fen': 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3',
       'notation': 'd4'
@@ -49,13 +49,13 @@ function seedEvaluations() {
   var evaluations = [
     {
       'moveId': '1',
-      'userId': '1',
+      'uid': '1',
       'createdAt': '1435857130718',
       'stars': 4
     },
     {
       'moveId': '2',
-      'userId': '1',
+      'uid': '1',
       'createdAt': '1435857130718',
       'stars': 2
     }
@@ -69,27 +69,27 @@ function seedComments() {
   var comments = [
     {
       'moveId': '1',
-      'userId': '1',
+      'uid': '1',
       'text': 'This one will cause us to loose the diagonal'
     },
     {
       'moveId': '1',
-      'userId': '1',
+      'uid': '1',
       'text': 'davay davay das vedanya'
     },
     {
       'moveId': '1',
-      'userId': '1',
+      'uid': '1',
       'text': 'whats goin on'
     },
     {
       'moveId': '2',
-      'userId': '1',
+      'uid': '1',
       'text': 'second move s bitch'
     },
     {
       'moveId': '3',
-      'userId': '1',
+      'uid': '1',
       'text': 'this is a comment for third move'
     }
   ];

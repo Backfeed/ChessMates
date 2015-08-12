@@ -77,7 +77,7 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
       turnIndex: GameModel.game.turnIndex,
       createdAt: Date.now(),
       notation: notation,
-      userId: Meteor.userId(),
+      uid: Meteor.userId(),
       gameId: "1",
       fen: ChessValidator.game.fen()
     });

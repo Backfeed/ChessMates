@@ -5,8 +5,8 @@ Meteor.methods({
   protoEndTurn: protoEndTurn
 });
 
-function protoRate(userId, moveId, stars) {
-  var user = getUserBy(userId);
+function protoRate(uid, moveId, stars) {
+  var user = getUserBy(uid);
   var stake = Protocol.getStakeBy(user);
   payReputationAtStake(user, stake);
 
@@ -63,5 +63,5 @@ function getWinnerUser(moves, winningNotation) {
 }
 
 function awardWinner(winningMove) {
-  Meteor.users.update( { _id: winningMove.userId }, { $inc: { tokens: winningMove.tokens } } );
+  Meteor.users.update( { _id: winningMove.uid }, { $inc: { tokens: winningMove.tokens } } );
 }
