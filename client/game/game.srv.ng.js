@@ -23,7 +23,7 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
     return GameModel.game.playedThisTurn.indexOf(id || Meteor.userId()) > -1;
   }
 
-  function imDone(gameId) {
+  function imDone() {
     $meteor.call('clientDone', gameId).then(
       function()    { Toast.toast('Waitin fo the gang, ya'); },
       function(err) { console.log('failed', err); }
