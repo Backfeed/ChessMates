@@ -26,7 +26,7 @@ function bottomBarController($meteor) {
 
   function getPlayers() {
     ctrl.players = $meteor.collection(function() {
-      return getUsersBy({ 'status.online': true }, ["emails", "status"]);
+      return F.getUsersBy({ 'status.online': true }, ["emails", "status"]);
     }, false).subscribe('userStatus');
   }
 

@@ -20,7 +20,7 @@ function isBlank(gameId, turnIndex) {
 
 /********* Helper methods *********/
 function validateSufficientTokens(uid) {
-  var userTokens = getUserBy(uid).tokens;
+  var userTokens = F.getUserBy(uid).tokens;
   if (userTokens < 1)
     throw new Meteor.Error(404, 'Insufficient funds: Suggesting a move costs 1 token, you have ' + userTokens + 'tokens');
 }

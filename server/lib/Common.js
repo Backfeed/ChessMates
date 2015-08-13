@@ -7,14 +7,14 @@ Common = (function Common() {
 
   function displayNameOf(userOrId) {
     if (!userOrId) return;
-    user = typeof userOrId === 'string' ? getUserBy(userOrId) : userOrId;
+    user = typeof userOrId === 'string' ? F.getUserBy(userOrId) : userOrId;
     if (user.profile && user.profile.name) return user.profile.name;
     if (user.emails) return user.emails[0].address;
     return "Anonymous user";
   }
 
   function displayNamesOf(usersIds) {
-    return _.map(usersIds, displayNameOf);
+    return _.map(usersIds, F.displayNameOf);
   }
 
 })();

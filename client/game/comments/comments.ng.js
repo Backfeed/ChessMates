@@ -23,7 +23,7 @@ function commentsController() {
   init();
 
   function init() {
-    ctrl.mover = getUserBy(ctrl.move.uid);
+    ctrl.mover = F.getUserBy(ctrl.move.uid);
   }
 
   function create() {

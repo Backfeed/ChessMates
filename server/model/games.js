@@ -15,7 +15,7 @@ Meteor.methods({
 
 function clientDone(gameId) {
   var game = validateGame(gameId);
-  validateUser(this.uid);
+  validateUser(Meteor.userId());
   validateUniqueness(game.playedThisTurn);
   Meteor.call('validateSugMovExists', gameId, game.turnIndex);
 
@@ -81,7 +81,6 @@ function restart(gameId) {
 }
 
 function AIEvaluationCB(score) {
-  console.log("score is: ", score);
 }
 
 
@@ -153,7 +152,7 @@ function getMoves(gameId, notation) {
 }
 
 function isAllClientsFinished(gameId) {
-  playersN = getUsersBy({ "status.online": true }).count();
+  playersN = F.getUsersBy({ "status.online": true }).count();
   playedN = Games.findOne({gameId: gameId}).playedThisTurn.length;
   return playersN === playedN;
 }
@@ -170,7 +169,6 @@ function getFen(move) {
 }
 
 function endGame(gameId, winner) {
-  console.log('GAME OVER! WINNER: ', winner);
   Meteor.call('endTimer', gameId);
   Games.update({ gameId: gameId }, { $set: { winner: winner } });
 }
@@ -182,9 +180,9 @@ function publish(options, gameId) {
 }
 
 function beforeUpdate(uid, doc, fieldNames, modifier, options){
-  console.log('before game collection updated');
+  // console.log('before game collection updated');
 }
 
 function afterUpdate(uid, doc, fieldNames, modifier, options){
-  console.log('after game collection updated');
+  // console.log('after game collection updated');
 }

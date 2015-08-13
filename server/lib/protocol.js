@@ -6,7 +6,7 @@ Meteor.methods({
 });
 
 function protoRate(uid, moveId, stars) {
-  var user = getUserBy(uid);
+  var user = F.getUserBy(uid);
   var stake = Protocol.getStakeBy(user);
   payReputationAtStake(user, stake);
 
@@ -16,7 +16,6 @@ function protoRate(uid, moveId, stars) {
 }
 
 function protoEndTurn(gameId, turnIndex) {
-  console.log('protoEndTurn: ' ,gameId, turnIndex);
   var winningMove = R.compose(max(R.prop('value')), R.map(Protocol.getMoveStats), getSuggestedMove)(gameId, turnIndex);
   awardWinner(winningMove);
 
@@ -59,7 +58,7 @@ function calcAvgMoveVal(totalRep, score) {
 
 // getWinnerUser :: [Object], String -> Object
 function getWinnerUser(moves, winningNotation) {
-  return R.compose(getUserBy, toUid, find(isNotationEquals(winningNotation)))(moves);
+  return R.compose(F.getUserBy, toUid, find(isNotationEquals(winningNotation)))(moves);
 }
 
 function awardWinner(winningMove) {
