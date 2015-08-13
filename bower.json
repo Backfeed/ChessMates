@@ -1,0 +1,8 @@
+{
+  "name": "chessmates",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular-vs-repeat": "~1.0.0-rc9"
+  },
+  "private": true
+}
