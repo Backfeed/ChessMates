@@ -30,13 +30,10 @@ function commentsController($scope, $state, $meteor, GameModel) {
 
 
   function init() {
-
-    $meteor.autorun($scope, function() {
-      $meteor.subscribe('comments', "1", $scope.getReactively('ctrl.turnIndex')).then(function() {
-        ctrl.comments = $meteor.collection(function() {
-          return Comments.find({ gameId: "1", turnIndex: $scope.getReactively('ctrl.turnIndex') });
-        }, false);
-      });
+    $meteor.subscribe('comments', "1", $scope.getReactively('ctrl.turnIndex')).then(function() {
+      ctrl.comments = $meteor.collection(function() {
+        return Comments.find({ gameId: "1", turnIndex: $scope.getReactively('ctrl.turnIndex') });
+      }, false);
     });
   }
 
