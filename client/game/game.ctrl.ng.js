@@ -86,6 +86,7 @@ function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, 
   }
 
   function declareWinner(winner) {
+    if (!winner) return;
     Toast.toast(winner + " is the winner!");
   }
 
