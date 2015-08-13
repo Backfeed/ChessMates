@@ -1,5 +1,14 @@
 <div>
   <section layout="row" layout-margin>
+    <div flex="10">
+      <md-list>
+        <md-list-item ng-repeat="move in ctrl.game.moves | reverse | groupEvery: 2: ' '">
+         <span>{{ ::$index + 1 }}</span>  
+         <span class="bold">{{ ::move }}</span>
+          <md-divider></md-divider>
+        </md-list-item>
+      </md-list>      
+    </div>
     <div flex>
       <div board="{{ ctrl.gameId }}" style="max-width: 460px;"></div>
     </div>
@@ -14,13 +23,7 @@
     </div>
   </section>
 
-<!--   <md-divider></md-divider>
-  <md-list>
-    <md-list-item ng-repeat="move in ctrl.game.moves | reverse">
-      {{ $index }} {{ ::move }} 
-      <md-divider></md-divider>
-    </md-list-item>
-  </md-list> -->
+  <md-divider></md-divider>
 
   <bottom-bar></bottom-bar>
 </div>
