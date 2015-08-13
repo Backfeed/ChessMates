@@ -1,4 +1,4 @@
-<div ng-repeat="comment in ctrl.comments">
+<div ng-repeat="comment in ctrl.comments | reverse">
   <div class="comment" layout="row" layout-align="space-between">
     <div class="comment-meta">
       <span class="bold">{{ ctrl.getUserBy(comment.uid) | displayName }}</span>:
