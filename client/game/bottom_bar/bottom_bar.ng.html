@@ -5,12 +5,12 @@
   <div flex="10">
     {{ $root.currentUser | displayName }}
   </div>
-  <div flex="10">
-    <i class="sprite-coins"></i>
+  <div flex="10" class="flexbox-v-align">
+    <i class="sprite-coins icon-with-text"></i>
     {{ $root.currentUser.tokens | decimel: 1 }}
   </div>
-  <div flex="10">
-    <i class="sprite-rep"></i>
+  <div flex="10" class="flexbox-v-align">
+    <i class="sprite-rep icon-with-text"></i>
     {{ $root.currentUser.reputation | decimel: 1 }}%
   </div>
   <div flex="10">
@@ -18,12 +18,7 @@
     {{ $root.currentUser.rank }}
     MY RANK -->
   </div>
-  <div flex="40">
-    <!-- <i class="sprite-divider"></i>
-    What is supposed to be displayed here?
-    22 -->
-  </div>
-  <div flex="10" class="bottom-bar-players">
+  <div flex="10" class="bottom-bar-players flex-right">
     {{ ctrl.players.length }} playing
     <players></players>
   </div>
