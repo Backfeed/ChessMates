@@ -2,14 +2,14 @@
 Meteor.startup(function () {
   console.log('==========\n\n\n\n\n\n');
 
-  if (Roles.getAllRoles().length === 0)    seedRoles();
-  if (F.getUsersBy().count() === 0)   seedUsers();
-  if (Clans.find().count() === 0)          seedClan();
-  if (Timers.find().count() === 0)         seedTimer();
-  if (SuggestedMoves.find().count() === 0) seedSuggestedMoves();
-  //if (Evaluations.find().count() === 0)    seedEvaluations(); //Cause a bug on startup
-  if (Comments.find().count() === 0)       seedComments();
-  if (Games.find().count() === 0)          seedGame();
+  // if (Roles.getAllRoles().length === 0)    seedRoles();
+  // if (F.getUsersBy().count() === 0)   seedUsers();
+  // if (Clans.find().count() === 0)          seedClan();
+  // if (Timers.find().count() === 0)         seedTimer();
+  // if (SuggestedMoves.find().count() === 0) seedSuggestedMoves();
+  // //if (Evaluations.find().count() === 0)    seedEvaluations(); //Cause a bug on startup
+  // if (Comments.find().count() === 0)       seedComments();
+  // if (Games.find().count() === 0)          seedGame();
 });
 
 function seedTimer() {
