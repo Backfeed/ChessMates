@@ -7,19 +7,20 @@ function players() {
     controllerAs: 'ctrl',
     templateUrl: 'client/game/players/players.ng.html',
     controller: playersController,
-    scope: { game: '='}
+    scope: {}
   };
 }
 
-function playersController($scope, $meteor, GameService, EvaluationModel) {
+function playersController($scope, $meteor, GameService, GameModel) {
   var ctrl = this;
   angular.extend(ctrl, {
     isDone: isDone,
+    sumBy: sumBy,
     totalReputation: 0,
     totalTokens: 0,
     totalDone: 0,
-    usersList: [],
-    users: []
+    game: {},
+    players: []
   });
 
   $scope.$watch('ctrl.game.playedThisTurn', updateTotalDone);
@@ -27,37 +28,32 @@ function playersController($scope, $meteor, GameService, EvaluationModel) {
   init();
 
   function init() {
-    $meteor.subscribe('userStatus');
-    updateUsers();
+    getPlayers();
+    getGame();
   }
 
-  function updateUsers() {
-    resetStats();
-    ctrl.usersList = [];
-    // TODO :: Remove users, only usersList shall prevail
-    _.each(getUsersBy({ "status.online": true }), function(user) {
-      ctrl.usersList.push(user);
-      addToTotalFrom(user);
-    });
-  }
-
-  function resetStats() {
-    ctrl.totalReputation = 0;
-    ctrl.totalTokens = 0;
-  }
-
-  function addToTotalFrom(user) {
-    ctrl.totalReputation += user.reputation;
-    ctrl.totalTokens += user.tokens;
+  function getPlayers() {
+    ctrl.players = $meteor.collection(function() {
+      return F.getUsersBy({ 'status.online': true });
+    }, false).subscribe('userStatus');
   }
 
   function isDone(id) {
     return GameService.isDone(id);
   }
 
-  function updateTotalDone(ids) {
-    if (!ids) { return 0; }
-    ctrl.totalDone = ids.length;
+  function sumBy(prop) {
+    return F.sumBy(prop, ctrl.players);
+  }
+
+
+  function getGame() {
+    ctrl.game = GameModel.game;
+  }
+
+  function updateTotalDone(uids) {
+    if (!uids) return;
+    ctrl.doneCount = uids.length;
   }
 
 }

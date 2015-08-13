@@ -1,26 +1,28 @@
-<table class="table table-bordered table-hover">
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Reputation</th>
-      <th>Tokens</th>
-      <th>Done</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="user in ctrl.usersList">
-      <td>{{ ::user | displayName }}</td>
-      <td>{{ user.reputation }}</td>
-      <td>{{ user.tokens }}</td>
-      <td>{{ ctrl.isDone(user._id) }}</td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <td>{{ ctrl.usersList.length }}</td>
-      <td>{{ ctrl.totalReputation }}</td>
-      <td>{{ ctrl.totalTokens }}</td>
-      <td>{{ ctrl.totalDone }}</td>
-    </tr>
-  </tfoot>
-</table>
+<div class="relative">
+  <md-content layout="column" class="players">
+    <md-list vs-repeat>
+      <md-list-item ng-repeat="user in ctrl.players | reverse">
+        <div flex="50"> 
+          <span class="bold">
+            {{ ::user | displayName }}
+          </span>:
+        </div>
+        <div flex="20">{{ user.reputation | decimel: 1 }}</div>
+        <div flex="20">{{ user.tokens | decimel: 1 }}</div>
+        <div class="flex-right" flex="10">
+          <md-icon md-svg-icon="navigation:ic_check_24px"
+                   aria-label="User done mark"
+                   class="players-done"
+                   ng-show="ctrl.isDone(user._id)"></md-icon>
+        </div>
+      </md-list-item>
+      <md-divider></md-divider>
+      <md-list-item>
+        <span class="bold" flex="50">{{ ctrl.players.length }}</span> 
+        <span flex="20">{{ ctrl.sumBy('reputation') | decimel: 1 }}</span>
+        <span flex="20">{{ ctrl.sumBy('tokens') | decimel: 1 }}</span>
+        <span flex="10">{{ ctrl.doneCount }}</span>
+      </md-list-item>
+    </md-list>
+  </md-content>
+</div>
