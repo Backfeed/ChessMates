@@ -8,31 +8,47 @@ function comments() {
     templateUrl: "client/game/comments/comments.ng.html",
     controller: commentsController,
     restrict: 'E',
-    scope: { comments: '=', move: '=' }
+    scope: {}
   };
 }
 
-function commentsController() {
+function commentsController($scope, $state, $meteor, GameModel) {
   var ctrl = this;
   angular.extend(ctrl, {
-    getUserBy: getUserBy,
     create: create,
-    mover: {}
+    getUserBy: getUserBy,
+    turnIndex: 0,
+    comments: []
   });
 
   init();
 
+  Tracker.autorun(function() {
+    ctrl.turnIndex = Session.get('turnIndex');
+    $meteor.subscribe('comments', "1", ctrl.turnIndex);
+  });
+
+
   function init() {
-    ctrl.mover = F.getUserBy(ctrl.move.uid);
+
+    $meteor.autorun($scope, function() {
+      $meteor.subscribe('comments', "1", $scope.getReactively('ctrl.turnIndex')).then(function() {
+        ctrl.comments = $meteor.collection(function() {
+          return Comments.find({ gameId: "1", turnIndex: $scope.getReactively('ctrl.turnIndex') });
+        }, false);
+      });
+    });
   }
 
   function create() {
-    ctrl.comments.push({
-      moveId: ctrl.move._id,
-      uid: Meteor.userId(),
-      createdAt: Date.now(),
-      text: ctrl.newComment.body
-    });
+    var gameId = GameModel.game.gameId;
+    var turnIndex = GameModel.game.turnIndex;
+    var text = ctrl.newComment.body;
+    Meteor.call('createComment', gameId, turnIndex, text);
     ctrl.newComment.body = ''
+  }
+
+  function getUserBy(uid) {
+    return F.getUserBy(uid);
   }
 }

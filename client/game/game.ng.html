@@ -1,15 +1,26 @@
 <div>
-  <section class="area game-area" layout="row" layout-margin>
+  <section layout="row" layout-margin>
     <div flex>
       <div board="{{ ctrl.gameId }}" style="max-width: 460px;"></div>
-
     </div>
 
-    <div flex="60">
+    <div flex="30">
         <timer settings="ctrl.timer"></timer>
         <suggested-moves turn-index="ctrl.game.turnIndex" selected-move="ctrl.selectedMove" suggested-moves="ctrl.suggestedMoves" ng-if="ctrl.game.turnIndex"></suggested-moves>
     </div>
+
+    <div flex="30">
+      <comments></comments>
+    </div>
   </section>
+
+<!--   <md-divider></md-divider>
+  <md-list>
+    <md-list-item ng-repeat="move in ctrl.game.moves | reverse">
+      {{ $index }} {{ ::move }} 
+      <md-divider></md-divider>
+    </md-list-item>
+  </md-list> -->
 
   <bottom-bar></bottom-bar>
 </div>

@@ -21,8 +21,7 @@ function GameModel($meteor) {
       game          : $meteor.object(Games,  { gameId: id }, false).subscribe('games'),
       timer         : $meteor.object(Timers, { gameId: id }, false).subscribe('timers'),
       suggestedMoves: $meteor.collection(SuggestedMoves),
-      evaluations   : $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('evaluations'),
-      comments      : $meteor.collection(function() { return Comments.find({ gameId: id }) }).subscribe('comments')
+      evaluations   : $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('evaluations')
     });
 
     Tracker.autorun(function() {

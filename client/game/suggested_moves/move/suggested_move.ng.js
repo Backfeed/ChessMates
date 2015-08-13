@@ -31,15 +31,10 @@ function suggestedMoveController($meteor, $scope) {
 
   function init() {
     getEvaluations();
-    getComments();
   }
 
   function getEvaluations() {
     ctrl.evaluations = $meteor.collection(function() { return Evaluations.find({ moveId: ctrl.move._id }); }).subscribe('evaluations');
-  }
-
-  function getComments() {
-    ctrl.comments = $meteor.collection(function() { return Comments.find({ moveId: ctrl.move._id }); }).subscribe('comments');
   }
 
   function canRate() {
