@@ -6,7 +6,6 @@ angular.module('blockchess.util', [
   // Filters
   'blockchess.util.decimel',
   'blockchess.util.displayName',
-  'blockchess.util.displayNameById',
   'blockchess.util.reverse',
   'blockchess.util.groupEvery'
 ]);
