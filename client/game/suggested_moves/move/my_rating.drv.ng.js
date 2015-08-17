@@ -20,7 +20,7 @@ function myRating($meteor, Toast) {
       }
       
       function rate() { 
-        if (scope.ctrl.canRate())
+        if (scope.ctrl.canRate() && scope.myRating)
           Meteor.call('rate', attrs.moveId, scope.myRating);
         else
           Toast.toast(scope.ctrl.getDisabledRateText());
