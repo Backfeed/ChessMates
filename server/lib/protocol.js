@@ -17,18 +17,19 @@ function protoRate(uid, moveId, stars) {
   var uStake = calcUserStake(uid); // 1
   var uRep = User.getRep(uid) - uStake; // 10
 
-  Meteor.users.update({ _id: uid }, { $set: { reputation: uRep } });
+  User.updateRep(uid, uRep);
 
   var evaluators = getEvaluators(moveId);
 
   var multiplier = uStake / calcFullStake(stars, evaluators);
   
-  _.each(evaluators, function(u) {
-    Meteor.users.update(u._id, { $inc: { reputation: u.reputation * multiplier } });
-  });
+  _.each(evaluators, distributeStake);
 
-  SuggestedMoves.update({ _id: moveId }, { $inc: { reputation: BASE_FUNDS * multiplier } });
+  SugMov.incRep(moveId, BASE_FUNDS * multiplier);
 
+  function distributeStake(u) {
+    User.incRep(u._id, u.reputation * multiplier);
+  }
 }
 
 function calcFullStake(stars, evaluators) {
