@@ -1,7 +1,7 @@
 // TODO :: Make proper meteor constants
 BASE_STAKE = 0.1;
 BASE_FUNDS = 10;
-STARS_VAL = [0, 1, 3, 7,15];
+STARS_VAL = [0, 1, 3, 7, 15];
 STARS_TOKENS = [0, 10, 20, 50, 100];
 
 Meteor.methods({
@@ -36,7 +36,7 @@ function protoEndTurn(gameId, turnIndex) {
   var totalTurnRep = getTotalTurnRep(moves);
   _.each(moves, distributeTokens);
 
-  var winningMove = moves[0];
+  var winningMove = getWinningMove(moves);
 
   return {
     from: winningMove.notation.substr(0,2),
@@ -89,9 +89,30 @@ function calcUserStake(uid) {
 // TODO :: Make it relative to reputation of entire clan?
 // The idea is that games that involve many players (and thus more reputation) should be rewarded higher than games with little players/reputation
 function getTotalTurnRep(moves) {
-  var repArr = moves.map(F.toUid)
-                    .map(User.getRep);
-  return R.sum(repArr);
+  return R.compose(R.sum, R.map(User.getRep), mapUids, R.flatten, R.map(getEvaluations), F.mapIds)(moves)
+}
+
+function getWinningMove(moves) {
+  return R.compose(trace('wining move'), getWithHighestScore, trace('moves with score'), R.map(addScoreToMove), trace('moves'))(moves);
+}
+
+function calcScore(move) {
+  return R.compose(R.sum, R.map(evalToScore), getEvaluations, F.toId)(move)
+}
+
+function evalToScore(evaluation) { 
+  var starsVal = STARS_VAL[evaluation.stars-1];
+  var uRep = User.getRep(evaluation.uid);
+  return starsVal * uRep;
+}
+
+function addScoreToMove(move) {
+  move.score = calcScore(move);
+  return move;
+}
+
+function getWithHighestScore(moves) {
+  return F.max(R.prop('score'), moves);
 }
 
 /********* Debug *********/
