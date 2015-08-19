@@ -38,8 +38,8 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
       return false;
     }
 
-    if (Meteor.user().tokens < 1) {
-      Toast.toast('Suggesting a move costs 1 token, you have ' + Meteor.user().tokens);
+    if (Meteor.user().tokens < MOVE_COST) {
+      Toast.toast('Suggesting a move costs ' + MOVE_COST + ' token, you have ' + Meteor.user().tokens);
       return false;
     }
 

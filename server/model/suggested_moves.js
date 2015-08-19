@@ -21,8 +21,8 @@ function isBlank(gameId, turnIndex) {
 /********* Helper methods *********/
 function validateSufficientTokens(uid) {
   var userTokens = F.getUserBy(uid).tokens;
-  if (userTokens < 1)
-    throw new Meteor.Error(404, 'Insufficient funds: Suggesting a move costs 1 token, you have ' + userTokens + 'tokens');
+  if (userTokens < MOVE_COST)
+    throw new Meteor.Error(404, 'Insufficient funds: Suggesting a move costs ' + MOVE_COST + ' token, you have ' + userTokens + 'tokens');
 }
 
 function validateUniqueness(move) {
@@ -52,6 +52,6 @@ function afterInsert(uid, move) {
   if (!uid) return;
   Meteor.users.update(
     { _id: uid },
-    { $inc: { tokens: -1 } }
+    { $inc: { tokens: -MOVE_COST } }
   );
 }
