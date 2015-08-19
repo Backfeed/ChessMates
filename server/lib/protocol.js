@@ -1,9 +1,3 @@
-// TODO :: Make proper meteor constants
-BASE_STAKE = 0.1;
-BASE_FUNDS = 10;
-STARS_VAL = [0, 1, 3, 7, 15];
-STARS_TOKENS = [0, 10, 20, 50, 100];
-
 Meteor.methods({
   protoRate: protoRate,
   protoEndTurn: protoEndTurn
@@ -93,7 +87,7 @@ function getTotalTurnRep(moves) {
 }
 
 function getWinningMove(moves) {
-  return R.compose(trace('wining move'), getWithHighestScore, trace('moves with score'), R.map(addScoreToMove), trace('moves'))(moves);
+  return R.compose(getWithHighestScore, R.map(addScoreToMove))(moves);
 }
 
 function calcScore(move) {
