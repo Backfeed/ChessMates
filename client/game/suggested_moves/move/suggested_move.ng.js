@@ -1,6 +1,7 @@
 angular.module('blockchess.game.suggestedMoves.move', [
+  // Service
+  'blockchess.game.suggestedMoves.move.evaluation',
   // Directives
-  'blockchess.game.suggestedMoves.move.myRating',
   // Filters
   'blockchess.game.suggestedMoves.move.avgStars'
 ])
@@ -17,39 +18,60 @@ function suggestedMove() {
   };
 }
 
-function suggestedMoveController($meteor, $scope) {
+function suggestedMoveController($meteor, $scope, Evaluation) {
   var ctrl = this;
   angular.extend(ctrl, {
     getDisabledRateText: getDisabledRateText,
     getConfidence: getConfidence,
-    canRate: canRate,
-    count: 0,
-    evaluations: []
+    rate: rate,
+    canRate: Evaluation.canRate,
+    evaluations: [],
+    myEvl: {}
   });
+
+  $scope.$watch('ctrl.myRating', rate);
 
   init();
 
   function init() {
-    getEvaluations();
+    $meteor.subscribe('evaluations').then(function() {
+      getEvaluations();
+      getMyEvl();
+    });
   }
 
   function getEvaluations() {
-    ctrl.evaluations = $meteor.collection(function() { return Evaluations.find({ moveId: ctrl.move._id }); }).subscribe('evaluations');
-  }
-
-  function canRate() {
-    return !!Meteor.userId() && Meteor.user().reputation;
-  }
-
-  function getDisabledRateText() {
-    if (!Meteor.userId())
-      return 'Must be logged in to evaluate moves';
-    if (!Meteor.user().reputation)
-      return 'Must have reputation to evaluate moves';
+    ctrl.evaluations = $meteor.collection(function() { 
+      return Evaluations.find({ moveId: ctrl.move._id, moveId: ctrl.move.turnIndex }); 
+    }, false);
   }
 
   function getConfidence() {
     return Protocol.getMoveStats(ctrl.move).confidence;
   }
 
+  function getMyEvl() {
+    ctrl.myEvl = $meteor.object(Evaluations, { 
+      moveId: ctrl.move._id, 
+      uid: Meteor.userId(), 
+      inactive: false 
+    }, false);
+    
+    if (ctrl.myEvl)
+      ctrl.myRating = ctrl.myEvl.stars;
+  }
+
+  function rate(stars, oldStars) {
+    if (stars)
+      Evaluation.rate(ctrl.move._id, stars);
+  }
+
+}
+
+
+function getDisabledRateText() {
+  if (!Meteor.userId())
+    return 'Must be logged in to evaluate moves';
+  if (!Meteor.user().reputation)
+    return 'Must have reputation to evaluate moves';
 }

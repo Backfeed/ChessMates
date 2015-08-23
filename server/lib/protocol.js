@@ -1,12 +1,11 @@
 Meteor.methods({
-  protoRate: protoRate,
-  protoEndTurn: protoEndTurn
+  protoRate: rate,
+  protoEndTurn: endTurn
 });
 
-function protoRate(uid, moveId, stars) {
-  // user should lose rep
-  var uStake = calcUserStake(uid); // 1
-  var uRep = User.getRep(uid) - uStake; // 10
+function rate(uid, moveId, stars) {
+  var uStake = calcUserStake(uid);
+  var uRep = User.getRep(uid) - uStake;
 
   User.set(uid, 'reputation', uRep);
 
@@ -23,7 +22,7 @@ function protoRate(uid, moveId, stars) {
   }
 }
 
-function protoEndTurn(gameId, turnIndex) {
+function endTurn(gameId, turnIndex) {
   var moves = SugMov.getBy(gameId, turnIndex).fetch();
   _.each(moves, distributeStake);
 
@@ -68,7 +67,7 @@ function getEvaluators(moveId) {
 }
 
 function getEvaluations(moveId) {
-  return Evaluations.find({ moveId: moveId }).fetch();
+  return Evaluations.find({ moveId: moveId, inactive: false }).fetch();
 }
 
 function getLastEvaluation(moveId) {

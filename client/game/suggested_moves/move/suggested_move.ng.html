@@ -5,11 +5,9 @@
   </div>
 </div>
 <span flex="30">
-  <rating ng-model="myRating"
+  <rating ng-model="ctrl.myRating"
           class="stars"
           readonly="!ctrl.canRate()"
-          move-id="{{ ctrl.move._id }}"
-          title="{{ ctrl.getDisabledRateText() }}"
-          my-rating></rating>
+          title="{{ ctrl.getDisabledRateText() }}"></rating>
 </span>
 <md-divider></md-divider>
