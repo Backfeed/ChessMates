@@ -10,8 +10,6 @@ accounts-password
 accounts-ui
 accounts-facebook
 accounts-twitter
-angularutils:pagination
-tmeasday:publish-counts
 email
 less
 angular:angular-material
@@ -35,6 +33,3 @@ alanning:roles
 meteorhacks:kadira-profiler
 kevohagan:ramda
 mquandalle:bower
-angular:angular-mocks
-sanjo:jasmine
-velocity:html-reporter
