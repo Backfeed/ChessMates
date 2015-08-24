@@ -20,6 +20,8 @@ function afterInsert(uid, evl) {
 
 function logEval(uid, evl) {
   var text = User.displayNameOf(uid) + " rates " + evl.notation + " " + evl.stars + " stars";
+  if (evl.stars === 5)
+    text += '!!';
   Meteor.call('createLog', evl.gameId, evl.turnIndex, text);
 }
 
