@@ -15,6 +15,12 @@ function publish(options) {
 
 function afterInsert(uid, evl) {
   Meteor.call("protoRate", uid, evl.moveId, evl.stars);
+  logEval(uid, evl);
+}
+
+function logEval(uid, evl) {
+  var text = User.displayNameOf(uid) + " rates " + evl.notation + " " + evl.stars + " stars";
+  Meteor.call('createLog', evl.gameId, evl.turnIndex, text);
 }
 
 function beforeInsert(uid, evl) {
@@ -48,9 +54,12 @@ function makeFormerEvalsInactive(uid, evl) {
   );
 }
 
-function create(moveId, stars) {
+function create(gameId, moveId, turnIndex, notation, stars) {
   Evaluations.insert({
+    gameId: gameId,
+    turnIndex: turnIndex,
     moveId: moveId,
+    notation: notation,
     uid: Meteor.userId(),
     reputation: Meteor.user().reputation,
     inactive: false,

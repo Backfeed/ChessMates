@@ -10,14 +10,14 @@ function Evaluation(Toast) {
 
   return service;
 
-  function rate(moveId, stars) {
+  function rate(gameId, moveId, turnIndex, notation, stars) {
     // Validations
     if (!Meteor.userId())
       return Toast.toast('Must be logged in to evaluate moves');
     if (!Meteor.user().reputation)
       return Toast.toast('Must have reputation to evaluate moves');
 
-    Meteor.call('rate', moveId, stars);
+    Meteor.call('rate', gameId, moveId, turnIndex, notation, stars);
   }
 }
 

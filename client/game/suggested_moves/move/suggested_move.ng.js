@@ -63,7 +63,7 @@ function suggestedMoveController($meteor, $scope, Evaluation) {
 
   function rate(stars, oldStars) {
     if (stars)
-      Evaluation.rate(ctrl.move._id, stars);
+      Evaluation.rate(ctrl.move.gameId, ctrl.move._id, ctrl.move.turnIndex, ctrl.move.notation, stars);
   }
 
 }
