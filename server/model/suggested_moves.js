@@ -50,6 +50,18 @@ function beforeInsert(uid, move) {
 
 function afterInsert(uid, move) {
   if (!uid) return;
+  
+  deduceCoinsFor(uid)
+
+  logMove(uid, move);
+}
+
+function logMove(uid, move) {
+  var text = User.displayNameOf(uid) + " suggests " + move.notation;
+  Meteor.call('createLog', move.gameId, move.turnIndex, text);
+}
+
+function deduceCoinsFor(uid) {
   Meteor.users.update(
     { _id: uid },
     { $inc: { tokens: -MOVE_COST } }

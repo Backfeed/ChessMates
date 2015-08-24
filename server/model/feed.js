@@ -3,7 +3,8 @@ Meteor.publish('feeds', publish);
 Feeds.before.insert(beforeInsert);
 
 Meteor.methods({
-  createComment: createComment
+  createComment: createComment,
+  createLog: createLog
 })
 
                 
@@ -23,6 +24,13 @@ function create(gameId, turnIndex, text, type) {
 function createComment(gameId, turnIndex, text) {
   create(gameId, turnIndex, text, 'comment')
 }
+
+// Sugar for create with type set to 'log'
+function createLog(gameId, turnIndex, text) {
+  create(gameId, turnIndex, text, 'log')
+}
+
+
 
 /********* Publish and hooks *********/
 function publish() {

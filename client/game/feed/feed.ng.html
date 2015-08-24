@@ -9,8 +9,9 @@
             {{ item.uid | displayName }}
           </span>:
         </span>
-        <span ng-class="{ 'secondary': item.type === 'log' }"></span>
-        {{ item.text }}
+        <span ng-class="{ 'secondary': item.type === 'log' }">
+          {{ item.text }}
+        </span>
       </div>
     </div>
   </div>
