@@ -130,10 +130,17 @@ function executeClanMove(gameId) {
 }
 
 function executeMoveCB(gameId, turn, notation) {
+  logMove(gameId, turn, notation);
   if (Chess.game_over())
     endGame(gameId);
   else
     startTurn(gameId, turn, notation);
+}
+
+function logMove(gameId, turn, notation) {
+  var text = turn + ' played ' + notation;
+  var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
+  Meteor.call('log', gameId, turnIndex, text, 'move');
 }
 
 function startTurn (gameId, turn, notation) {
@@ -171,6 +178,11 @@ function getFen(move) {
 function endGame(gameId, winner) {
   Meteor.call('endTimer', gameId);
   Games.update({ gameId: gameId }, { $set: { winner: winner } });
+  logEndGame(gameId, winner);
+  function logEndGame(gameId, winner) {
+    var text = winner + " wins the game!!";
+    Meteor.call('log', gameId, null, text, 'endGame');
+  }
 }
 
 

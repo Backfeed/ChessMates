@@ -58,7 +58,7 @@ function afterInsert(uid, move) {
 
 function logMove(uid, move) {
   var text = User.displayNameOf(uid) + " suggests " + move.notation;
-  Meteor.call('createLog', move.gameId, move.turnIndex, text);
+  Meteor.call('log', move.gameId, move.turnIndex, text, 'sugMove');
 }
 
 function deduceCoinsFor(uid) {

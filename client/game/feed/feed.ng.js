@@ -32,7 +32,7 @@ function FeedController($meteor, Toast) {
 
   function createComment() {
     if (Meteor.userId()) {
-      Meteor.call('createComment', ctrl.gameId, ctrl.turnIndex, ctrl.newComment);
+      Meteor.call('log', ctrl.gameId, ctrl.turnIndex, ctrl.newComment, 'comment');
       ctrl.newComment = '';
     } else {
       Toast.toast('Log in to comment');

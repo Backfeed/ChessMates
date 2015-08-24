@@ -3,13 +3,12 @@ Meteor.publish('feeds', publish);
 Feeds.before.insert(beforeInsert);
 
 Meteor.methods({
-  createComment: createComment,
-  createLog: createLog
+  log: log
 })
 
-                
+
 /********* Helper methods *********/
-function create(gameId, turnIndex, text, type) {
+function log(gameId, turnIndex, text, type) {
   Feeds.insert({
     gameId: gameId,
     uid: Meteor.userId(),
@@ -20,17 +19,6 @@ function create(gameId, turnIndex, text, type) {
   });
 }
 
-// Sugar for create with type set to 'comment'
-function createComment(gameId, turnIndex, text) {
-  create(gameId, turnIndex, text, 'comment')
-}
-
-// Sugar for create with type set to 'log'
-function createLog(gameId, turnIndex, text) {
-  create(gameId, turnIndex, text, 'log')
-}
-
-
 
 /********* Publish and hooks *********/
 function publish() {
@@ -38,7 +26,8 @@ function publish() {
 }
 
 function beforeInsert(uid, item) {
-  validateUser(uid);
+  if (item.type === 'comment')
+    validateUser(uid);
 }
 
 function validateUser(uid) {
