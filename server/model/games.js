@@ -115,7 +115,7 @@ function resetGameData(gameId) {
   Meteor.call('timerResetGame', gameId);
   Evaluations.remove({});
   SuggestedMoves.remove({ gameId: gameId });
-  Comments.remove({ gameId: gameId });
+  Feeds.remove({ gameId: gameId });
 
   function restartCB(err, result) {
     if (err) throw new Meteor.Error(403, err);

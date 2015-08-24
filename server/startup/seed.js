@@ -8,7 +8,6 @@ Meteor.startup(function () {
   // if (Timers.find().count() === 0)         seedTimer();
   // if (SuggestedMoves.find().count() === 0) seedSuggestedMoves();
   // //if (Evaluations.find().count() === 0)    seedEvaluations(); //Cause a bug on startup
-  // if (Comments.find().count() === 0)       seedComments();
   // if (Games.find().count() === 0)          seedGame();
 });
 
@@ -62,39 +61,6 @@ function seedEvaluations() {
   ];
   _.each(evaluations, function(evaluation) {
     Evaluations.insert(evaluation);
-  });
-}
-
-function seedComments() {
-  var comments = [
-    {
-      'moveId': '1',
-      'uid': '1',
-      'text': 'This one will cause us to loose the diagonal'
-    },
-    {
-      'moveId': '1',
-      'uid': '1',
-      'text': 'davay davay das vedanya'
-    },
-    {
-      'moveId': '1',
-      'uid': '1',
-      'text': 'whats goin on'
-    },
-    {
-      'moveId': '2',
-      'uid': '1',
-      'text': 'second move s bitch'
-    },
-    {
-      'moveId': '3',
-      'uid': '1',
-      'text': 'this is a comment for third move'
-    }
-  ];
-  _.each(comments, function(comment) {
-    Comments.insert(comment);
   });
 }
 

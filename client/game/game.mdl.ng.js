@@ -10,8 +10,7 @@ function GameModel($meteor) {
     timer: {},
     status: {},
     suggestedMoves: [],
-    evaluations: [],
-    comments: []
+    evaluations: []
   };
 
   return model;

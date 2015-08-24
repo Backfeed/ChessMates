@@ -9,8 +9,8 @@ angular.module('blockchess.game', [
   // Directives
   'blockchess.game.suggestedMoves',
   'blockchess.game.bottomBar',
-  'blockchess.game.comments',
   'blockchess.game.players',
+  'blockchess.game.feed',
   'blockchess.game.timer'
   // Filters
 ]);
