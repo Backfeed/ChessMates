@@ -105,6 +105,8 @@ function calcScore(move) {
 }
 
 function evalToScore(evaluation) { 
+  if (evaluation.inactive)
+    return 0;
   var starsVal = STARS_VAL[evaluation.stars-1];
   var uRep = User.getRep(evaluation.uid);
   return starsVal * uRep;
