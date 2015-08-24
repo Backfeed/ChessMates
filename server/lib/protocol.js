@@ -3,22 +3,23 @@ Meteor.methods({
   protoEndTurn: endTurn
 });
 
-function rate(uid, moveId, stars) {
+function rate(uid, moveId, newStars) {
   var uStake = calcUserStake(uid);
   var uRep = User.getRep(uid) - uStake;
 
   User.set(uid, 'reputation', uRep);
 
-  var evaluators = getEvaluators(moveId);
+  var evaluations = getEvaluations(moveId);
 
-  var multiplier = uStake / calcFullStake(stars, evaluators);
-  _.each(evaluators, distributeStake);
+  var multiplier = uStake / calcFullStake(newStars, evaluations);
+
+  _.each(evaluations, distributeStake);
 
   SugMov.inc(moveId, "reputation", BASE_FUNDS * multiplier);
 
-  function distributeStake(u) {
-    var amountToInc = u.reputation * multiplier;
-    User.inc(u._id, 'reputation', amountToInc);
+  function distributeStake(evl) {
+    var amountToInc = User.getRep(evl.uid) * multiplier * getStarsFactor(evl.stars, newStars);
+    User.inc(evl.uid, 'reputation', amountToInc);
   }
 }
 
@@ -57,9 +58,19 @@ function endTurn(gameId, turnIndex) {
 
 }
 
-function calcFullStake(stars, evaluators) {
-  // TODO :: Implement stars
-  return R.compose(R.add(BASE_FUNDS), F.sumBy('reputation'))(evaluators);
+function calcFullStake(newStars, evaluations) {
+  var totalRep = 0;
+  _.each(evaluations, function(evl) {
+    totalRep += User.getRep(evl.uid) * getStarsFactor(evl.stars, newStars);
+  });
+  return totalRep + BASE_FUNDS;
+}
+
+function getStarsFactor(newStars, stars) {
+  var distance = newStars > stars ? newStars - stars : stars - newStars;
+  if (distance === 0)
+    return 1;
+  return 0;
 }
 
 function getEvaluators(moveId) {
