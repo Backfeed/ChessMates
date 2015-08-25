@@ -74,3 +74,22 @@ body {
 .secondary {
   color: gray;
 }
+
+.prepend {
+  position: relative;
+}
+
+// TODO :: Reactor logic to prepend:before selector
+.prepend-coins:before:extend(.sprite-coins) {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -27px;
+}
+
+.prepend-rep:before:extend(.sprite-rep) {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -27px;
+}

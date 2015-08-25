@@ -12,22 +12,10 @@ function bottomBar() {
   };
 }
 
-function bottomBarController($meteor) {
+function bottomBarController() {
   var ctrl = this;
   angular.extend(ctrl, {
-    players: []
+    
   });
-
-  init();
-
-  function init() {
-    getPlayers();
-  }
-
-  function getPlayers() {
-    ctrl.players = $meteor.collection(function() {
-      return F.getUsersBy({ 'status.online': true }, ["emails", "status"]);
-    }, false).subscribe('userStatus');
-  }
 
 }

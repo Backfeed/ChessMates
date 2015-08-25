@@ -14,12 +14,22 @@
     </div>
 
     <div flex="30">
-        <timer settings="ctrl.timer"></timer>
-        <suggested-moves turn-index="ctrl.game.turnIndex" selected-move="ctrl.selectedMove" suggested-moves="ctrl.suggestedMoves" ng-if="ctrl.game.turnIndex"></suggested-moves>
+      <timer settings="ctrl.timer"></timer>
+      <suggested-moves turn-index="ctrl.game.turnIndex" 
+                       selected-move="ctrl.selectedMove" 
+                       suggested-moves="ctrl.suggestedMoves" 
+                       ng-if="ctrl.game.turnIndex"></suggested-moves>
     </div>
 
     <div flex="30">
-      <feed game-id="ctrl.gameId" turn-index="ctrl.game.turnIndex"></feed>
+      <tabset>
+        <tab heading="Notifications">
+          <feed game-id="ctrl.gameId" turn-index="ctrl.game.turnIndex"></feed>
+        </tab>
+        <tab heading="Players">
+          <players></players>
+        </tab>
+      </tabset>
     </div>
   </section>
 

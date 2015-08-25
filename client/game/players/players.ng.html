@@ -2,13 +2,13 @@
   <md-content layout="column" class="players">
     <md-list vs-repeat>
       <md-list-item ng-repeat="user in ctrl.players | reverse">
-        <div flex="50"> 
+        <div flex="40"> 
           <span class="bold">
             {{ ::user | displayName }}
-          </span>:
+          </span>
         </div>
-        <div flex="20">{{ user.reputation | decimel: 1 }}</div>
-        <div flex="20">{{ user.tokens | decimel: 1 }}</div>
+        <div flex="25">{{ user.reputation | decimel: 1 }}</div>
+        <div flex="25">{{ user.tokens | decimel: 1 }}</div>
         <div class="flex-right" flex="10">
           <md-icon md-svg-icon="navigation:ic_check_24px"
                    aria-label="User done mark"
@@ -17,11 +17,15 @@
         </div>
       </md-list-item>
       <md-divider></md-divider>
-      <md-list-item>
-        <span class="bold" flex="50">{{ ctrl.players.length }}</span> 
-        <span flex="20">{{ ctrl.sumBy('reputation') | decimel: 1 }}</span>
-        <span flex="20">{{ ctrl.sumBy('tokens') | decimel: 1 }}</span>
-        <span flex="10">{{ ctrl.doneCount }}</span>
+      <md-list-item class="players-bar">
+        <span flex="40"></span> 
+        <span flex="25" class="flexbox-v-align prepend prepend-rep">
+          {{ ctrl.sumBy('reputation') | decimel: 1 }}
+        </span>
+        <span flex="25" class="flexbox-v-align prepend prepend-coins">
+          {{ ctrl.sumBy('tokens') | decimel: 1 }}
+        </span>
+        <span flex="10">{{ ctrl.doneCount }} / {{ ctrl.players.length }}</span>
       </md-list-item>
     </md-list>
   </md-content>
