@@ -16,6 +16,10 @@ function FeedController($meteor, Toast) {
 
   angular.extend(ctrl, {
     createComment: createComment,
+    showEvaluations: true,
+    showComments: true,
+    showSugMoves: true,
+    showMoves: true,
     newComment: '',
     items: []
   });
