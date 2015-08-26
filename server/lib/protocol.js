@@ -9,7 +9,7 @@ function rate(uid, moveId, newStars) {
 
   User.set(uid, 'reputation', uRep);
 
-  var evaluations = getEvaluations(moveId);
+  var evaluations = Evals.getList(moveId);
 
   var multiplier = uStake / calcFullStake(newStars, evaluations);
 
@@ -38,12 +38,12 @@ function endTurn(gameId, turnIndex) {
   };
 
   function distributeStake(m) {
-    var lastEvaluatorId = getLastEvaluation(m._id).uid;
+    var lastEvaluatorId = Evals.getLast(m._id).uid;
     User.inc(lastEvaluatorId, 'reputation', m.reputation);
   }
 
   function distributeTokens(m) {
-    var evals = getEvaluations(m._id);
+    var evals = Evals.getList(m._id);
 
     var tokens = 0;
     
@@ -73,19 +73,6 @@ function getStarsFactor(newStars, stars) {
   return 0;
 }
 
-function getEvaluators(moveId) {
-  return R.compose(F.mapUsersBy ,F.mapUids, getEvaluations)(moveId);
-}
-
-function getEvaluations(moveId) {
-  return Evaluations.find({ moveId: moveId, inactive: false }).fetch();
-}
-
-function getLastEvaluation(moveId) {
-  var evals = getEvaluations(moveId);
-  return evals[evals.length-1];
-}
-
 function calcUserStake(uid) {
   return R.compose(R.multiply(BASE_STAKE), User.getRep)(uid);
 }
@@ -93,27 +80,17 @@ function calcUserStake(uid) {
 // TODO :: Make it relative to reputation of entire clan?
 // The idea is that games that involve many players (and thus more reputation) should be rewarded higher than games with little players/reputation
 function getTotalTurnRep(moves) {
-  return R.compose(R.sum, R.map(User.getRep), mapUids, R.flatten, R.map(getEvaluations), F.mapIds)(moves)
+  return R.compose(R.sum, R.map(User.getRep), mapUids, R.flatten, R.map(Evals.getList), F.mapIds)(moves)
 }
 
 function getWinningMove(moves) {
   return R.compose(getWithHighestScore, R.map(addScoreToMove))(moves);
 }
 
-function calcScore(move) {
-  return R.compose(R.sum, R.map(evalToScore), getEvaluations, F.toId)(move)
-}
 
-function evalToScore(evaluation) { 
-  if (evaluation.inactive)
-    return 0;
-  var starsVal = STARS_VAL[evaluation.stars-1];
-  var uRep = User.getRep(evaluation.uid);
-  return starsVal * uRep;
-}
 
 function addScoreToMove(move) {
-  move.score = calcScore(move);
+  move.score = Protocol.calcMoveScore(move);
   return move;
 }
 

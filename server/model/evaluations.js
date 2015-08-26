@@ -41,7 +41,7 @@ function isUniq(moveId, stars) {
     moveId: moveId,
     uid: Meteor.userId(),
     stars: stars,
-    inactive: false
+    active: true
   });
 }
 
@@ -51,7 +51,7 @@ function makeFormerEvalsInactive(uid, evl) {
       uid: uid, 
       moveId: evl.moveId
     },
-    { $set: { inactive: true } },
+    { $set: { active: false } },
     { multi: true }
   );
 }
@@ -64,7 +64,7 @@ function create(gameId, moveId, turnIndex, notation, stars) {
     notation: notation,
     uid: Meteor.userId(),
     reputation: Meteor.user().reputation,
-    inactive: false,
+    active: true,
     stars: stars
   });
 }

@@ -22,7 +22,8 @@ function suggestedMoveController($meteor, $scope, Evaluation) {
   var ctrl = this;
   angular.extend(ctrl, {
     getDisabledRateText: getDisabledRateText,
-    getConfidence: getConfidence,
+    calcScore: calcScore,
+    calcConfidence: calcConfidence,
     rate: rate,
     canRate: Evaluation.canRate,
     evaluations: [],
@@ -42,19 +43,23 @@ function suggestedMoveController($meteor, $scope, Evaluation) {
 
   function getEvaluations() {
     ctrl.evaluations = $meteor.collection(function() { 
-      return Evaluations.find({ moveId: ctrl.move._id, moveId: ctrl.move.turnIndex }); 
+      return Evaluations.find({ moveId: ctrl.move._id, turnIndex: ctrl.move.turnIndex }); 
     }, false);
   }
 
-  function getConfidence() {
-    return Protocol.getMoveStats(ctrl.move).confidence;
+  function calcScore() {
+    return Protocol.calcEvalsScore(ctrl.evaluations);
+  }
+
+  function calcConfidence() {
+    return Protocol.calcConfidence(ctrl.evaluations);
   }
 
   function getMyEvl() {
     ctrl.myEvl = $meteor.object(Evaluations, { 
       moveId: ctrl.move._id, 
       uid: Meteor.userId(), 
-      inactive: false 
+      active: true
     }, false);
     
     if (ctrl.myEvl)
