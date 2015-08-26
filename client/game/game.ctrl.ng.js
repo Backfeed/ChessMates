@@ -35,21 +35,28 @@ function GameController($timeout, $scope, $rootScope, GameService, GameModel, Ch
     ctrl.game = GameModel.game;
     ctrl.timer = GameModel.timer;
     ctrl.suggestedMoves = GameModel.suggestedMoves;
-
-    $rootScope.menuItems = [
-      {
-        label: 'I\'m done',
-        click: imDone,
-        isDisabled: isDone
-      }
-    ]
+    addMenuItems();
   }
 
-  $timeout(function() {
-    if ($rootScope.currentUser && $rootScope.currentUser.admin)
-      addAdminMenu();
-  }, 5000);
+  function addMenuItems() {
+    $rootScope.menuItems = [];
 
+    $timeout(function() {
+      if ($rootScope.currentUser) {
+        addUserMenu();
+      }
+      if ($rootScope.currentUser && $rootScope.currentUser.admin)
+        addAdminMenu();
+    }, 3000);
+  }
+
+  function addUserMenu() {
+    $rootScope.menuItems.push({
+      label: 'I\'m done',
+      click: imDone,
+      isDisabled: isDone
+    });
+  }
 
   function addAdminMenu() {
     $rootScope.menuItems.push({
@@ -61,6 +68,7 @@ function GameController($timeout, $scope, $rootScope, GameService, GameModel, Ch
       click: restart
     });
   }
+
 
   function restart() { GameService.restart();          }
   function isDone()  { return GameService.isDone();    }
