@@ -39,7 +39,7 @@ function count(gameId, turnIndex) {
 /********* Publish and hooks *********/
 function publish(options, gameId, turnIndex) {
   turnIndex = turnIndex || 1;
-  return SuggestedMoves.find({ "gameId": "1", "turnIndex": turnIndex });
+  return SuggestedMoves.find({ gameId: "1", turnIndex: turnIndex });
 }
 
 function beforeInsert(uid, move) {
