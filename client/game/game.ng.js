@@ -11,6 +11,7 @@ angular.module('blockchess.game', [
   'blockchess.game.bottomBar',
   'blockchess.game.players',
   'blockchess.game.feed',
+  'blockchess.game.history',
   'blockchess.game.timer'
   // Filters
 ]);
