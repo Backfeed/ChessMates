@@ -44,7 +44,7 @@ function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, 
       }
     ]
 
-    if (Meteor.user() && Meteor.user().admin)
+    if ($rootScope.currentUser.admin)
       addAdminMenu();
   }
 
