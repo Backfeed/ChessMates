@@ -20,7 +20,8 @@ function onCreate (options, user) {
   if (options.profile)
     user.profile = options.profile;
 
-  user.tokens = 100;
+  user.tokens = 200;
+  user.reputation = 100;
 
   return user;
 }
