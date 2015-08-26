@@ -1,24 +1,25 @@
 <div>
   <input id="feed-hide-comments" type="checkbox" ng-model="ctrl.hideComments"> 
   <label for="feed-hide-comments">Hide user comments</label>
-  <div ng-repeat="item in ctrl.items | reverse" 
-       class="feed-item"
-       ng-hide="ctrl.hideComments && 
-                item.type === 'comment'"> 
-    <div class="item" layout="row" layout-align="space-between">
-      <div class="item-meta">
-        <span ng-if="item.type === 'comment'">
-          <span class="bold">
-            {{ item.uid | displayName }}
-          </span>:
-        </span>
-        <span ng-class="{ 'secondary': item.type !== 'comment' }">
-          {{ item.text }}
-        </span>
+  <div class="feed-items">
+    <div ng-repeat="item in ctrl.items | reverse" 
+         class="feed-item"
+         ng-hide="ctrl.hideComments && 
+                  item.type === 'comment'"> 
+      <div class="item" layout="row" layout-align="space-between">
+        <div class="item-meta">
+          <span ng-if="item.type === 'comment'">
+            <span class="bold">
+              {{ item.uid | displayName }}
+            </span>:
+          </span>
+          <span ng-class="{ 'secondary': item.type !== 'comment' }">
+            {{ item.text }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
-  
   <form ng-submit="ctrl.createComment()">
     <input type="text"
            required
