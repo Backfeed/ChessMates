@@ -1,6 +1,6 @@
 <md-list>
   <md-divider></md-divider>
-  <md-list-item ng-repeat="move in ctrl.suggestedMoves"
+  <md-list-item ng-repeat="move in ctrl.suggestedMoves | orderBy: '-score'"
                 suggested-move
                 move="move"
                 my-fav-move="ctrl.myFavMove"

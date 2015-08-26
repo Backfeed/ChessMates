@@ -48,7 +48,7 @@ function suggestedMoveController($meteor, $scope, Evaluation) {
   }
 
   function calcScore() {
-    return Protocol.calcEvalsScore(ctrl.evaluations);
+    return ctrl.move.score = Protocol.calcEvalsScore(ctrl.evaluations);
   }
 
   function calcConfidence() {
