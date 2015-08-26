@@ -1,7 +1,7 @@
 angular.module('blockchess.game.controller', [])
 .controller('GameController', GameController)
 
-function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, ChessValidator, Toast) {
+function GameController($timeout, $scope, $rootScope, GameService, GameModel, ChessBoard, ChessValidator, Toast) {
   var gameId = "1";
   var ctrl = this;
 
@@ -43,10 +43,13 @@ function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, 
         isDisabled: isDone
       }
     ]
-
-    if ($rootScope.currentUser.admin)
-      addAdminMenu();
   }
+
+  $timeout(function() {
+    if ($rootScope.currentUser && $rootScope.currentUser.admin)
+      addAdminMenu();
+  }, 5000);
+
 
   function addAdminMenu() {
     $rootScope.menuItems.push({
