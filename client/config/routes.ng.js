@@ -8,7 +8,7 @@ function routes($urlRouterProvider, $locationProvider) {
     enabled: true,
     requireBase: false
   });
-  $urlRouterProvider.otherwise("/games/");
+  $urlRouterProvider.otherwise("/games");
 }
 
 function stateChangeError($rootScope, $state) {
