@@ -7,6 +7,10 @@
 <spen flex="20">
   Confidence {{ ctrl.calcConfidence() | decimel: 0 }}
 </spen>
+<spen flex="20">
+  Count {{ ctrl.evaluations.length }}
+</spen>
+
 <span flex="30">
   <rating ng-model="ctrl.myRating"
           class="stars"
