@@ -42,8 +42,8 @@ function timerResetGame(gameId) {
     { 
       $set: {
         inPlay: true,
-        timePerMove: 90000,
-        timeLeft: 90000
+        timePerMove: 300000,
+        timeLeft: 300000
       }
     }
   );
