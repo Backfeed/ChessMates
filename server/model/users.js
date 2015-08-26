@@ -8,11 +8,11 @@ Accounts.onCreateUser(onCreate);
 
 /********* Publish and hooks *********/
 function publish() {
-  return F.getUsersBy({}, ["emails", "status", "reputation", "tokens"]);
+  return F.getUsersBy({}, ["emails", "status", "reputation", "tokens", "admin"]);
 }
 
 function publishStatus() {
-  return F.getUsersBy({ 'status.online': true }, ["emails", "status", "reputation", "tokens"]);
+  return F.getUsersBy({ 'status.online': true }, ["emails", "status", "reputation", "tokens", "admin"]);
 }
 
 function onCreate (options, user) {

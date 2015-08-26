@@ -76,8 +76,14 @@ function validateGame(gameId) {
 }
 
 function restart(gameId) {
+  validateAdmin()
   Chess.reset();
   resetGameData(gameId);
+}
+
+function validateAdmin() {
+  if (!Meteor.user() || !Meteor.user().admin)
+    throw new Meteor.Error(200, "Only admins can make this action!");
 }
 
 function AIEvaluationCB(score) {

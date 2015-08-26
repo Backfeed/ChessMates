@@ -38,20 +38,26 @@ function GameController($scope, $rootScope, GameService, GameModel, ChessBoard, 
 
     $rootScope.menuItems = [
       {
-        label: 'Restart',
-        click: restart
-      },
-      {
         label: 'I\'m done',
         click: imDone,
         isDisabled: isDone
-      },
-      {
-        label: 'End turn',
-        click: endTurn
       }
-
     ]
+
+    if (Meteor.user().admin)
+      addAdminMenu();
+
+  }
+
+  function addAdminMenu() {
+    $rootScope.menuItems.push({
+      label: 'End turn',
+      click: endTurn
+    });
+    $rootScope.menuItems.push({
+      label: 'Restart',
+      click: restart
+    });
   }
 
   function restart() { GameService.restart();          }
