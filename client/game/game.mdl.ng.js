@@ -1,11 +1,12 @@
 angular.module('blockchess.game.model', [])
 .service('GameModel', GameModel);
 
+// TODO :: Make for multiple games
+
 function GameModel($meteor) {
 
   var model = {
     set: set,
-    restart: restart,
     game: {},
     timer: {},
     status: {},
@@ -28,7 +29,5 @@ function GameModel($meteor) {
       $meteor.subscribe('suggestedMoves', {}, id, turnIndex);
     });
   }
-
-  function restart() { Meteor.call('restart', "1"); }
 
 }
