@@ -28,7 +28,7 @@ function endTurn(gameId, turnIndex) {
   _.each(moves, distributeStake);
 
   var totalTurnRep = getTotalTurnRep(moves);
-  _.each(moves, distributeTokens);
+  _.each(moves, distributeTokensAndRep);
 
   var winningMove = getWinningMove(moves);
 
@@ -38,11 +38,12 @@ function endTurn(gameId, turnIndex) {
   };
 
   function distributeStake(m) {
-    var lastEvaluatorId = Evals.getLast(m._id).uid;
-    User.inc(lastEvaluatorId, 'reputation', m.reputation);
+    var lastEval = Evals.getLast(m._id);
+    if (lastEval)
+      User.inc(lastEval.uid, 'reputation', m.reputation);
   }
 
-  function distributeTokens(m) {
+  function distributeTokensAndRep(m) {
     var evals = Evals.getList(m._id);
 
     var tokens = 0;
@@ -52,8 +53,10 @@ function endTurn(gameId, turnIndex) {
     });
 
     tokens = Math.round(tokens/totalTurnRep);
+    var reputation = tokens * SUG_MOVE_TOKENS_REP_RATIO;
 
     User.inc(m.uid, 'tokens', tokens);
+    User.inc(m.uid, 'reputation', reputation);
   }
 
 }
