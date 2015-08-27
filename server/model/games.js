@@ -132,7 +132,7 @@ function resetGameData(gameId) {
 function executeClanMove(gameId) {
   var turnIndex = Games.findOne({ gameId: gameId }).turnIndex;
   var move = Meteor.call('protoEndTurn', gameId, turnIndex);
-  executeMove(gameId, move, 'clan');
+  executeMove(gameId, move, 'team');
 }
 
 function executeMoveCB(gameId, turn, notation) {
@@ -151,7 +151,7 @@ function logMove(gameId, turn, notation) {
 
 function startTurn (gameId, turn, notation) {
   Meteor.call('startTurnTimer', gameId);
-  if (turn === 'clan')
+  if (turn === 'team')
     Meteor.setTimeout(promptEngine, 2000); // TODO :: timeout is here due to weird bug
 
   function promptEngine() {
