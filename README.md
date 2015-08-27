@@ -14,7 +14,15 @@ Clone the project:
 
     git clone https://github.com/Backfeed/blockchess.git
 
-Run it:
-
     cd blockchess
+
+Go to file .meteor/packages
+Remove npm-container
+
+Make initial build:
+
+    meteor
+
+Run it
+
     meteor
