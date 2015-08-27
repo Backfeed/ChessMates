@@ -3,12 +3,21 @@
     <h1>Games</h1>
   </div>
 
+  <div layout="row">
+    <form ng-submit="ctrl.create()">
+      <input type="text" ng-model="ctrl.newGame.title" placeholder="Game title" required>
+      <button>Create new game</button>
+    </form>
+  </div>
+
+
+
   <md-content>
     <md-list>
       <md-list-item ng-repeat="game in ctrl.games" class="md-2-line">
-        <div class="md-list-item-text" ui-sref="game({ id: game._id })">
-          _id: {{ ::game._id }}
-        </div>
+        <a class="md-list-item-text" ui-sref="game({ id: game._id })">
+          {{ ::game.title }}
+        </a>
         <div class="md-list-item-text">
         </div>
       </md-list-item>

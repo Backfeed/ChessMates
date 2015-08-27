@@ -1,8 +1,10 @@
 Meteor.publish('games', publish);
+Meteor.publish('gamesList', publishList);
 Games.before.update(beforeUpdate);
 Games.after.update(afterUpdate);
 
 Meteor.methods({
+  createGame: createGame,
   clientDone: clientDone,
   endTurn: endTurn,
   executeMove: executeMove,
@@ -12,6 +14,17 @@ Meteor.methods({
   restart: restart,
   AIEvaluationCB: AIEvaluationCB
 });
+
+function createGame(title) {
+  return Games.insert({ 
+    title: title,
+    playedThisTurn: [],
+    moves: [],
+    pgn: [],
+    turnIndex: 1,
+    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+  });
+}
 
 function clientDone(gameId) {
   var game = validateGame(gameId);
@@ -196,6 +209,12 @@ function endGame(gameId, winner) {
 function publish(options, gameId) {
   return Games.find({"gameId": "1"});
 }
+
+function publishList(options) {
+  return Games.find({});
+}
+
+
 
 function beforeUpdate(uid, doc, fieldNames, modifier, options){
   // console.log('before game collection updated');
