@@ -1,5 +1,5 @@
 angular.module('blockchess.game.service', [])
-  .service('GameService', GameService);
+.service('GameService', GameService);
 
 function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
 
