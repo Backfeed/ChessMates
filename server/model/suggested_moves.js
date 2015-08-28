@@ -56,8 +56,8 @@ function count(gameId, turnIndex) {
 
 /********* Publish and hooks *********/
 function publish(gameId, turnIndex) {
-  turnIndex = turnIndex || 1;
-  log("turn index", gameId, turnIndex);
+  turnIndex = turnIndex || Games.findOne(gameId).turnIndex;
+  log("publish", gameId, turnIndex);
   return SuggestedMoves.find({ gameId: gameId, turnIndex: turnIndex });
 }
 
@@ -85,8 +85,4 @@ function deduceCoinsFor(uid) {
     { _id: uid },
     { $inc: { tokens: -MOVE_COST } }
   );
-}
-
-function log() {
-  return _DEV.log('MODEL: SUG MOV:', arguments);
 }

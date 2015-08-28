@@ -265,3 +265,11 @@ function getChessValidator(gameId) {
 function getChessEngine(gameId) {
   return ChessEngines[gameId] = ChessEngines[gameId] || Engine(gameId);
 }
+
+function getTurnIndex(gameId) {
+  return get(gameId).turnIndex;
+}
+
+function get(gameId) {
+  return Games.findOne(gameId);
+}
