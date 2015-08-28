@@ -16,10 +16,15 @@
         <a class="md-list-item-text" ui-sref="game({ id: game._id })">
           {{ ::game.title }}
         </a>
-        <div class="md-list-item-text" ng-if="ctrl.userCanDestroy(game)">
-          <md-icon ng-click="ctrl.destroy(game._id)"
+        <div class="md-list-item-text">
+          <md-icon ng-if="ctrl.userCanDestroy(game)"
+                   ng-click="ctrl.destroy(game._id)"
                    md-svg-icon="content:ic_clear_24px"
                    aria-label="Delete game"></md-icon>
+          <md-icon ng-if="ctrl.userCanArchive(game)"
+                   ng-click="ctrl.archive(game._id)"
+                   md-svg-icon="action:ic_lock_24px"
+                   aria-label="Archive game"></md-icon>
           
         </div>
       </md-list-item>

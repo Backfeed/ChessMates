@@ -6,8 +6,10 @@ function GamesController($scope, $meteor, $state, Users, Toast) {
 
   angular.extend(ctrl, {
     create: create,
-    userCanDestroy: userCanDestroy,
     destroy: destroy,
+    archive: archive,
+    userCanArchive: userCanArchive,
+    userCanDestroy: userCanDestroy,
     newGame: { title: '' },
     games: []
   });
@@ -15,17 +17,25 @@ function GamesController($scope, $meteor, $state, Users, Toast) {
   init();
 
   function init() {
-    ctrl.games = $scope.$meteorCollection(Games).subscribe('gamesList');
+    $meteor.autorun($scope, function() {
+      ctrl.games = $scope.$meteorCollection(Games, { 
+        status: { $not: /archived/ } 
+      })
+      .subscribe('gamesList');
+    });
   }
 
   function create() {   
     if (Users.isLogged()) {
-      $meteor.call('createGame', ctrl.newGame.title).then(function(newGameId) {
-        ctrl.newGame.title = '';
-        $state.go('game', { id: newGameId });
-      });
+      $meteor.call('createGame', ctrl.newGame.title)
+        .then(success);
     } else {
       Toast.toast('Please log in to create a game');
+    }
+
+    function success(newGameId) {
+      ctrl.newGame.title = '';
+      $state.go('game', { id: newGameId });
     }
   }
 
@@ -34,8 +44,22 @@ function GamesController($scope, $meteor, $state, Users, Toast) {
   }
 
   function userCanDestroy(game) {
-    return game.ownerId === Users.getId() || 
-           Users.isAdmin();
+    return Users.isOwnerOrAdmin(game);
+  }
+
+  function archive(gameId) {
+    $meteor.call('archiveGame', gameId);
+    //   .then(success);
+
+    // function success() { 
+    //   ctrl.games = _.reject(ctrl.games, function(g) {
+    //     return g.gameId = gameId;
+    //   });
+    // }
+  }
+
+  function userCanArchive(game) {
+    return Users.isOwnerOrAdmin(game);
   }
 
 }

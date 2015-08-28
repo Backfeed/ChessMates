@@ -1,7 +1,7 @@
 angular.module('blockchess.game.service', [])
 .service('GameService', GameService);
 
-function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
+function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator, ChessBoard) {
 
   return {
     cancelMoveHighlights: cancelMoveHighlights,
@@ -12,6 +12,7 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
     singleMove: singleMove,
     getSugMoveBy: getSugMoveBy,
     restart: restart,
+    archive: archive,
     isDone: isDone,
     imDone: imDone
   };
@@ -31,6 +32,17 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
   function restart(gameId) {
     cancelMoveHighlights();
     $meteor.call('restart', gameId);
+  }
+
+  function archive(gameId) {
+    $meteor.call('archiveGame', gameId).then(success);
+
+    function success() {
+      Toast.toast('Game has been archived. Redirecting to games list ...');
+      $timeout(function() {
+        $state.go('games');
+      }, 3000);
+    }
   }
 
   function updateBoard(gameId) {

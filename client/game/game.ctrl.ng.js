@@ -62,11 +62,18 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Users, Ga
         click: restart,
         ownerId: ctrl.game.ownerId,
         requireAdmin: true
+      },
+      {
+        label: 'Archive',
+        click: archive,
+        ownerId: ctrl.game.ownerId,
+        requireAdmin: true
       }
     ]);
   }
 
   function restart() { GameService.restart(gameId);          }
+  function archive() { GameService.archive(gameId);          }
   function isDone()  { return GameService.isDone(gameId);    }
   function imDone()  { GameService.imDone(gameId);     }
   function endTurn() { $meteor.call('endTurn', gameId); }

@@ -14,6 +14,7 @@ Meteor.methods({
   validateGame: validateGame,
   endGame: endGame,
   restart: restart,
+  archiveGame: archive,
   AIEvaluationCB: AIEvaluationCB
 });
 
@@ -123,6 +124,15 @@ function restart(gameId) {
 
 }
 
+function archive(gameId) {
+  validateAdminOrOwner(gameId);
+  destroyChessValidator(gameId);
+  destroyChessEngine(gameId);
+  Meteor.call('destroyTimer', gameId);
+
+  Games.update({ _id: gameId }, { $set: { status: 'archived' } });
+}
+
 function validateAdminOrOwner(gameId) {
   if (!Meteor.user() || !(User.isAdmin() || User.isOwner(Games.findOne(gameId))))
     throw new Meteor.Error(200, "Only admins or game owners can make this action!");
@@ -228,7 +238,7 @@ function publish(gameId) {
 }
 
 function publishList(options) {
-  return Games.find({});
+  return Games.find({ status: { $not: /archived/ } });
 }
 
 function afterInsert(userId, game) {
@@ -247,6 +257,14 @@ function getChessValidator(gameId) {
   return ChessValidators[gameId] = ChessValidators[gameId] || Chess();
 }
 
+function destroyChessValidator(gameId) {
+  delete ChessValidators[gameId];
+}
+
 function getChessEngine(gameId) {
   return ChessEngines[gameId] = ChessEngines[gameId] || Engine(gameId);
+}
+
+function destroyChessEngine(gameId) {
+  delete ChessEngines[gameId];
 }
