@@ -57,7 +57,6 @@ function count(gameId, turnIndex) {
 /********* Publish and hooks *********/
 function publish(gameId, turnIndex) {
   turnIndex = turnIndex || Games.findOne(gameId).turnIndex;
-  log("publish", gameId, turnIndex);
   return SuggestedMoves.find({ gameId: gameId, turnIndex: turnIndex });
 }
 
