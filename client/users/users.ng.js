@@ -2,15 +2,21 @@ angular.module('blockchess.users', [])
 .service('Users', Users);
 
 function Users() {
+
   var service = {
+    get: get,
     isLogged: isLogged,
     isAdmin: isAdmin
   };
 
   return service;
 
+  function get() {
+    return Meteor.user();
+  }
+
   function isLogged() {
-    return !!getId();
+    return !!Meteor.userId();
   }
 
   function isAdmin() {
@@ -18,10 +24,9 @@ function Users() {
   }
 
   function getRoles() {
-    return Roles.getRolesForUser(getId());
+    if (!isLogged())
+      return 
+    return Roles.getRolesForUser(get()._id);
   }
 
-  function getId() {
-    return Meteor.userId();
-  }
 }

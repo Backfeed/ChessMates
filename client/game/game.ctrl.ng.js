@@ -44,32 +44,25 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Users, Ga
   }
 
   function addMenuItems() {
-    if (Users.isLogged()) {
-      addUserMenu();
-    }
-    if (Users.isAdmin())
-      addAdminMenu();
+    TopBar.set([
+      {
+        label: 'I\'m done',
+        click: imDone,
+        isDisabled: isDone,
+        requireUser: true
+      },
+      {
+        label: 'End turn',
+        click: endTurn,
+        requireAdmin: true
+      },
+      {
+        label: 'Restart',
+        click: restart,
+        requireAdmin: true
+      }
+    ]);
   }
-
-  function addUserMenu() {
-    TopBar.set([{
-      label: 'I\'m done',
-      click: imDone,
-      isDisabled: isDone
-    }]);
-  }
-
-  function addAdminMenu() {
-    TopBar.addDynamic({
-      label: 'End turn',
-      click: endTurn
-    });
-    TopBar.addDynamic({
-      label: 'Restart',
-      click: restart
-    });
-  }
-
 
   function restart() { GameService.restart(gameId);          }
   function isDone()  { return GameService.isDone(gameId);    }

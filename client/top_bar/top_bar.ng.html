@@ -13,7 +13,7 @@
           <meteor-include src="loginButtons"></meteor-include>
         </md-menu-item>
 
-        <md-menu-item ng-repeat="item in ctrl.getDynamicItems()">
+        <md-menu-item ng-repeat="item in ctrl.getDynamicItems()" ng-if="ctrl.userCanAccess(item)">
           <md-button ng-click="item.click()" ng-disabled="item.isDisabled()">{{ item.label }}</md-button>
         </md-menu-item>
 

@@ -14,15 +14,21 @@ function topBar() {
   };
 }
 
-function topBarController($meteor, TopBar) {
+function topBarController($meteor, TopBar, Users) {
   var ctrl = this;
 
   angular.extend(ctrl, {
-    getDynamicItems: getDynamicItems
+    getDynamicItems: getDynamicItems,
+    userCanAccess: userCanAccess
   });
 
   function getDynamicItems() {
     return TopBar.dynamicItems;
   }
+
+  function userCanAccess(item) {
+    return !(item.requireUser && !Users.isLogged()) &&
+           !(item.requireAdmin && !Users.isAdmin());
+  }   
 
 }
