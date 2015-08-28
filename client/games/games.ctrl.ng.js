@@ -6,6 +6,7 @@ function GamesController($meteor, $state) {
 
   angular.extend(ctrl, {
     create: create,
+    destroy: destroy,
     newGame: { title: '' },
     games: []
   });
@@ -22,5 +23,11 @@ function GamesController($meteor, $state) {
       $state.go('game', { id: newGameId });
     });
   }
+
+  function destroy(gameId) {
+    $meteor.call('destroyGame', gameId);
+  }
+
+
 
 }

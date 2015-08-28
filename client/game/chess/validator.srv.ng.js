@@ -2,18 +2,15 @@ angular.module('blockchess.game.chess.validator', [])
 .service('ChessValidator', ChessValidator);
 
 function ChessValidator($window) {
-  var GameBoard = {
-    getHistory: getHistory,
-    game: new $window.Chess()
+  var service = {
+    init: init,
+    game: {}
   };
 
-  return GameBoard;
+  return service;
 
-  function getHistory() {
-    return GameBoard.game.history({ verbose: true })
-            .map(function(move){
-              return move.from + move.to })
-            .join(" ");
+  function init(gameId) {
+    service.game[gameId] = new $window.Chess();
   }
 
 }

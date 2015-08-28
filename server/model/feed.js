@@ -3,6 +3,7 @@ Meteor.publish('feeds', publish);
 Feeds.before.insert(beforeInsert);
 
 Meteor.methods({
+  destroyFeeds: destroyList,
   log: log
 })
 
@@ -19,10 +20,14 @@ function log(gameId, turnIndex, text, type) {
   });
 }
 
+function destroyList(gameId) {
+  Feeds.remove({ gameId: gameId });
+}
+
 
 /********* Publish and hooks *********/
-function publish() {
-  return Feeds.find();
+function publish(gameId) {
+  return Feeds.findOne({ gameId: gameId });
 }
 
 function beforeInsert(uid, item) {

@@ -11,7 +11,7 @@ function suggestedMoves() {
     templateUrl: "client/game/suggested_moves/suggested_moves.ng.html",
     controller: suggestedMovesController,
     restrict: 'E',
-    scope: { turnIndex: '=', selectedMove: '=', suggestedMoves: '=' }
+    scope: { selectedMove: '=', suggestedMoves: '=' }
   };
 }
 

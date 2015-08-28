@@ -1,8 +1,8 @@
 angular.module('blockchess.game.controller', [])
 .controller('GameController', GameController)
 
-function GameController($timeout, $scope, $rootScope, GameService, GameModel, ChessBoard, ChessValidator, Toast) {
-  var gameId = "1";
+function GameController($meteor, $state, $timeout, $scope, $rootScope, GameService, GameModel, ChessBoard, ChessValidator, Toast) {
+  var gameId = $state.params.id;
   var ctrl = this;
 
   angular.extend(ctrl, {
@@ -13,16 +13,13 @@ function GameController($timeout, $scope, $rootScope, GameService, GameModel, Ch
     gameId: gameId, // DEV
     isDone: isDone,
     imDone: imDone,
-    showRawData: showRawData,
     selectedMove: {},
     timer: {},
     user: Meteor.user(),
     game: {}
   });
 
-  Session.set('showRawData', false);
-
-  $scope.$on('singleMove', singleMove);
+  $scope.$on('singleMove::'+gameId, singleMove);
   $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard, true);
   $scope.$watch('ctrl.game.turnIndex', checkIsGameOver);
@@ -31,11 +28,17 @@ function GameController($timeout, $scope, $rootScope, GameService, GameModel, Ch
   init();
 
   function init() {
-    GameModel.set(gameId);
-    ctrl.game = GameModel.game;
-    ctrl.timer = GameModel.timer;
-    ctrl.suggestedMoves = GameModel.suggestedMoves;
+    GameModel.init(gameId);
+    ChessValidator.init(gameId);
+    ctrl.game = GameModel.game[gameId];
+    ctrl.timer = GameModel.timer[gameId];
+    ctrl.suggestedMoves = $meteor.collection(SuggestedMoves);
     addMenuItems();
+
+    $meteor.autorun($scope, function() {
+      console.log('CLIENT: game ctrl autorun');
+      $meteor.subscribe('suggestedMoves', gameId, $scope.getReactively('ctrl.game.turnIndex'));
+    });
   }
 
   function addMenuItems() {
@@ -70,34 +73,29 @@ function GameController($timeout, $scope, $rootScope, GameService, GameModel, Ch
   }
 
 
-  function restart() { GameService.restart();          }
-  function isDone()  { return GameService.isDone();    }
+  function restart() { GameService.restart(gameId);          }
+  function isDone()  { return GameService.isDone(gameId);    }
   function imDone()  { GameService.imDone(gameId);     }
   function endTurn() { Meteor.call('endTurn', gameId); }
 
   function updateBoard() {
-    if (ctrl.game && ctrl.game.fen && ChessValidator.game) {
-      Session.set('turnIndex', ctrl.game.turnIndex);
-      GameService.updateBoard();
+    if (ctrl.game && ctrl.game.fen && ChessValidator.game[gameId] && ChessBoard.board[gameId]) {
+      GameService.updateBoard(gameId);
     }
-  }
-
-  function showRawData() {
-    return Session.get('showRawData');
   }
 
   function singleMove(e, notation) {
-    GameService.movePieceBack();
-    if (GameService.getMoveBy('notation', notation)) {
+    GameService.movePieceBack(gameId);
+    if (GameService.getSugMoveBy(ctrl.suggestedMoves, 'notation', notation)) {
       Toast.toast('move exists');
-      ctrl.selectedMove = GameService.getMoveBy('notation', notation);
+      ctrl.selectedMove = GameService.getSugMoveBy(ctrl.suggestedMoves, 'notation', notation);
       return false;
     }
-    GameService.singleMove(notation);
+    GameService.singleMove(gameId, notation);
   }
 
   function checkIsGameOver() {
-    if (ChessValidator.game.game_over())
+    if (ChessValidator.game[gameId].game_over())
       Toast.toast('Game over!');
   }
 

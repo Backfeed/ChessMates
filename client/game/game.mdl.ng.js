@@ -1,33 +1,29 @@
 angular.module('blockchess.game.model', [])
 .service('GameModel', GameModel);
 
-// TODO :: Make for multiple games
-
 function GameModel($meteor) {
 
   var model = {
-    set: set,
+    init: init,
     game: {},
-    timer: {},
-    status: {},
-    suggestedMoves: [],
-    evaluations: []
+    timer: {}
   };
 
   return model;
 
-  function set(id) {
-    angular.extend(model, {
-      game          : $meteor.object(Games,  { gameId: id }, false).subscribe('games'),
-      timer         : $meteor.object(Timers, { gameId: id }, false).subscribe('timers'),
-      suggestedMoves: $meteor.collection(SuggestedMoves),
-      evaluations   : $meteor.collection(function() { return Evaluations.find({ gameId: id }) }).subscribe('evaluations')
-    });
-
-    Tracker.autorun(function() {
-      var turnIndex = Session.get('turnIndex');
-      $meteor.subscribe('suggestedMoves', {}, id, turnIndex);
-    });
+  function init(gameId) {
+    log(gameId);
+    model.game[gameId] = $meteor.object(Games, { _id: gameId }).subscribe('games', gameId);
+    model.timer[gameId] = $meteor.object(Timers, { gameId: gameId }).subscribe('timers', gameId);
   }
 
+}
+
+function log() {
+  console.log('\n\n');
+  console.log('CLIENT: MODEL: GAME: ');
+  _.each(arguments, function(msg) {
+    console.log(msg);
+  });
+  console.log('\n\n');
 }

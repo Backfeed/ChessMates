@@ -33,7 +33,7 @@
  * https://github.com/jhlywa/chess.js/blob/master/LICENSE
  */
 
-Chess = (function Chess(fen) {
+Chess = function Chess(fen) {
 
   /* jshint indent: false */
 
@@ -1580,7 +1580,7 @@ Chess = (function Chess(fen) {
     }
 
   };
-})();
+}
 
 /* export Chess object if using node or any other CommonJS compatible
  * environment */

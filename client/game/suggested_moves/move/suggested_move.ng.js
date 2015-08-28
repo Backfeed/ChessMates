@@ -43,7 +43,7 @@ function suggestedMoveController($meteor, $scope, Evaluation) {
 
   function getEvaluations() {
     ctrl.evaluations = $meteor.collection(function() { 
-      return Evaluations.find({ moveId: ctrl.move._id, turnIndex: ctrl.move.turnIndex }); 
+      return Evaluations.find({ moveId: ctrl.move._id });
     }, false);
   }
 

@@ -4,13 +4,14 @@ Evaluations.before.insert(beforeInsert);
 Evaluations.after.insert(afterInsert);
 
 Meteor.methods({
-  rate: create
+  rate: create,
+  destroyEvaluations: destroyList
 });
 
 
 /********* Publish and hooks *********/
-function publish(options) {
-  return Evaluations.find({});
+function publish(options, moveId) {
+  return Evaluations.find({}, { moveId: moveId });
 }
 
 function afterInsert(uid, evl) {
@@ -28,6 +29,10 @@ function logEval(uid, evl) {
 function beforeInsert(uid, evl) {
   validateUniqueness(uid, evl);
   makeFormerEvalsInactive(uid, evl);
+}
+
+function destroyList(gameId) {
+  Evaluations.remove({ gameId: gameId });
 }
 
 /********* Helper methods *********/
@@ -67,4 +72,8 @@ function create(gameId, moveId, turnIndex, notation, stars) {
     active: true,
     stars: stars
   });
+}
+
+function destroy(gameId) {
+  Evaluations.remove({ gameId: gameId });
 }

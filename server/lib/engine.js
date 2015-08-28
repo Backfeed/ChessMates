@@ -1,5 +1,5 @@
 /* jshint ignore:start */
-Engine = (function Engine() {
+Engine = function Engine(gameId) {
   var engine = getEngine();
   var evaler = getEvaler();
   var config = { depth: "3" };
@@ -38,7 +38,9 @@ Engine = (function Engine() {
           to: match[2],
           promotion: match[3]
         };
-        Meteor.call('AIGetMoveCb', move);
+        console.log("SERVER:: ENGINE:: move");
+        console.log(gameId);
+        Meteor.call('AIGetMoveCb', gameId, move);
       }
 
     });
@@ -97,5 +99,5 @@ Engine = (function Engine() {
     config = options;
   }
 
-})();
+}
 /* jshint ignore:end */

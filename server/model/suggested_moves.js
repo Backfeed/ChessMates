@@ -4,6 +4,8 @@ SuggestedMoves.before.insert(beforeInsert);
 SuggestedMoves.after.insert(afterInsert);
 
 Meteor.methods({
+  createSugMov: create,
+  destroySugMoves: destroyList,
   validateSugMovExists: validateExists,
   noSugMov: isBlank
 });
@@ -17,6 +19,20 @@ function isBlank(gameId, turnIndex) {
   return !count(gameId, turnIndex);
 }
 
+function create(gameId, turnIndex, notation, fen) {
+  SuggestedMoves.insert({
+    gameId: gameId,
+    turnIndex: turnIndex,
+    notation: notation,
+    fen: fen,
+    uid: Meteor.userId(),
+    createdAt: Date.now()
+  });
+}
+
+function destroyList(gameId) {
+  SuggestedMoves.remove({ gameId: gameId });
+}
 
 /********* Helper methods *********/
 function validateSufficientTokens(uid) {
@@ -37,9 +53,10 @@ function count(gameId, turnIndex) {
 
 
 /********* Publish and hooks *********/
-function publish(options, gameId, turnIndex) {
+function publish(gameId, turnIndex) {
   turnIndex = turnIndex || 1;
-  return SuggestedMoves.find({ gameId: "1", turnIndex: turnIndex });
+  log("turn index", gameId, turnIndex);
+  return SuggestedMoves.find({ gameId: gameId, turnIndex: turnIndex });
 }
 
 function beforeInsert(uid, move) {
@@ -66,4 +83,13 @@ function deduceCoinsFor(uid) {
     { _id: uid },
     { $inc: { tokens: -MOVE_COST } }
   );
+}
+
+function log() {
+  console.log('\n\n');
+  console.log('SERVER: MODEL: SUGMOV: ');
+  _.each(arguments, function(msg) {
+    console.log(msg);
+  });
+  console.log('\n\n');
 }

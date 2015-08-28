@@ -1,15 +1,14 @@
 <div class="game">
   <section layout="row" layout-margin>
     <div flex style="max-width: 460px;">
-      <div board="{{ ctrl.gameId }}" style="max-width: 460px;"></div>
+      <div board="{{ ctrl.gameId }}" ng-if="ctrl.gameId" style="max-width: 460px;"></div>
       <history moves="ctrl.game.moves"></history>
     </div>
 
     <div flex="30">
       <timer settings="ctrl.timer"></timer>
-      <suggested-moves turn-index="ctrl.game.turnIndex" 
-                       selected-move="ctrl.selectedMove" 
-                       suggested-moves="ctrl.suggestedMoves" 
+      <suggested-moves selected-move="ctrl.selectedMove"
+                       suggested-moves="ctrl.suggestedMoves"
                        ng-if="ctrl.game.turnIndex"></suggested-moves>
     </div>
 
@@ -19,7 +18,7 @@
           <feed game-id="ctrl.gameId" turn-index="ctrl.game.turnIndex"></feed>
         </tab>
         <tab heading="Players">
-          <players></players>
+          <players game-id="ctrl.gameId"></players>
         </tab>
       </tabset>
     </div>

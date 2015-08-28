@@ -2,7 +2,6 @@ angular.module('blockchess.game.service', [])
   .service('GameService', GameService);
 
 function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
-  var gameId = "1"; // Dev
 
   return {
     cancelMoveHighlights: cancelMoveHighlights,
@@ -11,39 +10,38 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
     movePieceBack: movePieceBack,
     updateBoard: updateBoard,
     singleMove: singleMove,
-    getMoveBy: getMoveBy,
+    getSugMoveBy: getSugMoveBy,
     restart: restart,
     isDone: isDone,
     imDone: imDone
   };
 
-  function isDone(id) {
-    if (!GameModel.game.playedThisTurn) { return false; }
-    //if (GameModel.suggestedMoves.length < 1) { return false; }
-    return GameModel.game.playedThisTurn.indexOf(id || Meteor.userId()) > -1;
+  function isDone(gameId, uid) {
+    if (!GameModel.game[gameId].playedThisTurn) { return false; }
+    return GameModel.game[gameId].playedThisTurn.indexOf(uid || Meteor.userId()) > -1;
   }
 
-  function imDone() {
+  function imDone(gameId) {
     $meteor.call('clientDone', gameId).then(
       function()    { Toast.toast('Waitin fo the gang, ya'); },
       function(err) { console.log('failed', err); }
     );
   }
 
-  function restart() {
-    Session.set('turnIndex', 1);
+  function restart(gameId) {
     cancelMoveHighlights();
     Meteor.call('restart', gameId);
   }
 
-  function updateBoard() {
-    ChessBoard.board.position(GameModel.game.fen);
-    ChessValidator.game.load(GameModel.game.fen);
+  function updateBoard(gameId) {
+    debugger
+    ChessBoard.board[gameId].position(GameModel.game[gameId].fen);
+    ChessValidator.game[gameId].load(GameModel.game[gameId].fen);
     cancelMoveHighlights();
   }
 
-  function getMoveBy(attr, val) {
-    return _.find(GameModel.suggestedMoves, function(m) {
+  function getSugMoveBy(sugMoves, attr, val) {
+    return _.find(sugMoves, function(m) {
       return m[attr] === val;
     });
   }
@@ -66,22 +64,18 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
     $('.highlight-square').removeClass('highlight-square');
   }
 
-  function movePieceBack() {
+  function movePieceBack(gameId) {
     setTimeout(function(){
-      ChessValidator.game.undo();
-      ChessBoard.board.position(ChessValidator.game.fen())
+      ChessValidator.game[gameId].undo();
+      ChessBoard.board[gameId].position(ChessValidator.game[gameId].fen())
     }, 1500);
   }
 
-  function singleMove(notation) {
-    GameModel.suggestedMoves.push({
-      turnIndex: GameModel.game.turnIndex,
-      createdAt: Date.now(),
-      notation: notation,
-      uid: Meteor.userId(),
-      gameId: "1",
-      fen: ChessValidator.game.fen()
-    });
+  function singleMove(gameId, notation) {
+    var turnIndex = GameModel.game[gameId].turnIndex;
+    var fen = ChessValidator.game[gameId].fen();
+    
+    $meteor.call('createSugMov', gameId, turnIndex, notation, fen)
   }
 
 }

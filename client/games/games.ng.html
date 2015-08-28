@@ -10,8 +10,6 @@
     </form>
   </div>
 
-
-
   <md-content>
     <md-list>
       <md-list-item ng-repeat="game in ctrl.games" class="md-2-line">
@@ -19,6 +17,10 @@
           {{ ::game.title }}
         </a>
         <div class="md-list-item-text">
+          <md-icon ng-click="ctrl.destroy(game._id)"
+                   md-svg-icon="content:ic_clear_24px"
+                   aria-label="Delete game"></md-icon>
+          
         </div>
       </md-list-item>
     </md-list>

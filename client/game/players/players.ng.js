@@ -7,7 +7,7 @@ function players() {
     controllerAs: 'ctrl',
     templateUrl: 'client/game/players/players.ng.html',
     controller: playersController,
-    scope: {}
+    scope: { gameId: '=' }
   };
 }
 
@@ -39,16 +39,15 @@ function playersController($scope, $meteor, GameService, GameModel) {
   }
 
   function isDone(id) {
-    return GameService.isDone(id);
+    return GameService.isDone(ctrl.gameId, id);
   }
 
   function sumBy(prop) {
     return F.sumBy(prop, ctrl.players);
   }
 
-
   function getGame() {
-    ctrl.game = GameModel.game;
+    ctrl.game = GameModel.game[ctrl.gameId];
   }
 
   function updateTotalDone(uids) {
