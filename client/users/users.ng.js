@@ -1,7 +1,7 @@
 angular.module('blockchess.users', [])
 .service('Users', Users);
 
-function Users() {
+function Users($rootScope) {
 
   var service = {
     get: get,
@@ -12,11 +12,11 @@ function Users() {
   return service;
 
   function get() {
-    return Meteor.user();
+    return $rootScope.currentUser;
   }
 
   function isLogged() {
-    return !!Meteor.userId();
+    return !!$rootScope.currentUser;
   }
 
   function isAdmin() {
