@@ -27,6 +27,9 @@ function topBarController($meteor, TopBar, Users) {
   }
 
   function userCanAccess(item) {
+    if (Users.isOwner(item))
+      return true;
+
     return !(item.requireUser && !Users.isLogged()) &&
            !(item.requireAdmin && !Users.isAdmin());
   }   

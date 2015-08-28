@@ -25,6 +25,7 @@ var log = _DEV.log('MODEL: GAMES:');
 
 function create(title) {
   return Games.insert({ 
+    ownerId: Meteor.userId(),
     title: title,
     playedThisTurn: [],
     moves: [],
@@ -110,7 +111,7 @@ function validateGame(gameId) {
 }
 
 function restart(gameId) {
-  validateAdmin()
+  validateAdminOrOwner(gameId)
   getChessValidator(gameId).reset();
   resetGameData(gameId, resetGameDataCB);
 
@@ -122,9 +123,9 @@ function restart(gameId) {
 
 }
 
-function validateAdmin() {
-  if (!Meteor.user() || !Meteor.user().admin)
-    throw new Meteor.Error(200, "Only admins can make this action!");
+function validateAdminOrOwner(gameId) {
+  if (!Meteor.user() || !(User.isAdmin() || User.isOwner(Games.findOne(gameId))))
+    throw new Meteor.Error(200, "Only admins or game owners can make this action!");
 }
 
 function AIEvaluationCB(score) {

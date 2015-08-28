@@ -16,7 +16,7 @@
         <a class="md-list-item-text" ui-sref="game({ id: game._id })">
           {{ ::game.title }}
         </a>
-        <div class="md-list-item-text">
+        <div class="md-list-item-text" ng-if="ctrl.userCanDestroy(game)">
           <md-icon ng-click="ctrl.destroy(game._id)"
                    md-svg-icon="content:ic_clear_24px"
                    aria-label="Delete game"></md-icon>

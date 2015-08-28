@@ -5,7 +5,9 @@ function Users($rootScope) {
 
   var service = {
     get: get,
+    getId: getId,
     isLogged: isLogged,
+    isOwner: isOwner,
     isAdmin: isAdmin
   };
 
@@ -15,8 +17,16 @@ function Users($rootScope) {
     return $rootScope.currentUser;
   }
 
+  function getId() {
+    return get() ? get()._id : null;
+  }
+
   function isLogged() {
-    return !!$rootScope.currentUser;
+    return !!get();
+  }
+
+  function isOwner(item) {
+    return item.ownerId === getId();
   }
 
   function isAdmin() {
@@ -25,8 +35,8 @@ function Users($rootScope) {
 
   function getRoles() {
     if (!isLogged())
-      return 
-    return Roles.getRolesForUser(get()._id);
+      return ;
+    return Roles.getRolesForUser(getId());
   }
 
 }

@@ -54,11 +54,13 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Users, Ga
       {
         label: 'End turn',
         click: endTurn,
+        ownerId: ctrl.game.ownerId,
         requireAdmin: true
       },
       {
         label: 'Restart',
         click: restart,
+        ownerId: ctrl.game.ownerId,
         requireAdmin: true
       }
     ]);
