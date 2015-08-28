@@ -53,15 +53,9 @@ function clientDone(gameId) {
 }
 
 function endTurn(gameId) {
-  log('endTurn', gameId);
   Meteor.call('clearTimerInterval', gameId);
-  log('endTurn: interval cleared', gameId);
 
   var turnIndex = Games.findOne(gameId).turnIndex;
-
-  log('endTurn: turnIndex', turnIndex, Meteor.call('noSugMov', gameId, turnIndex), Meteor.call('isTimerInPlay', gameId));
-
-
 
   if (Meteor.call('noSugMov', gameId, turnIndex))
     return endGame(gameId, 'AI');
@@ -72,8 +66,6 @@ function endTurn(gameId) {
 }
 
 function executeMove(gameId, move, turn) {
-  log('executeMove', gameId, move, turn);
-
   var notation = move.from + move.to;
 
   Games.update(
@@ -106,7 +98,6 @@ function executeMoveCB(gameId, turn, notation) {
 }
 
 function AIGetMoveCb(gameId, move) {
-  log("AIGetMoveCb", gameId, move);
   executeMove(gameId, move, "AI");
 }
 
@@ -178,7 +169,6 @@ function resetGameData(gameId, CB) {
 function executeClanMove(gameId) {
   var turnIndex = Games.findOne(gameId).turnIndex;
   var move = Meteor.call('protoEndTurn', gameId, turnIndex);
-  log('executeClanMove', turnIndex, move);
   executeMove(gameId, move, 'team');
 }
 
@@ -246,16 +236,10 @@ function afterInsert(userId, game) {
 
 function beforeRemove(userId, game) {
   var gameId = game._id;
-  log('beforeRemove: gameID', gameId)
-  console.log('**** ')
   Meteor.call('destroyTimer', gameId);
-  console.log('**** timer destroyed')
   Meteor.call('destroyEvaluations', gameId);
-  console.log('**** evaluations destroyed')
   Meteor.call('destroySugMoves', gameId);
-  console.log('**** sugmoves destroyed')
   Meteor.call('destroyFeeds', gameId);
-  console.log('**** feed destroyed')
 }
 
 function getChessValidator(gameId) {
@@ -264,12 +248,4 @@ function getChessValidator(gameId) {
 
 function getChessEngine(gameId) {
   return ChessEngines[gameId] = ChessEngines[gameId] || Engine(gameId);
-}
-
-function getTurnIndex(gameId) {
-  return get(gameId).turnIndex;
-}
-
-function get(gameId) {
-  return Games.findOne(gameId);
 }
