@@ -22,7 +22,7 @@ function stateChangeError($rootScope, $state) {
 }
 
 function stateChangeSuccess($rootScope, $meteor) {
-  $rootScope.$on("$stateChangeSuccess", function() {
+  $rootScope.$on("$stateChangeStart", function() {
     $meteor.requireUser().then(function(u) {
       $rootScope.currentUser = u;
     });
