@@ -1,6 +1,8 @@
 angular.module('blockchess.game.feed', [])
 .directive('feed', Feed);
 
+var log = _DEV.log('Feed')
+
 function Feed() {
   return {
     bindToController: true,
@@ -27,10 +29,8 @@ function FeedController($scope, $meteor, Toast) {
   init();
 
   function init() {
-    $scope.$meteorSubscribe('feeds').then(function() {
-      ctrl.items = $scope.$meteorCollection(function() {
-        return Feeds.find({ gameId: ctrl.gameId });
-      }, false);
+    $scope.$meteorSubscribe('feeds', ctrl.gameId).then(function() {
+      ctrl.items = $scope.$meteorCollection(Feeds, false);
     });
   }
 

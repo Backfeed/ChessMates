@@ -29,7 +29,7 @@ function destroyList(gameId) {
 
 /********* Publish and hooks *********/
 function publish(gameId) {
-  return Feeds.findOne({ gameId: gameId });
+  return Feeds.find({ gameId: gameId });
 }
 
 function beforeInsert(uid, item) {
