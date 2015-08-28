@@ -1,7 +1,5 @@
 Meteor.publish('timers', publish);
 
-var GameInterval = GameInterval || {};
-
 Meteor.methods({
   createTimer: create,
   startTurnTimer: startTurnTimer,
@@ -11,6 +9,10 @@ Meteor.methods({
   timerResetGame: timerResetGame,
   destroyTimer: destroy
 });
+
+var GameInterval = GameInterval || {};
+
+var log = _DEV.log('MODEL: TIMERS:');
 
 function create(gameId) {
   Timers.insert({
@@ -40,7 +42,6 @@ function isTimerInPlay(gameId) {
 }
 
 function clear(gameId) {
-  log("clear", gameId, GameInterval[gameId], GameInterval);
   Meteor.clearInterval(GameInterval[gameId]);
 }
 
@@ -76,13 +77,4 @@ function publish(gameId) {
 
 function destroy(gameId) {
   Timers.remove({ gameId: gameId });
-}
-
-function log() {
-  console.log('\n\n');
-  console.log('SERVER: MODEL: TIMERS: ');
-  _.each(arguments, function(msg) {
-    console.log(msg);
-  });
-  console.log('\n\n');
 }

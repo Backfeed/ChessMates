@@ -10,6 +10,8 @@ Meteor.methods({
   noSugMov: isBlank
 });
 
+var log = _DEV.log('MODEL: SUG MOV:');
+
 function validateExists(gameId, turnIndex) {
   if (isBlank(gameId, turnIndex))
     throw new Meteor.Error(403, 'No moves suggested');
@@ -86,10 +88,5 @@ function deduceCoinsFor(uid) {
 }
 
 function log() {
-  console.log('\n\n');
-  console.log('SERVER: MODEL: SUGMOV: ');
-  _.each(arguments, function(msg) {
-    console.log(msg);
-  });
-  console.log('\n\n');
+  return _DEV.log('MODEL: SUG MOV:', arguments);
 }

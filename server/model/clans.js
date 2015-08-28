@@ -1,5 +1,6 @@
 Meteor.publish('clans', publish);
 
+var log = _DEV.log('MODEL: CLANS:');
 
 /********* Helper methods *********/
 

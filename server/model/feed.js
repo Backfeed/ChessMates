@@ -4,12 +4,14 @@ Feeds.before.insert(beforeInsert);
 
 Meteor.methods({
   destroyFeeds: destroyList,
-  log: log
+  log: create
 })
+
+var log = _DEV.log('MODEL: FEEDS:');
 
 
 /********* Helper methods *********/
-function log(gameId, turnIndex, text, type) {
+function create(gameId, turnIndex, text, type) {
   Feeds.insert({
     gameId: gameId,
     uid: Meteor.userId(),

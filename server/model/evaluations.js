@@ -8,6 +8,8 @@ Meteor.methods({
   destroyEvaluations: destroyList
 });
 
+var log = _DEV.log('MODEL: EVALUATIONS:');
+
 
 /********* Publish and hooks *********/
 function publish(options, moveId) {

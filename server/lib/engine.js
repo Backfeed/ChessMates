@@ -38,8 +38,6 @@ Engine = function Engine(gameId) {
           to: match[2],
           promotion: match[3]
         };
-        console.log("SERVER:: ENGINE:: move");
-        console.log(gameId);
         Meteor.call('AIGetMoveCb', gameId, move);
       }
 

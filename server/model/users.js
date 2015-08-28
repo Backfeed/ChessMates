@@ -1,6 +1,9 @@
 Meteor.publish(null, publish);
 Meteor.publish("userStatus", publishStatus);
+
 Accounts.onCreateUser(onCreate);
+
+var log = _DEV.log('MODEL: USERS:');
 
 
 /********* Helper methods *********/

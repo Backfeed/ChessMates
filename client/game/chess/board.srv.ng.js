@@ -14,7 +14,6 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
   return service;
 
   function init(gameId) {
-    console.log(gameId);
     service.board[gameId] = new $window.ChessBoard('board', getConfig(gameId));
   }
 

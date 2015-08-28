@@ -7,7 +7,6 @@ function board(ChessBoard) {
     scope: {},
     link: function(scope, elem, attrs) {
       ChessBoard.init(attrs.board);
-      console.log('BOARD: ', attrs.board);
     }
   }
 }

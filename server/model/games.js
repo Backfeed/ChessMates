@@ -2,20 +2,7 @@ Meteor.publish('games', publish);
 Meteor.publish('gamesList', publishList);
 
 Games.after.insert(afterInsert);
-
 Games.before.remove(beforeRemove);
-
-var ChessValidators = ChessValidators || {};
-
-var ChessEngines = ChessEngines || {};
-
-function getChessValidator(gameId) {
-  return ChessValidators[gameId] = ChessValidators[gameId] || Chess();
-}
-
-function getChessEngine(gameId) {
-  return ChessEngines[gameId] = ChessEngines[gameId] || Engine(gameId);
-}
 
 Meteor.methods({
   createGame: create,
@@ -29,6 +16,12 @@ Meteor.methods({
   restart: restart,
   AIEvaluationCB: AIEvaluationCB
 });
+
+var ChessValidators = ChessValidators || {};
+
+var ChessEngines = ChessEngines || {};
+
+var log = _DEV.log('MODEL: GAMES:');
 
 function create(title) {
   return Games.insert({ 
@@ -265,11 +258,10 @@ function beforeRemove(userId, game) {
   console.log('**** feed destroyed')
 }
 
-function log() {
-  console.log('\n\n');
-  console.log('SERVER: MODEL: GAMES: ');
-  _.each(arguments, function(msg) {
-    console.log(msg);
-  });
-  console.log('\n\n');
+function getChessValidator(gameId) {
+  return ChessValidators[gameId] = ChessValidators[gameId] || Chess();
+}
+
+function getChessEngine(gameId) {
+  return ChessEngines[gameId] = ChessEngines[gameId] || Engine(gameId);
 }
