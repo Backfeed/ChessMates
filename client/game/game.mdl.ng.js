@@ -18,12 +18,3 @@ function GameModel($rootScope, $meteor) {
   }
 
 }
-
-function log() {
-  console.log('\n\n');
-  console.log('CLIENT: MODEL: GAME: ');
-  _.each(arguments, function(msg) {
-    console.log(msg);
-  });
-  console.log('\n\n');
-}
