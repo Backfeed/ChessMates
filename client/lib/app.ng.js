@@ -6,6 +6,7 @@ angular.module('blockchess', [
     'blockchess.config',
     'blockchess.util',
     'blockchess.logo',
+    'blockchess.users',
     'blockchess.clan',
     'blockchess.clans',
     'blockchess.game',
