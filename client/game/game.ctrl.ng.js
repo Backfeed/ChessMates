@@ -32,12 +32,12 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, GameServi
     ChessValidator.init(gameId);
     ctrl.game = GameModel.game[gameId];
     ctrl.timer = GameModel.timer[gameId];
-    ctrl.suggestedMoves = $meteor.collection(SuggestedMoves);
+    ctrl.suggestedMoves = $scope.$meteorCollection(SuggestedMoves);
     addMenuItems();
 
     $meteor.autorun($scope, function() {
       console.log('CLIENT: game ctrl autorun');
-      $meteor.subscribe('suggestedMoves', gameId, $scope.getReactively('ctrl.game.turnIndex'));
+      $scope.$meteorSubscribe('suggestedMoves', gameId, $scope.getReactively('ctrl.game.turnIndex'));
     });
   }
 
@@ -76,7 +76,7 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, GameServi
   function restart() { GameService.restart(gameId);          }
   function isDone()  { return GameService.isDone(gameId);    }
   function imDone()  { GameService.imDone(gameId);     }
-  function endTurn() { Meteor.call('endTurn', gameId); }
+  function endTurn() { $meteor.call('endTurn', gameId); }
 
   function updateBoard() {
     if (ctrl.game && ctrl.game.fen && ChessValidator.game[gameId] && ChessBoard.board[gameId]) {

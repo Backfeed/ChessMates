@@ -1,7 +1,7 @@
 angular.module('blockchess.games.controller', [])
 .controller('GamesController', GamesController)
 
-function GamesController($meteor, $state) {
+function GamesController($scope, $meteor, $state) {
   var ctrl = this;
 
   angular.extend(ctrl, {
@@ -14,10 +14,10 @@ function GamesController($meteor, $state) {
   init();
 
   function init() {
-    ctrl.games = $meteor.collection(Games).subscribe('gamesList');
+    ctrl.games = $scope.$meteorCollection(Games).subscribe('gamesList');
   }
 
-  function create() {
+  function create() {   
     $meteor.call('createGame', ctrl.newGame.title).then(function(newGameId) {
       ctrl.newGame.title = '';
       $state.go('game', { id: newGameId });

@@ -35,14 +35,14 @@ function suggestedMoveController($meteor, $scope, Evaluation) {
   init();
 
   function init() {
-    $meteor.subscribe('evaluations').then(function() {
+    $scope.$meteorSubscribe('evaluations').then(function() {
       getEvaluations();
       getMyEvl();
     });
   }
 
   function getEvaluations() {
-    ctrl.evaluations = $meteor.collection(function() { 
+    ctrl.evaluations = $scope.$meteorCollection(function() { 
       return Evaluations.find({ moveId: ctrl.move._id });
     }, false);
   }
@@ -56,7 +56,7 @@ function suggestedMoveController($meteor, $scope, Evaluation) {
   }
 
   function getMyEvl() {
-    ctrl.myEvl = $meteor.object(Evaluations, { 
+    ctrl.myEvl = $scope.$meteorObject(Evaluations, { 
       moveId: ctrl.move._id, 
       uid: Meteor.userId(), 
       active: true

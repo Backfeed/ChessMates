@@ -33,7 +33,7 @@ function playersController($scope, $meteor, GameService, GameModel) {
   }
 
   function getPlayers() {
-    ctrl.players = $meteor.collection(function() {
+    ctrl.players = $scope.$meteorCollection(function() {
       return F.getUsersBy({ 'status.online': true });
     }, false).subscribe('userStatus');
   }

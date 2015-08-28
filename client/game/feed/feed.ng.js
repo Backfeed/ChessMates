@@ -11,7 +11,7 @@ function Feed() {
   };
 }
 
-function FeedController($meteor, Toast) {
+function FeedController($scope, $meteor, Toast) {
   var ctrl = this;
 
   angular.extend(ctrl, {
@@ -27,8 +27,8 @@ function FeedController($meteor, Toast) {
   init();
 
   function init() {
-    $meteor.subscribe('feeds').then(function() {
-      ctrl.items = $meteor.collection(function() {
+    $scope.$meteorSubscribe('feeds').then(function() {
+      ctrl.items = $scope.$meteorCollection(function() {
         return Feeds.find({ gameId: ctrl.gameId });
       }, false);
     });
@@ -36,7 +36,7 @@ function FeedController($meteor, Toast) {
 
   function createComment() {
     if (Meteor.userId()) {
-      Meteor.call('log', ctrl.gameId, ctrl.turnIndex, ctrl.newComment, 'comment');
+      $meteor.call('log', ctrl.gameId, ctrl.turnIndex, ctrl.newComment, 'comment');
       ctrl.newComment = '';
     } else {
       Toast.toast('Log in to comment');

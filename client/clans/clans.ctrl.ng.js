@@ -13,7 +13,7 @@ function ClansController($meteor) {
 
 
   function init() {
-    ctrl.clans = $meteor.collection(Clans).subscribe('clans');
+    ctrl.clans = $scope.$meteorCollection(Clans).subscribe('clans');
   }
 
 }

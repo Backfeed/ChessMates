@@ -1,7 +1,7 @@
 angular.module('blockchess.game.suggestedMoves.move.evaluation', [])
 .service('Evaluation', Evaluation);
 
-function Evaluation(Toast) {
+function Evaluation($meteor, Toast) {
 
   var service = {
     rate: rate,
@@ -17,7 +17,7 @@ function Evaluation(Toast) {
     if (!Meteor.user().reputation)
       return Toast.toast('Must have reputation to evaluate moves');
 
-    Meteor.call('rate', gameId, moveId, turnIndex, notation, stars);
+    $meteor.call('rate', gameId, moveId, turnIndex, notation, stars);
   }
 }
 

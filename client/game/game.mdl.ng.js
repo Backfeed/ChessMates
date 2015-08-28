@@ -1,8 +1,9 @@
 angular.module('blockchess.game.model', [])
 .service('GameModel', GameModel);
 
-function GameModel($meteor) {
-
+function GameModel($rootScope, $meteor) {
+  var $scope = $rootScope.$new();
+  
   var model = {
     init: init,
     game: {},
@@ -12,9 +13,8 @@ function GameModel($meteor) {
   return model;
 
   function init(gameId) {
-    log(gameId);
-    model.game[gameId] = $meteor.object(Games, { _id: gameId }).subscribe('games', gameId);
-    model.timer[gameId] = $meteor.object(Timers, { gameId: gameId }).subscribe('timers', gameId);
+    model.game[gameId] = $scope.$meteorObject(Games, { _id: gameId }).subscribe('games', gameId);
+    model.timer[gameId] = $scope.$meteorObject(Timers, { gameId: gameId }).subscribe('timers', gameId);
   }
 
 }
