@@ -12,7 +12,7 @@
 
   <md-content>
     <md-list>
-      <md-list-item ng-repeat="game in ctrl.games" class="md-2-line">
+      <md-list-item ng-repeat="game in ctrl.games" class="md-2-line" ng-if="game.status !== 'archived'">
         <a class="md-list-item-text" ui-sref="game({ id: game._id })">
           {{ ::game.title }}
         </a>
