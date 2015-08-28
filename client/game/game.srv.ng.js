@@ -34,7 +34,6 @@ function GameService($meteor, Toast, GameModel, ChessValidator, ChessBoard) {
   }
 
   function updateBoard(gameId) {
-    debugger
     ChessBoard.board[gameId].position(GameModel.game[gameId].fen);
     ChessValidator.game[gameId].load(GameModel.game[gameId].fen);
     cancelMoveHighlights();

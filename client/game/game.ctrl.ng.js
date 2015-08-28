@@ -36,9 +36,10 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, GameServi
     addMenuItems();
 
     $meteor.autorun($scope, function() {
-      console.log('CLIENT: game ctrl autorun');
       $scope.$meteorSubscribe('suggestedMoves', gameId, $scope.getReactively('ctrl.game.turnIndex'));
     });
+
+    $timeout(updateBoard, 1000);
   }
 
   function addMenuItems() {
