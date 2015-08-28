@@ -1,7 +1,7 @@
 angular.module('blockchess.game.controller', [])
 .controller('GameController', GameController)
 
-function GameController($meteor, $state, $timeout, $scope, $rootScope, GameService, GameModel, ChessBoard, ChessValidator, Toast) {
+function GameController($meteor, $state, $timeout, $scope, $rootScope, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar) {
   var gameId = $state.params.id;
   var ctrl = this;
 
@@ -10,7 +10,8 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, GameServi
     ChessBoard: ChessBoard, // DEV
     GameModel: GameModel, // DEV
     restart: restart, // DEV
-    gameId: gameId, // DEV
+    TopBar: TopBar, // DEV
+    gameId: gameId,
     isDone: isDone,
     imDone: imDone,
     selectedMove: {},
@@ -43,31 +44,27 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, GameServi
   }
 
   function addMenuItems() {
-    $rootScope.menuItems = [];
-
-    $timeout(function() {
-      if ($rootScope.currentUser) {
-        addUserMenu();
-      }
-      if ($rootScope.currentUser && $rootScope.currentUser.admin)
-        addAdminMenu();
-    }, 3000);
+    if (Users.isLogged()) {
+      addUserMenu();
+    }
+    if (Users.isAdmin())
+      addAdminMenu();
   }
 
   function addUserMenu() {
-    $rootScope.menuItems.push({
+    TopBar.set([{
       label: 'I\'m done',
       click: imDone,
       isDisabled: isDone
-    });
+    }]);
   }
 
   function addAdminMenu() {
-    $rootScope.menuItems.push({
+    TopBar.addDynamic({
       label: 'End turn',
       click: endTurn
     });
-    $rootScope.menuItems.push({
+    TopBar.addDynamic({
       label: 'Restart',
       click: restart
     });

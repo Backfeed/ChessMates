@@ -1,4 +1,6 @@
-angular.module('blockchess.topBar', [])
+angular.module('blockchess.topBar', [
+  'blockchess.topBar.service'
+])
 .directive('topBar', topBar);
 
 function topBar() {
@@ -12,19 +14,15 @@ function topBar() {
   };
 }
 
-function topBarController($meteor) {
+function topBarController($meteor, TopBar) {
   var ctrl = this;
+
   angular.extend(ctrl, {
-    clans: []
+    getDynamicItems: getDynamicItems
   });
 
-  init();
-
-  function init() {
-    getClans();
-  }
-
-  function getClans() {
+  function getDynamicItems() {
+    return TopBar.dynamicItems;
   }
 
 }
