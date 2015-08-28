@@ -16,7 +16,6 @@ function gameRoutes($stateProvider) {
 }
 
 function getGameData(GameModel, $stateParams) {
-  console.log('foo');
   return GameModel.init($stateParams.id)
           .then(function(response) {
             return response;
