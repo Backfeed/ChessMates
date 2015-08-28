@@ -18,6 +18,7 @@ function topBarController($meteor, TopBar, Users) {
   var ctrl = this;
 
   angular.extend(ctrl, {
+    getDynamicTitle: getDynamicTitle,
     getDynamicItems: getDynamicItems,
     userCanAccess: userCanAccess
   });
@@ -33,5 +34,9 @@ function topBarController($meteor, TopBar, Users) {
     return !(item.requireUser && !Users.isLogged()) &&
            !(item.requireAdmin && !Users.isAdmin());
   }   
+
+  function getDynamicTitle() {
+    return TopBar.dynamicTitle;
+  }
 
 }

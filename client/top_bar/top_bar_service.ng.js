@@ -1,11 +1,15 @@
 angular.module('blockchess.topBar.service', [])
 .service('TopBar', TopBar);
 
+var log = _DEV.log('TOPBAR SERVICE');
+
 function TopBar($rootScope) {
   var service = {
     
-    set: set,
-    addDynamic: addDynamic,
+    setDynamicMenu: setDynamicMenu,
+    addDynamicMenuItem: addDynamicMenuItem,
+    setDynamicTitle: setDynamicTitle,
+    dynamicTitle: null,
     dynamicItems: []
 
   };
@@ -14,17 +18,21 @@ function TopBar($rootScope) {
 
   return service;
 
-  function set(items) {
+  function setDynamicMenu(items) {
     service.dynamicItems = items;
   }
 
-  function addDynamic(item) {
+  function addDynamicMenuItem(item) {
     service.dynamicItems.push(item);
   }
 
+  function setDynamicTitle(title) {
+    service.dynamicTitle = title;
+  }
 
   function resetDynamic() {
     service.dynamicItems = [];
+    service.dynamicTitle = null;
   }
 
 }

@@ -1,7 +1,9 @@
 angular.module('blockchess.game.controller', [])
 .controller('GameController', GameController)
 
-function GameController($meteor, $state, $timeout, $scope, $rootScope, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar) {
+var log = _DEV.log('GAME CTRL - ');
+
+function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromises, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar) {
   var gameId = $state.params.id;
   var ctrl = this;
 
@@ -29,12 +31,11 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Users, Ga
   init();
 
   function init() {
-    GameModel.init(gameId);
-    ChessValidator.init(gameId);
     ctrl.game = GameModel.game[gameId];
     ctrl.timer = GameModel.timer[gameId];
     ctrl.suggestedMoves = $scope.$meteorCollection(SuggestedMoves);
-    addMenuItems();
+    setTopBarMenu();
+    setTopBarTitle();
 
     $meteor.autorun($scope, function() {
       $scope.$meteorSubscribe('suggestedMoves', gameId, $scope.getReactively('ctrl.game.turnIndex'));
@@ -43,8 +44,8 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Users, Ga
     $timeout(updateBoard, 1000);
   }
 
-  function addMenuItems() {
-    TopBar.set([
+  function setTopBarMenu() {
+    TopBar.setDynamicMenu([
       {
         label: 'I\'m done',
         click: imDone,
@@ -70,6 +71,10 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Users, Ga
         requireAdmin: true
       }
     ]);
+  }
+
+  function setTopBarTitle() {
+    TopBar.setDynamicTitle(ctrl.game.title);
   }
 
   function restart() { GameService.restart(gameId);          }
