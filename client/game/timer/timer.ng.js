@@ -1,6 +1,8 @@
 angular.module('blockchess.game.timer', [])
 .directive('timer', timer);
 
+var log = _DEV.log('TIMER');
+
 function timer() {
   return {
     bindToController: true,
@@ -8,21 +10,33 @@ function timer() {
     templateUrl: "client/game/timer/timer.ng.html",
     controller: timerController,
     restrict: 'E',
-    scope: { settings: '=' }
+    scope: { timePerMove: '=', timeMoveStarted: '=' }
   }
 }
 
-function timerController($scope) {
+function timerController($scope, $interval) {
   var ctrl = this;
   angular.extend(ctrl, {
     timeLeftPercentage: 100
   });
 
-  $scope.$watch('ctrl.settings.timeLeft', updateTime);
+  var interval = $interval(updateTime, 1000);
+
+  $scope.$on('destroy', function() {
+    $interval.cancel(interval);
+  });
 
   function updateTime() {
-    if (ctrl.settings)
-        ctrl.timeLeftPercentage = Math.round((ctrl.settings.timeLeft / ctrl.settings.timePerMove) * 100);
+    ctrl.timeLeft = (getTimeLeft());
+    ctrl.timeLeftPercentage = F.toPercent(ctrl.timePerMove, ctrl.timeLeft);
+  }
+
+  function getDiff() {
+    return Date.now() - ctrl.timeMoveStarted;
+  }
+
+  function getTimeLeft() {
+    return ctrl.timePerMove - getDiff();
   }
 
 }

@@ -8,8 +8,7 @@ function GameModel($rootScope, $meteor, $q, ChessValidator) {
   
   var model = {
     init: init,
-    game: {},
-    timer: {}
+    game: {}
   };
 
   return model;
@@ -17,13 +16,10 @@ function GameModel($rootScope, $meteor, $q, ChessValidator) {
   function init(gameId) {
     ChessValidator.init(gameId);
     var gamesSubPromise = $scope.$meteorSubscribe('games', gameId)
-    var timersSubPromise = $scope.$meteorSubscribe('timers', gameId)
-    model.game[gameId] = $scope.$meteorObject(Games, { _id: gameId });
-    model.timer[gameId] = $scope.$meteorObject(Timers, { gameId: gameId }).subscribe('timers', gameId);
+    model.game[gameId] = $scope.$meteorObject(Games, { _id: gameId }, false);
 
     return $q.all({
-      games: gamesSubPromise,
-      timers: timersSubPromise
+      games: gamesSubPromise
     }).then(function(res) {
       return res;
     });

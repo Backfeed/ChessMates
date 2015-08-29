@@ -6,7 +6,7 @@
     </div>
 
     <div flex="30">
-      <timer settings="ctrl.timer"></timer>
+      <timer time-per-move="ctrl.game.timePerMove" time-move-started="ctrl.game.timeMoveStarted"></timer>
       <suggested-moves selected-move="ctrl.selectedMove"
                        suggested-moves="ctrl.suggestedMoves"
                        ng-if="ctrl.game.turnIndex"></suggested-moves>

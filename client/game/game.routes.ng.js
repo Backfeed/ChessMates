@@ -1,6 +1,8 @@
 angular.module('blockchess.game.routes', [])
 .config(gameRoutes);
 
+var log = _DEV.log('GAME ROUTE')
+
 function gameRoutes($stateProvider) {
   $stateProvider
     .state('game', {

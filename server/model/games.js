@@ -1,7 +1,6 @@
 Meteor.publish('games', publish);
 Meteor.publish('gamesList', publishList);
 
-Games.after.insert(afterInsert);
 Games.before.remove(beforeRemove);
 
 Meteor.methods({
@@ -27,10 +26,14 @@ var log = _DEV.log('MODEL: GAMES:');
 function create(title) {
   return Games.insert({ 
     ownerId: Meteor.userId(),
+    createdAt: Date.now(),
     title: title,
     playedThisTurn: [],
     moves: [],
     pgn: [],
+    timePerMove: 300000,
+    timeMoveStarted: null,
+    inPlay: false,
     turnIndex: 1,
     fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
   });
@@ -55,14 +58,23 @@ function clientDone(gameId) {
 }
 
 function endTurn(gameId) {
-  Meteor.call('clearTimerInterval', gameId);
+  var game = Games.findOne(gameId);
 
-  var turnIndex = Games.findOne(gameId).turnIndex;
+  Games.update(
+    { _id: gameId }, 
+    { 
+      $set: { 
+        inPlay: false
+      }
+    }
+  );
 
+
+  var turnIndex = game.turnIndex;
   if (Meteor.call('noSugMov', gameId, turnIndex))
     return endGame(gameId, 'AI');
 
-  if (Meteor.call('isTimerInPlay', gameId)) {
+  if (game.inPlay) {
     executeClanMove(gameId);
   }
 }
@@ -119,7 +131,15 @@ function restart(gameId) {
   function resetGameDataCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
 
-    Meteor.call('startTurnTimer',gameId);
+    Games.update(
+      { _id: gameId }, 
+      { 
+        $set: { 
+          timeMoveStarted: Date.now(),
+          inPlay: true
+        }
+      }
+    )
   }
 
 }
@@ -128,9 +148,8 @@ function archive(gameId) {
   validateAdminOrOwner(gameId);
   destroyChessValidator(gameId);
   destroyChessEngine(gameId);
-  Meteor.call('destroyTimer', gameId);
 
-  Games.update({ _id: gameId }, { $set: { status: 'archived' } });
+  Games.update({ _id: gameId }, { $set: { status: 'archived', inPlay: false } });
 }
 
 function validateAdminOrOwner(gameId) {
@@ -170,7 +189,6 @@ function resetGameData(gameId, CB) {
     CB
   );
 
-  Meteor.call('timerResetGame', gameId);
   Evaluations.remove({ gameId: gameId });
   SuggestedMoves.remove({ gameId: gameId });
   Feeds.remove({ gameId: gameId });
@@ -190,9 +208,18 @@ function logMove(gameId, turn, notation) {
 }
 
 function startTurn (gameId, turn, notation) {
-  Meteor.call('startTurnTimer', gameId);
+  Games.update(
+    { _id: gameId }, 
+    { 
+      $set: { 
+        timeMoveStarted: Date.now(),
+        inPlay: true
+      }
+    }
+  );
+
   if (turn === 'team')
-    Meteor.setTimeout(promptEngine, 2000); // TODO :: timeout is here due to weird bug
+    Meteor.setTimeout(promptEngine, 5000); // TODO :: timeout is here due to weird bug
 
   function promptEngine() {
     var moves = getMoves(gameId, notation);
@@ -222,8 +249,7 @@ function getFen(gameId, move) {
 }
 
 function endGame(gameId, winner) {
-  Meteor.call('endTimer', gameId);
-  Games.update({ _id: gameId }, { $set: { winner: winner } });
+  Games.update({ _id: gameId }, { $set: { winner: winner, inPlay: false } });
   logEndGame(gameId, winner);
   function logEndGame(gameId, winner) {
     var text = winner + " wins the game!!";
@@ -241,13 +267,8 @@ function publishList(options) {
   return Games.find({ status: { $not: /archived/ } });
 }
 
-function afterInsert(userId, game) {
-  Meteor.call('createTimer', game._id);
-}
-
 function beforeRemove(userId, game) {
   var gameId = game._id;
-  Meteor.call('destroyTimer', gameId);
   Meteor.call('destroyEvaluations', gameId);
   Meteor.call('destroySugMoves', gameId);
   Meteor.call('destroyFeeds', gameId);

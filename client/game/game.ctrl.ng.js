@@ -17,7 +17,6 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromi
     isDone: isDone,
     imDone: imDone,
     selectedMove: {},
-    timer: {},
     user: Meteor.user(),
     game: {}
   });
@@ -32,7 +31,6 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromi
 
   function init() {
     ctrl.game = GameModel.game[gameId];
-    ctrl.timer = GameModel.timer[gameId];
     ctrl.suggestedMoves = $scope.$meteorCollection(SuggestedMoves);
     setTopBarMenu();
     setTopBarTitle();
