@@ -31,11 +31,16 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
 
   function restart(gameId) {
     cancelMoveHighlights();
-    $meteor.call('restart', gameId);
+    
+    var userIsSure = confirm('Restart the current game?');
+    if (userIsSure)
+      $meteor.call('restart', gameId);
   }
 
   function archive(gameId) {
-    $meteor.call('archiveGame', gameId).then(success);
+    var userIsSure = confirm('archive the current game?');
+    if (userIsSure)
+      $meteor.call('archiveGame', gameId).then(success);
 
     function success() {
       Toast.toast('Game has been archived. Redirecting to games list ...');
