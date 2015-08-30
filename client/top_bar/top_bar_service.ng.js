@@ -39,6 +39,7 @@ function TopBar($rootScope) {
   function resetDynamic() {
     service.dynamicItems = [];
     service.dynamicTitle = null;
+    service.dynamicText = null;
   }
 
 }
