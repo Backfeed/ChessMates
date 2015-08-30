@@ -9,7 +9,9 @@ function TopBar($rootScope) {
     setDynamicMenu: setDynamicMenu,
     addDynamicMenuItem: addDynamicMenuItem,
     setDynamicTitle: setDynamicTitle,
+    setDynamicText: setDynamicText,
     dynamicTitle: null,
+    dynamicText: null,
     dynamicItems: []
 
   };
@@ -28,6 +30,10 @@ function TopBar($rootScope) {
 
   function setDynamicTitle(title) {
     service.dynamicTitle = title;
+  }
+
+  function setDynamicText(text) {
+    service.dynamicText = text;
   }
 
   function resetDynamic() {

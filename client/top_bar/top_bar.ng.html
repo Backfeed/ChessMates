@@ -1,6 +1,7 @@
 <md-toolbar md-scroll-shrink layout="row" layout-align="start center" layout-padding class="topbar">
   <logo flex="20"></logo>
-  <h1 ng-if="ctrl.getDynamicTitle()" class="topbar-title">{{ ctrl.getDynamicTitle() }}</h1>
+  <h1 ng-if="ctrl.getDynamicTitle()" class="topbar-title" flex="20">{{ ctrl.getDynamicTitle() }}</h1>
+  <span ng-if="ctrl.getDynamicText()" class="topbar-text" flex="20">{{ ctrl.getDynamicText() }}</span>
   <div class="flex-right">
     <a ui-sref="games">Games</a>
 
