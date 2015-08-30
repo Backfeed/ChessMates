@@ -1,30 +1,25 @@
 angular.module('blockchess.game.controller', [])
 .controller('GameController', GameController)
 
-var log = _DEV.log('GAME CTRL - ');
+var log = _DEV.log('GAME CTRL');
 
 function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromises, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar) {
   var gameId = $state.params.id;
   var ctrl = this;
 
   angular.extend(ctrl, {
-    ChessValidator: ChessValidator, // DEV
-    ChessBoard: ChessBoard, // DEV
-    GameModel: GameModel, // DEV
-    restart: restart, // DEV
-    TopBar: TopBar, // DEV
+    restart: restart,
     gameId: gameId,
     isDone: isDone,
     imDone: imDone,
     selectedMove: {},
-    user: Meteor.user(),
     game: {}
   });
 
   $scope.$on('singleMove::'+gameId, singleMove);
   $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard, true);
-  $scope.$watch('ctrl.game.turnIndex', checkIsGameOver);
+  $scope.$watch('ctrl.game.turnIndex', updateScore);
   $scope.$watch('ctrl.game.winner', declareWinner);
 
   init();
@@ -97,9 +92,8 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromi
     GameService.singleMove(gameId, notation);
   }
 
-  function checkIsGameOver() {
-    if (ChessValidator.game[gameId].game_over())
-      Toast.toast('Game over!');
+  function updateScore() {
+    TopBar.setDynamicText("Score: " + ctrl.game.score);
   }
 
   function declareWinner(winner) {

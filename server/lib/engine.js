@@ -7,6 +7,8 @@ Engine = function Engine(gameId) {
   uciCmd('ucinewgame');
   uciCmd('isready');
 
+  var log = _DEV.log('Engine of gameId: ', gameId);
+
   return {
     setPosition: setPosition,
     getMove: getMove,
@@ -29,10 +31,8 @@ Engine = function Engine(gameId) {
       } else {
           line = e;
       }
-      // console.log("Angular Stockfish: Engine: " + line);
       var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbk])?/);
       if (match) {
-        console.log('AI move Match');
         var move = {
           from: match[1],
           to: match[2],
@@ -49,18 +49,18 @@ Engine = function Engine(gameId) {
   function getEvaler() {
     var line;
     var ev = Meteor.npmRequire('stockfish')();
-    ev.onmessage = function(e) {
+    ev.onmessage = Meteor.bindEnvironment(function(e) {
       if (e && typeof e === "object") {
           line = e.data;
       } else {
           line = e;
       }
-      // console.log("Angular Stockfish: Evaler: " + line);
       if (line.indexOf('Total Evaluation') > -1) {
         var score = parseFloat(line.split('Total Evaluation: ')[1].split('(')[0])
-        Meteor.call('AIEvaluationCB', score);
+        Meteor.call('AIEvaluationCB', gameId, score);
       }
-    }
+    });
+    
     return ev;
   }
 
@@ -89,7 +89,6 @@ Engine = function Engine(gameId) {
 
   // Send commands to the engine
   function uciCmd(cmd, evlr) {
-    // console.log("Angular Stockfish: UCI: " + cmd);
     (evlr || engine).postMessage(cmd);
   }
 

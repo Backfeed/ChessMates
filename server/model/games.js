@@ -105,10 +105,17 @@ function executeMove(gameId, move, turn) {
 
 function executeMoveCB(gameId, turn, notation) {
   logMove(gameId, turn, notation);
+  cacheMoveScore(gameId);
   if (getChessValidator(gameId).game_over())
     endGame(gameId);
   else
     startTurn(gameId, turn, notation);
+}
+
+function cacheMoveScore(gameId) {
+  var game = Games.findOne(gameId);
+  var movesStr = movesArrToString(gameId);
+  var score = getChessEngine(gameId).evaluate(movesStr);
 }
 
 function AIGetMoveCb(gameId, move) {
@@ -157,7 +164,11 @@ function validateAdminOrOwner(gameId) {
     throw new Meteor.Error(200, "Only admins or game owners can make this action!");
 }
 
-function AIEvaluationCB(score) {
+function AIEvaluationCB(gameId, score) {
+  Games.update(
+    { _id: gameId },
+    { $set: { score: score } }
+  );
 }
 
 
@@ -229,7 +240,11 @@ function startTurn (gameId, turn, notation) {
 }
 
 function getMoves(gameId, notation) {
-  return Games.findOne(gameId).moves.join(" ") + " " + notation;
+  return movesArrToString(gameId) + " " + notation;
+}
+
+function movesArrToString(gameId) {
+  return Games.findOne(gameId).moves.join(" ")
 }
 
 function isAllClientsFinished(gameId) {
