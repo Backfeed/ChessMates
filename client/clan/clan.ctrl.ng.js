@@ -11,7 +11,7 @@ function ClanController($meteor, $state) {
   init();
 
   function init() {
-    ctrl.clan = $scope.$meteorObject(Clans, { _id: $state.params.id }).subscribe('clans');
+    ctrl.clan = $scope.$meteorObject(Clans, { _id: $state.params.id }, false).subscribe('clans');
   }
 
 }

@@ -26,7 +26,7 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromi
 
   function init() {
     ctrl.game = GameModel.game[gameId];
-    ctrl.suggestedMoves = $scope.$meteorCollection(SuggestedMoves);
+    ctrl.suggestedMoves = $scope.$meteorCollection(SuggestedMoves, false);
     setTopBarMenu();
     setTopBarTitle();
 

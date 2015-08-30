@@ -20,7 +20,7 @@ function GamesController($scope, $meteor, $state, Users, Toast) {
     $meteor.autorun($scope, function() {
       ctrl.games = $scope.$meteorCollection(Games, { 
         status: { $not: /archived/ } 
-      })
+      }, false)
       .subscribe('gamesList');
     });
   }
