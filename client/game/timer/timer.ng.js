@@ -10,7 +10,7 @@ function timer() {
     templateUrl: "client/game/timer/timer.ng.html",
     controller: timerController,
     restrict: 'E',
-    scope: { timePerMove: '=', timeMoveStarted: '=' }
+    scope: { timePerMove: '=', timeMoveStarted: '=', isGameInPlay: '=' }
   }
 }
 
@@ -27,6 +27,8 @@ function timerController($scope, $interval) {
   });
 
   function updateTime() {
+    if (! ctrl.isGameInPlay) return;
+    
     ctrl.timeLeft = (getTimeLeft());
     ctrl.timeLeftPercentage = F.toPercent(ctrl.timePerMove, ctrl.timeLeft);
   }
