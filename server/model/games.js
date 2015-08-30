@@ -191,6 +191,7 @@ function resetGameData(gameId, CB) {
         playedThisTurn: [],
         moves: [],
         pgn: [],
+        score: 0,
         turnIndex: 1,
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
       },
