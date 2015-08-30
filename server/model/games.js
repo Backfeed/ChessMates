@@ -2,6 +2,7 @@ Meteor.publish('games', publish);
 Meteor.publish('gamesList', publishList);
 
 Games.before.remove(beforeRemove);
+Games.after.insert(afterInsert);
 
 Meteor.methods({
   createGame: create,
@@ -9,17 +10,13 @@ Meteor.methods({
   clientDone: clientDone,
   endTurn: endTurn,
   executeMove: executeMove,
-  AIGetMoveCb: AIGetMoveCb,
   validateGame: validateGame,
   endGame: endGame,
   restart: restart,
-  archiveGame: archive,
-  AIEvaluationCB: AIEvaluationCB
+  archiveGame: archive
 });
 
 var ChessValidators = ChessValidators || {};
-
-var ChessEngines = ChessEngines || {};
 
 var log = _DEV.log('MODEL: GAMES:');
 
@@ -81,9 +78,11 @@ function endTurn(gameId) {
 
 function executeMove(gameId, move, turn) {
   var notation = move.from + move.to;
+  
+  log('executeMove', 'gameId', gameId, 'move', move, 'turn', turn, 'notation', notation, 'getFen', getFen(gameId, move));
 
   Games.update(
-    { _id: gameId },
+    { _id: gameId },  
     {
       $push: {
         moves: notation,
@@ -98,12 +97,16 @@ function executeMove(gameId, move, turn) {
         turnIndex: 1
       }
     },
-    executeMoveCB(gameId, turn, notation)
+    function(err, records) {
+      log('executeMove',  'err', err, records);
+      executeMoveCB(gameId, turn, notation)
+    }
   );
 
 }
 
 function executeMoveCB(gameId, turn, notation) {
+  log('executeMoveCB', gameId, turn, notation);
   logMove(gameId, turn, notation);
   cacheGameScore(gameId);
   if (getChessValidator(gameId).game_over())
@@ -113,13 +116,19 @@ function executeMoveCB(gameId, turn, notation) {
 }
 
 function cacheGameScore(gameId) {
-  var game = Games.findOne(gameId);
   var movesStr = movesArrToString(gameId);
-  var score = getChessEngine(gameId).evaluate(movesStr);
-}
 
-function AIGetMoveCb(gameId, move) {
-  executeMove(gameId, move, "AI");
+  Meteor.call('evaluate', movesStr)
+    .then(function(gameScore) {
+      log('gameScore', gameScore);
+      Games.update(
+        { _id: gameId },
+        { $set: { score: gameScore } },
+        function(err, docs) {
+          log('cacheGameScore', 'err', err)
+        }
+      );
+    });
 }
 
 function validateGame(gameId) {
@@ -154,7 +163,6 @@ function restart(gameId) {
 function archive(gameId) {
   validateAdminOrOwner(gameId);
   destroyChessValidator(gameId);
-  destroyChessEngine(gameId);
 
   Games.update({ _id: gameId }, { $set: { status: 'archived', inPlay: false } });
 }
@@ -163,14 +171,6 @@ function validateAdminOrOwner(gameId) {
   if (!Meteor.user() || !(User.isAdmin() || User.isOwner(Games.findOne(gameId))))
     throw new Meteor.Error(200, "Only admins or game owners can make this action!");
 }
-
-function AIEvaluationCB(gameId, score) {
-  Games.update(
-    { _id: gameId },
-    { $set: { score: score } }
-  );
-}
-
 
 /********* Helper methods *********/
 function validateUniqueness(playedThisTurn) {
@@ -208,9 +208,35 @@ function resetGameData(gameId, CB) {
 
 function executeClanMove(gameId) {
   var turnIndex = Games.findOne(gameId).turnIndex;
+  cachePlayersScoreForMove(gameId, turnIndex);
   var move = Meteor.call('protoEndTurn', gameId, turnIndex);
   executeMove(gameId, move, 'team');
 }
+
+function cachePlayersScoreForMove(gameId, turnIndex) {
+  var evals = Evaluations.find({ gameId: gameId, turnIndex: turnIndex }).fetch();
+  var movesStr = movesArrToString(gameId);
+  var playersIds = F.mapUids(evals);
+  _.each(playersIds, function(playerId) {
+    var playerEvals = _.filter(evals, function(eval) {
+      return eval.uid === playerId;
+    });
+    var chosenMoveNotation = _.max(playerEvals, R.prop('stars')).notation;
+
+    cachePlayerScoreForMove(gameId, turnIndex, playerId, movesStr, chosenMoveNotation);
+  });
+
+}
+
+function cachePlayerScoreForMove(gameId, turnIndex, playerId, movesStr, chosenMoveNotation) {
+  debugger
+  var res = Meteor.call('evaluate', movesStr + " " + chosenMoveNotation);
+  log('res', res);
+  res.then(function(score) {
+    log("cachePlayerScoreForMove", 'score', score);
+  });
+}
+
 
 function logMove(gameId, turn, notation) {
   var text = turn + ' played ' + notation;
@@ -229,14 +255,15 @@ function startTurn (gameId, turn, notation) {
     }
   );
 
-  if (turn === 'team')
-    promptEngine()
-    // Meteor.setTimeout(promptEngine, 5000); // TODO :: timeout is here due to weird bug
-
-  function promptEngine() {
+  if (turn === 'team') {
     var moves = getMoves(gameId, notation);
-    getChessEngine(gameId).getMove(moves);
+    Meteor.call('getAiMove', moves).then(function(move) {
+      log('getAiMove', 'move', move);
+      executeMove(gameId, move, "AI");
+    });
   }
+
+  // Meteor.setTimeout(promptEngine, 5000); // TODO :: timeout is here due to weird bug
 }
 
 function getMoves(gameId, notation) {
@@ -290,18 +317,14 @@ function beforeRemove(userId, game) {
   Meteor.call('destroyFeeds', gameId);
 }
 
+function afterInsert(userId, game) {
+  Meteor.call('createScoreMap', game._id);
+}
+
 function getChessValidator(gameId) {
   return ChessValidators[gameId] = ChessValidators[gameId] || Chess();
 }
 
 function destroyChessValidator(gameId) {
   delete ChessValidators[gameId];
-}
-
-function getChessEngine(gameId) {
-  return ChessEngines[gameId] = ChessEngines[gameId] || Engine(gameId);
-}
-
-function destroyChessEngine(gameId) {
-  delete ChessEngines[gameId];
 }
