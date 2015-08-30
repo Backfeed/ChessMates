@@ -105,14 +105,14 @@ function executeMove(gameId, move, turn) {
 
 function executeMoveCB(gameId, turn, notation) {
   logMove(gameId, turn, notation);
-  cacheMoveScore(gameId);
+  cacheGameScore(gameId);
   if (getChessValidator(gameId).game_over())
     endGame(gameId);
   else
     startTurn(gameId, turn, notation);
 }
 
-function cacheMoveScore(gameId) {
+function cacheGameScore(gameId) {
   var game = Games.findOne(gameId);
   var movesStr = movesArrToString(gameId);
   var score = getChessEngine(gameId).evaluate(movesStr);
