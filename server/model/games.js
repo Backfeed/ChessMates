@@ -219,7 +219,8 @@ function startTurn (gameId, turn, notation) {
   );
 
   if (turn === 'team')
-    Meteor.setTimeout(promptEngine, 5000); // TODO :: timeout is here due to weird bug
+    promptEngine()
+    // Meteor.setTimeout(promptEngine, 5000); // TODO :: timeout is here due to weird bug
 
   function promptEngine() {
     var moves = getMoves(gameId, notation);
