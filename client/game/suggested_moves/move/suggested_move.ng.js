@@ -1,6 +1,5 @@
 angular.module('blockchess.game.suggestedMoves.move', [
   // Service
-  'blockchess.game.suggestedMoves.move.evaluation',
   // Directives
   // Filters
   'blockchess.game.suggestedMoves.move.avgStars'
@@ -14,7 +13,7 @@ function suggestedMove() {
     templateUrl: "client/game/suggested_moves/move/suggested_move.ng.html",
     controller: suggestedMoveController,
     restrict: 'A',
-    scope: { move: '=' }
+    scope: { move: '=', activeReputationSum: '=' }
   };
 }
 
@@ -22,8 +21,8 @@ function suggestedMoveController($meteor, $scope, Evaluation) {
   var ctrl = this;
   angular.extend(ctrl, {
     getDisabledRateText: getDisabledRateText,
-    calcScore: calcScore,
-    calcConfidence: calcConfidence,
+    calcRelativeScore: calcRelativeScore,
+    calcRelativeConfidence: calcRelativeConfidence,
     rate: rate,
     canRate: Evaluation.canRate,
     evaluations: [],
@@ -43,16 +42,16 @@ function suggestedMoveController($meteor, $scope, Evaluation) {
 
   function getEvaluations() {
     ctrl.evaluations = $scope.$meteorCollection(function() { 
-      return Evaluations.find({ moveId: ctrl.move._id });
+      return Evaluations.find({ moveId: ctrl.move._id, active: true });
     }, false);
   }
 
-  function calcScore() {
-    return ctrl.move.score = Protocol.calcEvalsScore(ctrl.evaluations);
+  function calcRelativeScore() {
+    return Protocol.calcRelativeScore(ctrl.evaluations, ctrl.activeReputationSum);
   }
 
-  function calcConfidence() {
-    return Protocol.calcConfidence(ctrl.evaluations);
+  function calcRelativeConfidence() {
+    return Protocol.calcRelativeConfidence(ctrl.evaluations, ctrl.activeReputationSum);
   }
 
   function getMyEvl() {

@@ -1,11 +1,13 @@
-angular.module('blockchess.game.suggestedMoves.move.evaluation', [])
+angular.module('blockchess.game.suggestedMoves.evaluations', [])
 .service('Evaluation', Evaluation);
 
-function Evaluation($meteor, Toast) {
-
+function Evaluation($rootScope, $meteor, Toast) {
+  var $scope = $rootScope.$new();
   var service = {
     rate: rate,
-    canRate: canRate
+    canRate: canRate,
+    init: init,
+    evals: {}
   };
 
   return service;
@@ -19,6 +21,12 @@ function Evaluation($meteor, Toast) {
 
     $meteor.call('rate', gameId, moveId, turnIndex, notation, stars);
   }
+
+  function init(gameId, turnIndex) {
+    var evalsSubPromise = $scope.$meteorSubscribe('evaluationsForTurn', gameId, turnIndex);
+    service.evals[gameId] = $scope.$meteorCollection(Evaluations, { gameId: gameId, turnIndex: turnIndex }, false);
+  }
+
 }
 
 function canRate() {

@@ -8,6 +8,7 @@
     <div flex="30">
       <timer time-per-move="ctrl.game.timePerMove" time-move-started="ctrl.game.timeMoveStarted" is-game-in-play="ctrl.game.inPlay"></timer>
       <suggested-moves selected-move="ctrl.selectedMove"
+                       active-reputation-sum="ctrl.activeReputationSum"
                        suggested-moves="ctrl.suggestedMoves"
                        ng-if="ctrl.game.turnIndex"></suggested-moves>
     </div>

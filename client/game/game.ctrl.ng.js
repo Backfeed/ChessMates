@@ -3,7 +3,7 @@ angular.module('blockchess.game.controller', [])
 
 var log = _DEV.log('GAME CTRL');
 
-function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromises, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar) {
+function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluation, gamePromises, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar) {
   var gameId = $state.params.id;
   var ctrl = this;
 
@@ -12,6 +12,8 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromi
     gameId: gameId,
     isDone: isDone,
     imDone: imDone,
+    activeReputationSum: 0,
+    currentTurnEvaluations: [],
     selectedMove: {},
     game: {}
   });
@@ -19,8 +21,9 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromi
   $scope.$on('singleMove::'+gameId, singleMove);
   $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard, true);
-  $scope.$watch('ctrl.game.turnIndex', updateScore);
+  $scope.$watch('ctrl.game.score', updateTopBarScore);
   $scope.$watch('ctrl.game.winner', declareWinner);
+  $scope.$watch('ctrl.currentTurnEvaluations', updateActiveReputationSum, true);
 
   init();
 
@@ -32,9 +35,17 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromi
 
     $meteor.autorun($scope, function() {
       $scope.$meteorSubscribe('suggestedMoves', gameId, $scope.getReactively('ctrl.game.turnIndex'));
+      Evaluation.init(gameId, ctrl.game.turnIndex);
+      ctrl.currentTurnEvaluations = Evaluation.evals[gameId];
     });
 
     $timeout(updateBoard, 1000);
+  }
+
+  function updateActiveReputationSum() {
+    if (ctrl.currentTurnEvaluations) {
+      ctrl.activeReputationSum = Protocol.calcConfidence(ctrl.currentTurnEvaluations);
+    }
   }
 
   function setTopBarMenu() {
@@ -92,7 +103,7 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, gamePromi
     GameService.singleMove(gameId, notation);
   }
 
-  function updateScore() {
+  function updateTopBarScore() {
     TopBar.setDynamicText("Score: " + ctrl.game.score);
   }
 

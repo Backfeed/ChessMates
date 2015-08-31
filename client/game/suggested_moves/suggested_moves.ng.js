@@ -1,4 +1,6 @@
 angular.module('blockchess.game.suggestedMoves', [
+  // Services
+  'blockchess.game.suggestedMoves.evaluations',
   // Directives
   'blockchess.game.suggestedMoves.move'
 ])
@@ -11,7 +13,7 @@ function suggestedMoves() {
     templateUrl: "client/game/suggested_moves/suggested_moves.ng.html",
     controller: suggestedMovesController,
     restrict: 'E',
-    scope: { selectedMove: '=', suggestedMoves: '=' }
+    scope: { selectedMove: '=', suggestedMoves: '=', activeReputationSum: '=' }
   };
 }
 

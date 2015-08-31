@@ -1,11 +1,11 @@
 <span class="bold" flex="10">{{ ::ctrl.move.notation }}</span>
 <div flex="30" class="progressbar-adjust" layout="row">
   <div flex="80">
-     <md-progress-linear class="md-accent" md-mode="determinate" value="{{ ctrl.calcScore() }}"></md-progress-linear>
+     <md-progress-linear class="md-accent" md-mode="determinate" value="{{ ctrl.calcRelativeScore() }}"></md-progress-linear>
   </div>
 </div>
 <spen flex="20">
-  Confidence {{ ctrl.calcConfidence() | decimel: 0 }}
+  Confidence {{ ctrl.calcRelativeConfidence() | decimel: 0 }}
 </spen>
 <spen flex="20">
   Count {{ ctrl.evaluations.length }}

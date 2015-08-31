@@ -2,6 +2,7 @@
   <md-divider></md-divider>
   <md-list-item ng-repeat="move in ctrl.suggestedMoves | orderBy: '-score'"
                 suggested-move
+                active-reputation-sum="ctrl.activeReputationSum"
                 move="move"
                 my-fav-move="ctrl.myFavMove"
                 ng-class="{ 'active': ctrl.selectedMove.notation == move.notation }"

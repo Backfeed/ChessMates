@@ -1,4 +1,5 @@
 Meteor.publish('evaluations', publish);
+Meteor.publish('evaluationsForTurn', publishForTurn);
 
 Evaluations.before.insert(beforeInsert);
 Evaluations.after.insert(afterInsert);
@@ -12,9 +13,15 @@ var log = _DEV.log('MODEL: EVALUATIONS:');
 
 
 /********* Publish and hooks *********/
-function publish(options, moveId) {
-  return Evaluations.find({}, { moveId: moveId });
+function publish(moveId) {
+  return Evaluations.find({ moveId: moveId, active: true });
 }
+
+function publishForTurn(gameId, turnIndex) {
+  return Evaluations.find({ gameId: gameId, turnIndex: turnIndex });
+}
+
+
 
 function afterInsert(uid, evl) {
   Meteor.call("protoRate", uid, evl.moveId, evl.stars);
