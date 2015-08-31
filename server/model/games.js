@@ -28,6 +28,7 @@ function create(title) {
     ownerId: Meteor.userId(),
     createdAt: Date.now(),
     title: title,
+    score: 0,
     playedThisTurn: [],
     moves: [],
     pgn: [],
