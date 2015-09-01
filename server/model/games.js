@@ -9,6 +9,7 @@ Meteor.methods({
   clientDone: clientDone,
   resetTimer: resetTimer,
   endTurn: endTurn,
+  getTimeLeftForTurn: getTimeLeftForTurn,
   executeMove: executeMove,
   AIGetMoveCb: AIGetMoveCb,
   validateGame: validateGame,
@@ -20,7 +21,7 @@ Meteor.methods({
 
 var ChessValidators = ChessValidators || {};
 
-var ChessEngines = ChessEngines || {};
+var timeoutHash = timeoutHash || {};
 
 var log = _DEV.log('MODEL: GAMES:');
 
@@ -33,9 +34,9 @@ function create(title) {
     playedThisTurn: [],
     moves: [],
     pgn: [],
-    timePerMove: 300000,
-    timeMoveStarted: null,
-    inPlay: false,
+    timePerMove: 1000 * 60 * 1.5,
+    timeMoveStarted: Date.now(),
+    inPlay: true,
     turnIndex: 1,
     fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
   });
@@ -302,4 +303,27 @@ function resetTimer(gameId) {
       }
     }
   );
+
+  updateTimeoutHash(gameId);
+  
+
+}
+
+function getTimeLeftForTurn(gameId) {
+  var game = Games.findOne(gameId);
+  return game.timePerMove -  (Date.now() - game.timeMoveStarted);
+}
+
+function updateTimeoutHash(gameId) {
+  var timeLeftForTurn = Meteor.call('getTimeLeftForTurn', gameId);
+  var gameTimeout = timeoutHash[gameId];
+  log('resetTimer', 'isGameTimeoutExists', !!gameTimeout);
+  if (gameTimeout && gameTimeout._onTimeout) {
+    Meteor.clearTimeout(gameTimeout);
+  }
+  timeoutHash[gameId] = Meteor.setTimeout(function() {
+    var timeLeftAfterCB =  getTimeLeftForTurn(gameId);
+    log('resetTimer timeout CB', 'gameId', gameId, "timeLeftAfterCB", timeLeftAfterCB);
+    Meteor.call('endTurn', gameId);
+  }, timeLeftForTurn);
 }
