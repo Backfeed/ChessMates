@@ -1,7 +1,7 @@
 Meteor.publish('games', publish);
 Meteor.publish('gamesList', publishList);
 
-Games.before.insert(beforeInsert);
+// Games.before.insert(beforeInsert);
 Games.before.remove(beforeRemove);
 
 Meteor.methods({
@@ -107,7 +107,7 @@ function executeMove(gameId, move, turn) {
 
 function executeMoveCB(gameId, turn, notation) {
   logMove(gameId, turn, notation);
-  cacheGameScore(gameId);
+  // cacheGameScore(gameId);
   if (getChessValidator(gameId).game_over())
     endGame(gameId);
   else
@@ -238,7 +238,8 @@ function startTurn (gameId, turn, notation) {
 
   function promptEngine() {
     var moves = getMoves(gameId, notation);
-    getChessEngine(gameId).getMove(moves);
+    Meteor.call('getAiMove', gameId, moves);
+    // getChessEngine(gameId).getMove(moves);
   }
 }
 
