@@ -9,11 +9,13 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
 
   angular.extend(ctrl, {
     restart: restart,
+    muteChanged: muteChanged,
     gameId: gameId,
     isDone: isDone,
     imDone: imDone,
     activeReputationSum: 0,
     currentTurnEvaluations: [],
+    alertIsMuted: false,
     selectedMove: {},
     game: {}
   });
@@ -23,9 +25,20 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   $scope.$watch('ctrl.game.fen', updateBoard, true);
   $scope.$watch('ctrl.game.score', updateTopBarScore);
   $scope.$watch('ctrl.game.winner', declareWinner);
+  $scope.$watch('ctrl.game.turnIndex', playSound);
   $scope.$watch('ctrl.currentTurnEvaluations', updateActiveReputationSum, true);
 
   init();
+
+  function playSound(turnIndex) {
+    if (! turnIndex || turnIndex === 1 || ctrl.alertIsMuted) return;
+    GameService.playAlert();
+  }
+
+  function muteChanged() {
+    if (ctrl.alertIsMuted)
+      GameService.pauseAlert();
+  }
 
   function init() {
     ctrl.game = GameModel.game[gameId];

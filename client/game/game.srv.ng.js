@@ -2,6 +2,7 @@ angular.module('blockchess.game.service', [])
 .service('GameService', GameService);
 
 function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator, ChessBoard) {
+  var ALERT_AUDIO = new Audio('audio/alert.mp3');
 
   return {
     cancelMoveHighlights: cancelMoveHighlights,
@@ -11,11 +12,22 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     updateBoard: updateBoard,
     singleMove: singleMove,
     getSugMoveBy: getSugMoveBy,
+    pauseAlert: pauseAlert,
     restart: restart,
+    playAlert: playAlert,
     archive: archive,
     isDone: isDone,
     imDone: imDone
   };
+
+  function playAlert() {
+    ALERT_AUDIO.play();
+  }
+
+  function pauseAlert() {
+    if (! ALERT_AUDIO.paused)
+      ALERT_AUDIO.pause();
+  }
 
   function isDone(gameId, uid) {
     if (!GameModel.game[gameId].playedThisTurn) { return false; }

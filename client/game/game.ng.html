@@ -6,7 +6,23 @@
     </div>
 
     <div flex="30">
-      <timer time-per-move="ctrl.game.timePerMove" time-move-started="ctrl.game.timeMoveStarted" is-game-in-play="ctrl.game.inPlay"></timer>
+      <div class="clearfix">
+        <timer time-per-move="ctrl.game.timePerMove" 
+               time-move-started="ctrl.game.timeMoveStarted" 
+               is-game-in-play="ctrl.game.inPlay"
+               class="pull-left"></timer>
+        
+        <!-- audio -->
+        <div class="pull-right">
+          <input id="alertIsMuted" 
+                 type="checkbox" 
+                 ng-model="ctrl.alertIsMuted" 
+                 ng-change="ctrl.muteChanged()"> 
+          <label for="alertIsMuted">Mute sounds</label>
+        </div>
+
+      </div>
+
       <suggested-moves selected-move="ctrl.selectedMove"
                        active-reputation-sum="ctrl.activeReputationSum"
                        suggested-moves="ctrl.suggestedMoves"
