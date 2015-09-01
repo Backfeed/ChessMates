@@ -1,6 +1,7 @@
 Meteor.publish('games', publish);
 Meteor.publish('gamesList', publishList);
 
+Games.before.insert(beforeInsert);
 Games.before.remove(beforeRemove);
 
 Meteor.methods({
@@ -285,7 +286,15 @@ function publishList(options) {
   return Games.find({ status: { $not: /archived/ } });
 }
 
-function beforeRemove(userId, game) {
+function beforeInsert(uid) {
+  if (Games.findOne({ status: { $not: /archived/ } })) {
+    var msg = "No support for multiple games at the moment"
+    log(msg);
+    throw new Meteor.Error(400, msg);
+  }
+}
+
+function beforeRemove(uid, game) {
   var gameId = game._id;
   Meteor.call('destroyEvaluations', gameId);
   Meteor.call('destroySugMoves', gameId);

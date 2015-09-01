@@ -2,8 +2,9 @@
   <div layout="row">
     <h1>Games</h1>
   </div>
-
-  <div layout="row">
+  
+  <!-- TODO :: Remove after solving multiple game engine bug -->
+  <div layout="row" ng-if="ctrl.games && ctrl.games.length === 0">
     <form ng-submit="ctrl.create()">
       <input type="text" ng-model="ctrl.newGame.title" placeholder="Game title" required>
       <button>Create new game</button>
