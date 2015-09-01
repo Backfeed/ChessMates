@@ -149,7 +149,6 @@ function restart(gameId) {
 function archive(gameId) {
   validateAdminOrOwner(gameId);
   destroyChessValidator(gameId);
-  destroyChessEngine(gameId);
 
   Games.update({ _id: gameId }, { $set: { status: 'archived', inPlay: false } });
 }
