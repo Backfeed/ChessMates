@@ -7,6 +7,7 @@ Meteor.methods({
   createGame: create,
   destroyGame: destroy,
   clientDone: clientDone,
+  resetTimer: resetTimer,
   endTurn: endTurn,
   executeMove: executeMove,
   AIGetMoveCb: AIGetMoveCb,
@@ -139,16 +140,8 @@ function restart(gameId) {
   function resetGameDataCB(err, result) {
     if (err) throw new Meteor.Error(403, err);
 
-    Games.update(
-      { _id: gameId }, 
-      { 
-        $set: { 
-          timeMoveStarted: Date.now(),
-          inPlay: true
-        }
-      }
-    )
-  }
+    Meteor.call('resetTimer', gameId);
+  } 
 
 }
 
@@ -221,15 +214,7 @@ function logMove(gameId, turn, notation) {
 }
 
 function startTurn (gameId, turn, notation) {
-  Games.update(
-    { _id: gameId }, 
-    { 
-      $set: { 
-        timeMoveStarted: Date.now(),
-        inPlay: true
-      }
-    }
-  );
+  Meteor.call('resetTimer', gameId);
 
   if (turn === 'team')
     promptEngine()
@@ -305,4 +290,16 @@ function getChessValidator(gameId) {
 
 function destroyChessValidator(gameId) {
   delete ChessValidators[gameId];
+}
+
+function resetTimer(gameId) {
+  Games.update(
+    { _id: gameId }, 
+    { 
+      $set: { 
+        timeMoveStarted: Date.now(),
+        inPlay: true
+      }
+    }
+  );
 }
