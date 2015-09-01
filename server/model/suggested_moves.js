@@ -44,8 +44,9 @@ function validateSufficientTokens(uid) {
 }
 
 function validateUniqueness(move) {
-  var suggested = SuggestedMoves.find({ "gameId": "1", "fen": move.fen });
-  if (suggested.count() > 0)
+  var existingMove = SuggestedMoves.findOne({ gameId: move.gameId, fen: move.fen });
+  log('validateUniqueness(move)', move, "existingMove", existingMove);
+  if (existingMove)
     throw new Meteor.Error(404, 'Move Already Suggested');
 }
 
