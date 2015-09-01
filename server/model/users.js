@@ -23,8 +23,8 @@ function onCreate (options, user) {
   if (options.profile)
     user.profile = options.profile;
 
-  user.tokens = 200;
-  user.reputation = 100;
+  user.tokens = 80;
+  user.reputation = 160;
 
   return user;
 }
