@@ -1,7 +1,6 @@
 Meteor.publish('games', publish);
 Meteor.publish('gamesList', publishList);
 
-// Games.before.insert(beforeInsert);
 Games.before.remove(beforeRemove);
 
 Meteor.methods({
@@ -107,7 +106,7 @@ function executeMove(gameId, move, turn) {
 
 function executeMoveCB(gameId, turn, notation) {
   logMove(gameId, turn, notation);
-  // cacheGameScore(gameId);
+  cacheGameScore(gameId);
   if (getChessValidator(gameId).game_over())
     endGame(gameId);
   else
@@ -117,7 +116,7 @@ function executeMoveCB(gameId, turn, notation) {
 function cacheGameScore(gameId) {
   var game = Games.findOne(gameId);
   var movesStr = movesArrToString(gameId);
-  var score = getChessEngine(gameId).evaluate(movesStr);
+  var score = Meteor.call('getAiScoreEvaluation', gameId, movesStr);
 }
 
 function AIGetMoveCb(gameId, move) {
@@ -234,12 +233,10 @@ function startTurn (gameId, turn, notation) {
 
   if (turn === 'team')
     promptEngine()
-    // Meteor.setTimeout(promptEngine, 5000); // TODO :: timeout is here due to weird bug
 
   function promptEngine() {
     var moves = getMoves(gameId, notation);
     Meteor.call('getAiMove', gameId, moves);
-    // getChessEngine(gameId).getMove(moves);
   }
 }
 
@@ -308,12 +305,4 @@ function getChessValidator(gameId) {
 
 function destroyChessValidator(gameId) {
   delete ChessValidators[gameId];
-}
-
-function getChessEngine(gameId) {
-  return ChessEngines[gameId] = ChessEngines[gameId] || Engine(gameId);
-}
-
-function destroyChessEngine(gameId) {
-  delete ChessEngines[gameId];
 }

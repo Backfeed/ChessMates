@@ -49,13 +49,6 @@ function GamesController($scope, $meteor, $state, Users, Toast) {
 
   function archive(gameId) {
     $meteor.call('archiveGame', gameId);
-    //   .then(success);
-
-    // function success() { 
-    //   ctrl.games = _.reject(ctrl.games, function(g) {
-    //     return g.gameId = gameId;
-    //   });
-    // }
   }
 
   function userCanArchive(game) {
