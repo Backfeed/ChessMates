@@ -83,7 +83,7 @@ function calcUserStake(uid) {
 // TODO :: Make it relative to reputation of entire clan?
 // The idea is that games that involve many players (and thus more reputation) should be rewarded higher than games with little players/reputation
 function getTotalTurnRep(moves) {
-  return R.compose(R.sum, R.map(User.getRep), mapUids, R.flatten, R.map(Evals.getList), F.mapIds)(moves)
+  return R.compose(R.sum, R.map(User.getRep), F.mapUids, R.flatten, R.map(Evals.getList), F.mapIds)(moves)
 }
 
 function getWinningMove(moves) {
