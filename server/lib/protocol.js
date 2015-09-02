@@ -52,6 +52,8 @@ function endTurn(gameId, turnIndex) {
       tokens += STARS_TOKENS[eval.stars-1] * User.getRep(eval.uid);
     });
 
+    if (tokens <= 0) return; // For this version of the protocl (v.2), negating score and tokens at end of move doesn't fit
+
     tokens = Math.round(tokens/totalTurnRep);
     var reputation = tokens * SUG_MOVE_TOKENS_REP_RATIO;
 
