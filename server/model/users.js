@@ -11,11 +11,11 @@ var log = _DEV.log('MODEL: USERS:');
 
 /********* Publish and hooks *********/
 function publish() {
-  return F.getUsersBy({}, ["emails", "status", "reputation", "tokens", "admin"]);
+  return F.getUsersBy({}, ["emails", "status", "reputation", "tokens", "admin", "profile"]);
 }
 
 function publishStatus() {
-  return F.getUsersBy({ 'status.online': true }, ["emails", "status", "reputation", "tokens", "admin"]);
+  return F.getUsersBy({ 'status.online': true }, ["emails", "status", "reputation", "tokens", "admin", "profile"]);
 }
 
 function onCreate (options, user) {
