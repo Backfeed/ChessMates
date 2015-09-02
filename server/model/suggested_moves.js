@@ -45,7 +45,6 @@ function validateSufficientTokens(uid) {
 
 function validateUniqueness(move) {
   var existingMove = SuggestedMoves.findOne({ gameId: move.gameId, fen: move.fen });
-  log('validateUniqueness(move)', move, "existingMove", existingMove);
   if (existingMove)
     throw new Meteor.Error(404, 'Move Already Suggested');
 }
@@ -54,13 +53,11 @@ function count(gameId, turnIndex) {
   return SuggestedMoves.find({gameId: gameId, turnIndex: turnIndex}).count();
 }
 
-
+  
 /********* Publish and hooks *********/
 function publish(gameId, turnIndex) {
-  log('publish(gameId, turnIndex)', gameId, turnIndex);
   if (! turnIndex) {
     var game = Games.findOne(gameId);
-    log('publish NO TURN INDEX - game', game, 'game.turnIndex', game.turnIndex);
     turnIndex = game ? game.turnIndex : 0;
     // TODO :: Fix this
     // On production sometimes the game returned by Games.findOne(gameId) won't have turnIndex.
