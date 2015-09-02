@@ -57,7 +57,15 @@ function count(gameId, turnIndex) {
 
 /********* Publish and hooks *********/
 function publish(gameId, turnIndex) {
-  turnIndex = turnIndex || Games.findOne(gameId).turnIndex;
+  log('publish(gameId, turnIndex)', gameId, turnIndex);
+  if (! turnIndex) {
+    var game = Games.findOne(gameId);
+    log('publish NO TURN INDEX - game', game, 'game.turnIndex', game.turnIndex);
+    turnIndex = game ? game.turnIndex : 0;
+    // TODO :: Fix this
+    // On production sometimes the game returned by Games.findOne(gameId) won't have turnIndex.
+    // This doesn't happen in dev. 
+  }
   return SuggestedMoves.find({ gameId: gameId, turnIndex: turnIndex });
 }
 
