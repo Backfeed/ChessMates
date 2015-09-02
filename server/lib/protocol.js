@@ -18,7 +18,7 @@ function rate(uid, moveId, newStars) {
   SugMov.inc(moveId, "reputation", BASE_FUNDS * multiplier);
 
   function distributeStake(evl) {
-    var amountToInc = User.getRep(evl.uid) * multiplier * getStarsFactor(evl.stars, newStars);
+    var amountToInc = User.getRep(evl.uid) * multiplier * getDecayVal(evl.stars, newStars);
     User.inc(evl.uid, 'reputation', amountToInc);
   }
 }
@@ -64,15 +64,17 @@ function endTurn(gameId, turnIndex) {
 function calcFullStake(newStars, evaluations) {
   var totalRep = 0;
   _.each(evaluations, function(evl) {
-    totalRep += User.getRep(evl.uid) * getStarsFactor(evl.stars, newStars);
+    totalRep += User.getRep(evl.uid) * getDecayVal(evl.stars, newStars);
   });
   return totalRep + BASE_FUNDS;
 }
 
-function getStarsFactor(newStars, stars) {
+function getDecayVal(newStars, stars) {
   var distance = newStars > stars ? newStars - stars : stars - newStars;
-  if (distance === 0)
-    return 1;
+  if (distance === 0) return 1;
+  if (distance === 1) return 0.5;
+  if (distance === 2) return 0.2;
+  if (distance === 3) return 0.05;
   return 0;
 }
 
