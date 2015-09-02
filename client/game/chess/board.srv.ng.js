@@ -7,11 +7,21 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
   };
 
   var service = {
+    cancelHighlights: cancelHighlights,
+    highlight: highlight,
     init: init,
     board: {}
   };
 
   return service;
+
+  function highlight(from, to) {
+    $('.square-'+from + ', .square-'+to).addClass('highlight-square');
+  }
+
+  function cancelHighlights() {
+    $('.highlight-square').removeClass('highlight-square');
+  }
 
   function init(gameId) {
     service.board[gameId] = new $window.ChessBoard('board', getConfig(gameId));

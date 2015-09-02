@@ -4,7 +4,6 @@ angular.module('blockchess.game.service', [])
 function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator, ChessBoard, Timer, DesktopNotifier) {
 
   return {
-    cancelMoveHighlights: cancelMoveHighlights,
     notifyNewTurn: notifyNewTurn,
     selectedMoveChanged: selectedMoveChanged,
     formatMoveFrom: formatMoveFrom,
@@ -32,7 +31,7 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
   }
 
   function restart(gameId) {
-    cancelMoveHighlights();
+    ChessBoard.cancelHighlights();
     
     var userIsSure = confirm('Restart the current game?');
     if (userIsSure)
@@ -53,9 +52,9 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
   }
 
   function updateBoard(gameId) {
+    ChessBoard.cancelHighlights();
     ChessBoard.board[gameId].position(GameModel.game[gameId].fen);
     ChessValidator.game[gameId].load(GameModel.game[gameId].fen);
-    cancelMoveHighlights();
   }
 
   function getSugMoveBy(sugMoves, attr, val) {
@@ -72,14 +71,10 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
   }
 
   function selectedMoveChanged(move) {
-    cancelMoveHighlights();
+    ChessBoard.cancelHighlights();
     if (!move || !move.notation) { return; }
     var formatted = formatMoveFrom(move.notation);
-    $('.square-'+formatted.from + ', .square-'+formatted.to).addClass('highlight-square');
-  }
-
-  function cancelMoveHighlights() {
-    $('.highlight-square').removeClass('highlight-square');
+    ChessBoard.highlight(formatted.from, formatted.to);
   }
 
   function movePieceBack(gameId) {
