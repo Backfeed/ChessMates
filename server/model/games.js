@@ -2,6 +2,7 @@ Meteor.publish('games', publish);
 Meteor.publish('gamesList', publishList);
 
 Games.before.remove(beforeRemove);
+Games.after.insert(afterInsert);
 
 Meteor.methods({
   createGame: create,
@@ -282,6 +283,10 @@ function beforeRemove(uid, game) {
   Meteor.call('destroyEvaluations', gameId);
   Meteor.call('destroySugMoves', gameId);
   Meteor.call('destroyFeeds', gameId);
+}
+
+function afterInsert(uid, game) {
+  updateTimeoutHash(game._id);
 }
 
 function getChessValidator(gameId) {
