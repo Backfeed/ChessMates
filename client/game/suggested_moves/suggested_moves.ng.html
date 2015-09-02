@@ -1,6 +1,6 @@
 <md-list>
   <md-divider></md-divider>
-  <md-list-item ng-repeat="move in ctrl.suggestedMoves | orderBy: '-score'"
+  <md-list-item ng-repeat="move in ctrl.suggestedMoves"
                 suggested-move
                 active-reputation-sum="ctrl.activeReputationSum"
                 move="move"
