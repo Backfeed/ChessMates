@@ -30,7 +30,6 @@ function onCreate (options, user) {
     Meteor.setTimeout(function() {
       // Doesn't work withoutthe timeout.
       // It could be that Roles package needs the after create method (which I can't find, maybe it doesn't even exist in meteor accountspackage)
-      log('timeout ended! ')
       User.makeAdmin(user._id);
     }, 5000);
   }
