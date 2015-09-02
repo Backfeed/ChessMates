@@ -1,7 +1,7 @@
 angular.module('blockchess.game.service', [])
 .service('GameService', GameService);
 
-function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator, ChessBoard) {
+function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator, ChessBoard, Timer) {
   var ALERT_AUDIO = new Audio('audio/alert.mp3');
 
   return {
@@ -10,6 +10,7 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     formatMoveFrom: formatMoveFrom,
     movePieceBack: movePieceBack,
     updateBoard: updateBoard,
+    isTurnAboutToEnd: isTurnAboutToEnd,
     singleMove: singleMove,
     getSugMoveBy: getSugMoveBy,
     pauseAlert: pauseAlert,
@@ -104,6 +105,10 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     var fen = ChessValidator.game[gameId].fen();
     
     $meteor.call('createSugMov', gameId, turnIndex, notation, fen)
+  }
+
+  function isTurnAboutToEnd(gameId) {
+    return Timer.getTurnTimeLeft(gameId) < 7000;
   }
 
 }

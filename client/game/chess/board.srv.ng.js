@@ -2,7 +2,7 @@ angular.module('blockchess.game.chess.boardService', [])
 .service('ChessBoard', ChessBoard);
 
 function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
-  var getSugMoveBy;
+  var GameService;
   var cfg = {
   };
 
@@ -38,9 +38,9 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
         return false;
       }
 
-      getSugMoveBy = getSugMoveBy || $injector.get('GameService').getSugMoveBy;
+      GameService = GameService || $injector.get('GameService');
 
-      if (getSugMoveBy(gameId, 'uid', Meteor.userId())) {
+      if (GameService.getSugMoveBy(gameId, 'uid', Meteor.userId())) {
         Toast.toast('Can only suggest one move per turn');
         return false;
       }
@@ -49,6 +49,13 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
         Toast.toast('Suggesting a move costs ' + MOVE_COST + ' token, you have ' + Meteor.user().tokens);
         return false;
       }
+
+      if (GameService.isTurnAboutToEnd(gameId)) {
+        Toast.toast('Turn is about to end. No more suggestions please!');
+        return false;
+      }
+
+
 
       return true;
     }
