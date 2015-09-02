@@ -218,7 +218,7 @@ function startTurn (gameId, turn, notation) {
   Meteor.call('resetTimer', gameId);
 
   if (turn === 'team')
-    promptEngine()
+    Meteor.setTimeout(promptEngine, 1500);
 
   function promptEngine() {
     var moves = getMoves(gameId, notation);
