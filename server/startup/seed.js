@@ -14,15 +14,10 @@ Meteor.startup(function () {
 });
 
 function makeBackfeedersAdmins() {
-  var backfeeders = Meteor.users.find({ 'emails.0.address': /backfeed.cc/ }).fetch();
+  var backfeeders = User.getBackfeeders();
   if (!backfeeders) 
     return log('Warning! no backfeeders found!');
 
-  _.each(backfeeders, makeAdmin);
+  _.each(backfeeders, User.makeAdmin);
 }
-
-function makeAdmin(user) {
-  Roles.addUsersToRoles([user._id], "admin");
-}
-
 /* jshint ignore:end */
