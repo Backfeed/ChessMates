@@ -10,16 +10,6 @@
         <timer game-id="ctrl.gameId"
                is-game-in-play="ctrl.game.inPlay"
                class="pull-left"></timer>
-        
-        <!-- audio -->
-        <div class="pull-right">
-          <input id="alertIsMuted" 
-                 type="checkbox" 
-                 ng-model="ctrl.alertIsMuted" 
-                 ng-change="ctrl.muteChanged()"> 
-          <label for="alertIsMuted">Mute sounds</label>
-        </div>
-
       </div>
 
       <suggested-moves selected-move="ctrl.selectedMove"

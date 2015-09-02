@@ -3,19 +3,17 @@ angular.module('blockchess.game.controller', [])
 
 var log = _DEV.log('GAME CTRL');
 
-function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluation, gamePromises, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar) {
+function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluation, gamePromises, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar, DesktopNotifier) {
   var gameId = $state.params.id;
   var ctrl = this;
 
   angular.extend(ctrl, {
     restart: restart,
-    muteChanged: muteChanged,
     gameId: gameId,
     isDone: isDone,
     imDone: imDone,
     activeReputationSum: 0,
     currentTurnEvaluations: [],
-    alertIsMuted: false,
     selectedMove: {},
     game: {}
   });
@@ -25,19 +23,15 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   $scope.$watch('ctrl.game.fen', updateBoard, true);
   $scope.$watch('ctrl.game.score', updateTopBarScore);
   $scope.$watch('ctrl.game.winner', declareWinner);
-  $scope.$watch('ctrl.game.turnIndex', playSound);
+  $scope.$watch('ctrl.game.turnIndex', notifyNewTurn);
   $scope.$watch('ctrl.currentTurnEvaluations', updateActiveReputationSum, true);
 
   init();
 
-  function playSound(turnIndex) {
-    if (! turnIndex || turnIndex === 1 || ctrl.alertIsMuted) return;
-    GameService.playAlert();
-  }
+  function notifyNewTurn(turnIndex, prevTurnIndex) {
+    if (! turnIndex || turnIndex === 1 || ! prevTurnIndex || turnIndex === prevTurnIndex) return;
 
-  function muteChanged() {
-    if (ctrl.alertIsMuted)
-      GameService.pauseAlert();
+    GameService.notifyNewTurn(turnIndex);
   }
 
   function init() {

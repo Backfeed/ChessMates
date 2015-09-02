@@ -1,11 +1,11 @@
 angular.module('blockchess.game.service', [])
 .service('GameService', GameService);
 
-function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator, ChessBoard, Timer) {
-  var ALERT_AUDIO = new Audio('audio/alert.mp3');
+function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator, ChessBoard, Timer, DesktopNotifier) {
 
   return {
     cancelMoveHighlights: cancelMoveHighlights,
+    notifyNewTurn: notifyNewTurn,
     selectedMoveChanged: selectedMoveChanged,
     formatMoveFrom: formatMoveFrom,
     movePieceBack: movePieceBack,
@@ -13,22 +13,11 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     isTurnAboutToEnd: isTurnAboutToEnd,
     singleMove: singleMove,
     getSugMoveBy: getSugMoveBy,
-    pauseAlert: pauseAlert,
     restart: restart,
-    playAlert: playAlert,
     archive: archive,
     isDone: isDone,
     imDone: imDone
   };
-
-  function playAlert() {
-    ALERT_AUDIO.play();
-  }
-
-  function pauseAlert() {
-    if (! ALERT_AUDIO.paused)
-      ALERT_AUDIO.pause();
-  }
 
   function isDone(gameId, uid) {
     if (!GameModel.game[gameId].playedThisTurn) { return false; }
@@ -109,6 +98,14 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
 
   function isTurnAboutToEnd(gameId) {
     return Timer.getTurnTimeLeft(gameId) < 7000;
+  }
+
+  function notifyNewTurn (turnIndex) {
+    // TODO :: Add user's changes: rep, tokens
+    // TODO :: Add msg if user's move was chosen
+    var msg = 'Turn ' + turnIndex + ' has begun!';
+    DesktopNotifier.notify(msg);
+
   }
 
 }

@@ -1,6 +1,7 @@
 angular.module('blockchess.util', [
   // Services
   'blockchess.util.common',
+  'blockchess.util.desktopNotifier',
   // Directives
   'blockchess.util.timeAgo',
   // Filters
