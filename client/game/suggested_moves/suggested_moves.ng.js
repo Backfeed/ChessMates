@@ -1,5 +1,6 @@
 angular.module('blockchess.game.suggestedMoves', [
   // Services
+  'blockchess.game.suggestedMoves.service',
   'blockchess.game.suggestedMoves.evaluations',
   // Directives
   'blockchess.game.suggestedMoves.move'

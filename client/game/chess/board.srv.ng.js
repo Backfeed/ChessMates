@@ -1,7 +1,7 @@
 angular.module('blockchess.game.chess.boardService', [])
 .service('ChessBoard', ChessBoard);
 
-function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
+function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast, SugMovService) {
   var GameService;
   var cfg = {
   };
@@ -63,10 +63,9 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
         return false;
       }
 
-      GameService = GameService || $injector.get('GameService');
-
-      if (GameService.getSugMoveBy(gameId, 'uid', Meteor.userId())) {
-        Toast.toast('Can only suggest one move per turn');
+      var currentUserMoveCount = SugMovService.getCurrentUserMoveCount(gameId);
+      if (currentUserMoveCount >= MOVES_PER_TURN) {
+        Toast.toast('Can only suggest ' + MOVES_PER_TURN + ' moves per turn');
         return false;
       }
 
@@ -75,12 +74,11 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
         return false;
       }
 
+      GameService = GameService || $injector.get('GameService');
       if (GameService.isTurnAboutToEnd(gameId)) {
         Toast.toast('Turn is about to end. No more suggestions please!');
         return false;
       }
-
-
 
       return true;
     }

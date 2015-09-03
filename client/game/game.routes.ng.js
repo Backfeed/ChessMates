@@ -11,15 +11,27 @@ function gameRoutes($stateProvider) {
       controller: 'GameController',
       controllerAs: 'ctrl',
       resolve: {
-        gamePromises: getGameData
+        gamePromises: initGameModel,
+        sugMovePromise: initSugMoveModel
       }
     });
 
 }
 
-function getGameData(GameModel, $stateParams) {
+// These resolve are a bit weird 
+// We don't care about the return value, which is the subscription handle returned from angular meteor subscribe
+// We do this to make sure the controller can safety get the data from the models
+function initGameModel(GameModel, $stateParams) {
   return GameModel.init($stateParams.id)
           .then(function(response) {
             return response;
           });
 }
+
+function initSugMoveModel(SugMovService, $stateParams) {
+  return SugMovService.init($stateParams.id)
+          .then(function(response) {
+            return response;
+          });
+}
+

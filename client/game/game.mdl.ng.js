@@ -15,14 +15,8 @@ function GameModel($rootScope, $meteor, $q, ChessValidator) {
 
   function init(gameId) {
     ChessValidator.init(gameId);
-    var gamesSubPromise = $scope.$meteorSubscribe('games', gameId)
     model.game[gameId] = $scope.$meteorObject(Games, { _id: gameId }, false);
-
-    return $q.all({
-      games: gamesSubPromise
-    }).then(function(res) {
-      return res;
-    });
+    return $scope.$meteorSubscribe('games', gameId);
   }
 
 }

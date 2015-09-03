@@ -3,7 +3,7 @@ angular.module('blockchess.game.controller', [])
 
 var log = _DEV.log('GAME CTRL');
 
-function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluation, gamePromises, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar, DesktopNotifier) {
+function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluation, gamePromises, Users, GameService, GameModel, ChessBoard, ChessValidator, Toast, TopBar, DesktopNotifier, SugMovService) {
   var gameId = $state.params.id;
   var ctrl = this;
 
@@ -36,7 +36,7 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
 
   function init() {
     ctrl.game = GameModel.game[gameId];
-    ctrl.suggestedMoves = $scope.$meteorCollection(SuggestedMoves, false);
+    ctrl.suggestedMoves = SugMovService.moves[gameId];
     setTopBarMenu();
     setTopBarTitle();
 
@@ -102,9 +102,9 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
 
   function singleMove(e, notation) {
     GameService.movePieceBack(gameId);
-    if (GameService.getSugMoveBy(ctrl.suggestedMoves, 'notation', notation)) {
+    if ( SugMovService.isMoveExists(gameId, notation) ) {
       Toast.toast('move exists');
-      ctrl.selectedMove = GameService.getSugMoveBy(ctrl.suggestedMoves, 'notation', notation);
+      ctrl.selectedMove = SugMovService.getByNotation(gameId, notation);
       return false;
     }
     GameService.singleMove(gameId, notation);

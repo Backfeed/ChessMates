@@ -11,7 +11,6 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     updateBoard: updateBoard,
     isTurnAboutToEnd: isTurnAboutToEnd,
     singleMove: singleMove,
-    getSugMoveBy: getSugMoveBy,
     restart: restart,
     archive: archive,
     isDone: isDone,
@@ -55,12 +54,6 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     ChessBoard.cancelHighlights();
     ChessBoard.board[gameId].position(GameModel.game[gameId].fen);
     ChessValidator.game[gameId].load(GameModel.game[gameId].fen);
-  }
-
-  function getSugMoveBy(sugMoves, attr, val) {
-    return _.find(sugMoves, function(m) {
-      return m[attr] === val;
-    });
   }
 
   function formatMoveFrom(notation) {
