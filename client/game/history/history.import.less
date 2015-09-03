@@ -1,10 +1,16 @@
 .history-item {
+  position: relative;
   float: left;
   margin-right: 10px;
   margin-top: 10px;
 }
 
-.history-item:not(:first-child) {
+.history-item:not(:first-child):nth-child(odd) {
   padding-left: 10px;
   border-left: 1px solid gray;
+}
+
+.history-item:nth-child(odd):before {
+  content: attr(data-index) + '.';
+  margin-right: 3px;
 }

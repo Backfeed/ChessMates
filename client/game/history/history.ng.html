@@ -1,7 +1,9 @@
 <div class="history">
-  <div ng-repeat="move in ctrl.moves | groupEvery: 2: ' '"
-       class="history-item">
-    <span>{{ ::$index + 1 }}.</span>  
+  <div ng-repeat="move in ctrl.moves"
+       data-index="{{ ::ctrl.getTurnBy($index) }}"
+       class="history-item"
+       ng-mouseover="ctrl.highlight(move)"
+       ng-mouseleave="ctrl.unHighlight(move)">
     <span class="bold">{{ ::move }}</span>
   </div>
 </div>
