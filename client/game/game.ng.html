@@ -15,9 +15,11 @@
           <div>
             <input type="checkbox" 
                    id="im-done-for-this-tun" 
+                   ng-model="ctrl.currnetPlayerIsDone"
                    ng-change="ctrl.imDone()"
-                   ng-disabled="!ctrl.game.inPlay || ctrl.currnetPlayerIsDone"
-                   ng-model="ctrl.currnetPlayerIsDone">
+                   ng-disabled="ctrl.currnetPlayerIsDone || 
+                                !ctrl.game.inPlay || 
+                                ctrl.game.turn === 'AI'">
             <label for="im-done-for-this-tun">I'm done</label>
           </div>
         </span>

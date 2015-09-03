@@ -9,6 +9,7 @@ Meteor.methods({
   destroyGame: destroy,
   clientDone: clientDone,
   resetTimer: resetTimer,
+  setTurn: setTurn,
   endTurn: endTurn,
   getTimeLeftForTurn: getTimeLeftForTurn,
   executeMove: executeMove,
@@ -51,7 +52,6 @@ function clientDone(gameId) {
   var game = validateGame(gameId);
   validateUser(Meteor.userId());
   validateUniqueness(game.playedThisTurn);
-  Meteor.call('validateSugMovExists', gameId, game.turnIndex);
 
   Games.update(
     { _id: gameId },
@@ -94,7 +94,6 @@ function executeMove(gameId, move, turn) {
         pgn: move
       },
       $set: {
-        turn: turn,
         playedThisTurn: [],
         fen: getFen(gameId, move)
       },
@@ -110,10 +109,14 @@ function executeMove(gameId, move, turn) {
 function executeMoveCB(gameId, turn, notation) {
   logMove(gameId, turn, notation);
   cacheGameScore(gameId);
-  if (getChessValidator(gameId).game_over())
+  if (getChessValidator(gameId).game_over()) {
     endGame(gameId);
-  else
-    startTurn(gameId, turn, notation);
+  }
+
+  else {
+    var nextTurn = turn === 'AI' ? 'team' : 'AI';
+    startTurn(gameId, nextTurn, notation);
+  }
 }
 
 function cacheGameScore(gameId) {
@@ -186,6 +189,7 @@ function resetGameData(gameId, CB) {
         playedThisTurn: [],
         moves: [],
         pgn: [],
+        turn: 'team',
         score: 0,
         turnIndex: 1,
         fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
@@ -214,10 +218,19 @@ function logMove(gameId, turn, notation) {
   Meteor.call('log', gameId, turnIndex, text, 'move');
 }
 
+function setTurn(gameId, turn) {
+  Games.update(
+    { _id: gameId },
+    { $set: { turn: turn } }
+  );
+}
+
 function startTurn (gameId, turn, notation) {
+  setTurn(gameId, turn);
+
   Meteor.call('resetTimer', gameId);
 
-  if (turn === 'team')
+  if (turn === 'AI')
     Meteor.setTimeout(promptEngine, 1500);
 
   function promptEngine() {

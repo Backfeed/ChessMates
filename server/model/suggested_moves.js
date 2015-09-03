@@ -6,16 +6,10 @@ SuggestedMoves.after.insert(afterInsert);
 Meteor.methods({
   createSugMov: create,
   destroySugMoves: destroyList,
-  validateSugMovExists: validateExists,
   noSugMov: isBlank
 });
 
 var log = _DEV.log('MODEL: SUG MOV:');
-
-function validateExists(gameId, turnIndex) {
-  if (isBlank(gameId, turnIndex))
-    throw new Meteor.Error(403, 'No moves suggested');
-}
 
 function isBlank(gameId, turnIndex) {
   return !count(gameId, turnIndex);
