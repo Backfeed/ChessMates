@@ -3,7 +3,7 @@ angular.module('blockchess.game.suggestedMoves.service', [])
 
 var log = _DEV.log('SugMovService');
 
-function SugMovService($rootScope, $meteor, GameModel) {
+function SugMovService($q, $rootScope, $meteor, GameModel) {
   var $scope = $rootScope.$new();
 
   var service = {
@@ -28,11 +28,10 @@ function SugMovService($rootScope, $meteor, GameModel) {
   return service;
 
   function init(gameId) {
-    var game = GameModel.game[gameId];
-    var subscriptionPromise;
-    service.moves[gameId] = $scope.$meteorCollection(SuggestedMoves, { gameId: gameId, turnIndex: game.turnIndex }, false);
-
-    return $scope.$meteorSubscribe('suggestedMoves', gameId);
+    var deferred = $q.defer();
+    service.moves[gameId] = $scope.$meteorCollection(SuggestedMoves, { gameId: gameId }, false);
+    deferred.resolve(service.moves[gameId]);
+    return deferred.promise;
   }
 
   function getCurrentUserMoveCount(gameId) {
