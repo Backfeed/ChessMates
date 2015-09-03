@@ -12,6 +12,14 @@
                class="pull-left"></timer>
         <span class="pull-right">
           Score: {{ ctrl.game.score }}
+          <div>
+            <input type="checkbox" 
+                   id="im-done-for-this-tun" 
+                   ng-change="ctrl.imDone()"
+                   ng-disabled="!ctrl.game.inPlay || ctrl.currnetPlayerIsDone"
+                   ng-model="ctrl.currnetPlayerIsDone">
+            <label for="im-done-for-this-tun">I'm done</label>
+          </div>
         </span>
                    
       </div>

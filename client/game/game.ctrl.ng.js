@@ -10,6 +10,7 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   angular.extend(ctrl, {
     gameId: gameId,
     isDone: isDone,
+    currnetPlayerIsDone: false,
     imDone: imDone,
     activeReputationSum: 0,
     currentTurnEvaluations: [],
@@ -21,10 +22,15 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard, true);
   $scope.$watch('ctrl.game.winner', declareWinner);
-  $scope.$watch('ctrl.game.turnIndex', notifyNewTurn);
+  $scope.$watch('ctrl.game.turnIndex', turnChanged);
   $scope.$watch('ctrl.currentTurnEvaluations', updateActiveReputationSum, true);
 
   init();
+
+  function turnChanged(turnIndex, prevTurnIndex) {
+    notifyNewTurn(turnIndex, prevTurnIndex);
+    ctrl.currnetPlayerIsDone = false;
+  }
 
   function notifyNewTurn(turnIndex, prevTurnIndex) {
     if (! turnIndex || turnIndex === 1 || ! prevTurnIndex || turnIndex === prevTurnIndex) return;
@@ -37,6 +43,7 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
     ctrl.suggestedMoves = SugMovService.moves[gameId];
     GameService.setTopBarMenu(gameId);
     TopBar.setDynamicTitle(ctrl.game.title);
+    ctrl.currnetPlayerIsDone = GameService.isDone(gameId);
 
     $meteor.autorun($scope, function() {
       $scope.$meteorSubscribe('suggestedMoves', gameId, $scope.getReactively('ctrl.game.turnIndex'));
@@ -53,8 +60,11 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
     }
   }
 
+  function imDone() { 
+    GameService.imDone(gameId);
+  }
+
   function isDone()  { return GameService.isDone(gameId);    }
-  function imDone()  { GameService.imDone(gameId);     }
 
   function updateBoard() {
     if (ctrl.game && ctrl.game.fen && ChessValidator.game[gameId] && ChessBoard.board[gameId]) {
