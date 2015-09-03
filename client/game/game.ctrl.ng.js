@@ -21,7 +21,6 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   $scope.$on('singleMove::'+gameId, singleMove);
   $scope.$watch('ctrl.selectedMove', GameService.selectedMoveChanged);
   $scope.$watch('ctrl.game.fen', updateBoard, true);
-  $scope.$watch('ctrl.game.score', updateTopBarScore);
   $scope.$watch('ctrl.game.winner', declareWinner);
   $scope.$watch('ctrl.game.turnIndex', notifyNewTurn);
   $scope.$watch('ctrl.currentTurnEvaluations', updateActiveReputationSum, true);
@@ -108,10 +107,6 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
       return false;
     }
     GameService.singleMove(gameId, notation);
-  }
-
-  function updateTopBarScore() {
-    TopBar.setDynamicText("Score: " + ctrl.game.score);
   }
 
   function declareWinner(winner) {

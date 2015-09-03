@@ -10,6 +10,10 @@
         <timer game-id="ctrl.gameId"
                is-game-in-play="ctrl.game.inPlay"
                class="pull-left"></timer>
+        <span class="pull-right">
+          Score: {{ ctrl.game.score }}
+        </span>
+                   
       </div>
 
       <suggested-moves selected-move="ctrl.selectedMove"
