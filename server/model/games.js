@@ -75,7 +75,7 @@ function endTurn(gameId) {
 
 
   var turnIndex = game.turnIndex;
-  if (Meteor.call('noSugMov', gameId, turnIndex))
+  if (Meteor.call('isSugMovBlank', gameId, turnIndex))
     return endGame(gameId, 'AI');
 
   if (game.inPlay) {

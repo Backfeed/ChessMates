@@ -6,7 +6,7 @@ SuggestedMoves.after.insert(afterInsert);
 Meteor.methods({
   createSugMov: create,
   destroySugMoves: destroyList,
-  noSugMov: isBlank
+  isSugMovBlank: isBlank
 });
 
 var log = _DEV.log('MODEL: SUG MOV:');
