@@ -8,7 +8,6 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   var ctrl = this;
 
   angular.extend(ctrl, {
-    restart: restart,
     gameId: gameId,
     isDone: isDone,
     imDone: imDone,
@@ -36,8 +35,8 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   function init() {
     ctrl.game = GameModel.game[gameId];
     ctrl.suggestedMoves = SugMovService.moves[gameId];
-    setTopBarMenu();
-    setTopBarTitle();
+    GameService.setTopBarMenu(gameId);
+    TopBar.setDynamicTitle(ctrl.game.title);
 
     $meteor.autorun($scope, function() {
       $scope.$meteorSubscribe('suggestedMoves', gameId, $scope.getReactively('ctrl.game.turnIndex'));
@@ -54,44 +53,8 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
     }
   }
 
-  function setTopBarMenu() {
-    TopBar.setDynamicMenu([
-      {
-        label: 'I\'m done',
-        click: imDone,
-        isDisabled: isDone,
-        requireUser: true
-      },
-      {
-        label: 'End turn',
-        click: endTurn,
-        ownerId: ctrl.game.ownerId,
-        requireAdmin: true
-      },
-      {
-        label: 'Restart',
-        click: restart,
-        ownerId: ctrl.game.ownerId,
-        requireAdmin: true
-      },
-      {
-        label: 'Archive',
-        click: archive,
-        ownerId: ctrl.game.ownerId,
-        requireAdmin: true
-      }
-    ]);
-  }
-
-  function setTopBarTitle() {
-    TopBar.setDynamicTitle(ctrl.game.title);
-  }
-
-  function restart() { GameService.restart(gameId);          }
-  function archive() { GameService.archive(gameId);          }
   function isDone()  { return GameService.isDone(gameId);    }
   function imDone()  { GameService.imDone(gameId);     }
-  function endTurn() { $meteor.call('endTurn', gameId); }
 
   function updateBoard() {
     if (ctrl.game && ctrl.game.fen && ChessValidator.game[gameId] && ChessBoard.board[gameId]) {

@@ -1,13 +1,14 @@
 angular.module('blockchess.game.service', [])
 .service('GameService', GameService);
 
-function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator, ChessBoard, Timer, DesktopNotifier) {
+function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator, ChessBoard, Timer, DesktopNotifier, TopBar) {
 
   return {
     notifyNewTurn: notifyNewTurn,
     selectedMoveChanged: selectedMoveChanged,
     formatMoveFrom: formatMoveFrom,
     movePieceBack: movePieceBack,
+    setTopBarMenu: setTopBarMenu,
     updateBoard: updateBoard,
     isTurnAboutToEnd: isTurnAboutToEnd,
     singleMove: singleMove,
@@ -16,6 +17,34 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     isDone: isDone,
     imDone: imDone
   };
+
+  function setTopBarMenu(gameId) {
+    var gameOwnerId = GameModel.game[gameId].ownerId;
+    TopBar.setDynamicMenu([
+      {
+        label: 'End turn',
+        click: function() { return endTurn(gameId) },
+        ownerId: gameOwnerId,
+        requireAdmin: true
+      },
+      {
+        label: 'Restart',
+        click: function() { return restart(gameId) },
+        ownerId: gameOwnerId,
+        requireAdmin: true
+      },
+      {
+        label: 'Archive',
+        click: function() { return archive(gameId) },
+        ownerId: gameOwnerId,
+        requireAdmin: true
+      }
+    ]);
+  }
+
+  function endTurn(gameId) { 
+    $meteor.call('endTurn', gameId); 
+  }
 
   function isDone(gameId, uid) {
     if (!GameModel.game[gameId].playedThisTurn) { return false; }
