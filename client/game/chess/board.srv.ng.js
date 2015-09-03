@@ -9,6 +9,7 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
   var service = {
     cancelHighlights: cancelHighlights,
     highlight: highlight,
+    unHighlight: unHighlight,
     init: init,
     board: {}
   };
@@ -17,6 +18,10 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
 
   function highlight(from, to) {
     $('.square-'+from + ', .square-'+to).addClass('highlight-square');
+  }
+
+  function unHighlight(from, to) {
+    $('.square-'+from + ', .square-'+to).removeClass('highlight-square');
   }
 
   function cancelHighlights() {
