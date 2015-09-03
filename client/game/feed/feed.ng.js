@@ -13,10 +13,12 @@ function Feed() {
   };
 }
 
-function FeedController($scope, $meteor, Toast) {
+function FeedController($scope, $meteor, Toast, ChessBoard) {
   var ctrl = this;
 
   angular.extend(ctrl, {
+    highlightBoard: highlightBoard,
+    unHighlightBoard: unHighlightBoard,
     createComment: createComment,
     showEvaluations: true,
     showComments: true,
@@ -32,6 +34,20 @@ function FeedController($scope, $meteor, Toast) {
     $scope.$meteorSubscribe('feeds', ctrl.gameId).then(function() {
       ctrl.items = $scope.$meteorCollection(Feeds, false);
     });
+  }
+  
+  function highlightBoard(item) {
+    var squares = getSquares(item);
+    ChessBoard.highlight(squares);
+  }
+
+  function unHighlightBoard(item) {
+    var squares = getSquares(item);
+    ChessBoard.unHighlight(squares);
+  }
+
+  function getSquares(item) {
+    return item.text.match(/[a-h][1-8]/g);
   }
 
   function createComment() {

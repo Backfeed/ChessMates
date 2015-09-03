@@ -19,17 +19,17 @@
                || ctrl.showMoves && item.type === 'move'
                || ctrl.showEvaluations && item.type === 'evaluation'
                ">
-      <div class="item" layout="row" layout-align="space-between">
-        <div class="item-meta">
-          <span ng-if="item.type === 'comment'">
-            <span class="bold">
-              {{ item.uid | displayName }}
-            </span>:
-          </span>
-          <span ng-class="{ 'secondary': item.type !== 'comment' }">
-            {{ item.text }}
-          </span>
-        </div>
+      <div class="item" layout="row"
+                        ng-mouseenter="ctrl.highlightBoard(item)"
+                        ng-mouseleave="ctrl.unHighlightBoard(item)">
+        <span ng-if="item.type === 'comment'">
+          <span class="bold">
+            {{ item.uid | displayName }}
+          </span>:
+        </span>
+        <span ng-class="{ 'secondary': item.type !== 'comment' }">
+          {{ item.text }}
+        </span>
       </div>
     </div>
   </div>

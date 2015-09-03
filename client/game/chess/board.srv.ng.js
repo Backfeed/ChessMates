@@ -16,12 +16,22 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast) {
 
   return service;
 
-  function highlight(from, to) {
-    $('.square-'+from + ', .square-'+to).addClass('highlight-square');
+  function highlight(squares) {
+    selector = getSquareSelector(squares);
+    $(selector).addClass('highlight-square');
   }
 
-  function unHighlight(from, to) {
-    $('.square-'+from + ', .square-'+to).removeClass('highlight-square');
+  function unHighlight(squares) {
+    selector = getSquareSelector(squares);
+    $(selector).removeClass('highlight-square');
+  }
+
+  function getSquareSelector(squares) {
+    return _.map(squares, addSquarePrefix).join(", ");
+  }
+
+  function addSquarePrefix(square) {
+    return '.square-' + square;
   }
 
   function cancelHighlights() {
