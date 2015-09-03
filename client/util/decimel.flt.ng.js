@@ -3,6 +3,6 @@ angular.module('blockchess.util.decimel', [])
 
 function decimelFilter() {
   return function(n, l) {
-    return decimel(l, n);
+    return F.decimel(l, n);
   }
 }
