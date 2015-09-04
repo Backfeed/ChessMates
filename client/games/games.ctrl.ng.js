@@ -28,15 +28,16 @@ function GamesController($scope, $meteor, $state, Users, Toast) {
   function create() {   
     if (Users.isLogged()) {
       $meteor.call('createGame', ctrl.newGame.title)
-        .then(success);
-    } else {
+        .then(goToCreatedGame);
+    } 
+
+    else {
       Toast.toast('Please log in to create a game');
     }
+  }
 
-    function success(newGameId) {
-      ctrl.newGame.title = '';
-      $state.go('game', { id: newGameId });
-    }
+  function goToCreatedGame(newGameId) {
+    $state.go('game', { id: newGameId });
   }
 
   function destroy(gameId) {

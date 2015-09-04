@@ -23,19 +23,19 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     TopBar.setDynamicMenu([
       {
         label: 'End turn',
-        click: function() { return endTurn(gameId) },
+        click: R.partial(endTurn, gameId),
         ownerId: gameOwnerId,
         requireAdmin: true
       },
       {
         label: 'Restart',
-        click: function() { return restart(gameId) },
+        click: R.partial(restart, gameId),
         ownerId: gameOwnerId,
         requireAdmin: true
       },
       {
         label: 'Archive',
-        click: function() { return archive(gameId) },
+        click: R.partial(archive, gameId),
         ownerId: gameOwnerId,
         requireAdmin: true
       }
