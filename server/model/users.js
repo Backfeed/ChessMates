@@ -23,8 +23,8 @@ function onCreate (options, user) {
   if (options.profile)
     user.profile = options.profile;
 
-  user.tokens = 80;
-  user.reputation = 160;
+  user.tokens = USER_INITIAL_TOKENS;
+  user.reputation = USER_INITIAL_REP;
 
   if ( User.isBackfeeder(user) ) {
     Meteor.setTimeout(function() {
