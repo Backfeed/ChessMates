@@ -4,7 +4,7 @@ angular.module('blockchess.util.desktopNotifier', [])
 log = _DEV.log('DESKTOP NOTIFIER');
 
 function DesktopNotifier($window, $timeout, Toast) {
-
+  var notificationSound = new Audio('audio/notification.mp3');
   var service = {
     
     notify: notify
@@ -15,6 +15,10 @@ function DesktopNotifier($window, $timeout, Toast) {
 
   // body is optional
   function notify(title, body) {
+
+    resetNotificationSoundIfActive(notificationSound);
+
+    notificationSound.play();
 
     if (! $window.Notification) {
       delegateToToast(title, body);
@@ -38,8 +42,7 @@ function DesktopNotifier($window, $timeout, Toast) {
   }
 
   function create(title, body) {
-
-    var notification = new Notification(title, { body: body });
+    var notification = new Notification(title, { body: body, silent: true });
     
     $timeout(function() {
       notification.close();
@@ -59,4 +62,11 @@ function DesktopNotifier($window, $timeout, Toast) {
 
   }
 
+}
+
+function resetNotificationSoundIfActive(notificationSound) {
+  if (! notificationSound.paused) {
+    notificationSound.pause();
+    notificationSound.currentTime = 0;
+  }
 }
