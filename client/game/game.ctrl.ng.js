@@ -8,10 +8,9 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   var ctrl = this;
 
   angular.extend(ctrl, {
-    gameId: gameId,
-    isDone: isDone,
-    currnetPlayerIsDone: false,
     imDone: imDone,
+    gameId: gameId,
+    currnetPlayerIsDone: false,
     activeReputationSum: 0,
     currentTurnEvaluations: [],
     selectedMove: {},
@@ -63,8 +62,6 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   function imDone() { 
     GameService.imDone(gameId);
   }
-
-  function isDone()  { return GameService.isDone(gameId);    }
 
   function updateBoard() {
     if (ctrl.game && ctrl.game.fen && ChessValidator.game[gameId] && ChessBoard.board[gameId]) {
