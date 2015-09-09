@@ -6,30 +6,39 @@
     </div>
 
     <div flex="30">
-      <div class="clearfix">
-        <timer game-id="ctrl.gameId"
-               is-game-in-play="ctrl.game.inPlay"
-               class="pull-left"></timer>
-        <span class="pull-right">
-          Score: {{ ctrl.game.score }}
-          <div>
-            <input type="checkbox" 
-                   id="im-done-for-this-tun" 
-                   ng-model="ctrl.currnetPlayerIsDone"
-                   ng-change="ctrl.imDone()"
-                   ng-disabled="ctrl.currnetPlayerIsDone || 
-                                !ctrl.game.inPlay || 
-                                ctrl.game.turn === 'AI'">
-            <label for="im-done-for-this-tun">I'm done</label>
-          </div>
-        </span>
-                   
+      <div ng-if="!ctrl.game.winner">
+        <div class="clearfix">
+          <timer game-id="ctrl.gameId"
+                 is-game-in-play="ctrl.game.inPlay"
+                 class="pull-left"></timer>
+          <span class="pull-right">
+            Score: {{ ctrl.game.score }}
+            <div>
+              <input type="checkbox" 
+                     id="im-done-for-this-tun" 
+                     ng-model="ctrl.currnetPlayerIsDone"
+                     ng-change="ctrl.imDone()"
+                     ng-disabled="ctrl.currnetPlayerIsDone || 
+                                  !ctrl.game.inPlay || 
+                                  ctrl.game.turn === 'AI'">
+              <label for="im-done-for-this-tun">I'm done</label>
+            </div>
+          </span>
+                     
+        </div>
+
+        <suggested-moves selected-move="ctrl.selectedMove"
+                         active-reputation-sum="ctrl.activeReputationSum"
+                         suggested-moves="ctrl.suggestedMoves"
+                         ng-if="ctrl.game.turnIndex"></suggested-moves>
       </div>
 
-      <suggested-moves selected-move="ctrl.selectedMove"
-                       active-reputation-sum="ctrl.activeReputationSum"
-                       suggested-moves="ctrl.suggestedMoves"
-                       ng-if="ctrl.game.turnIndex"></suggested-moves>
+      <div ng-if="ctrl.game.winner">
+        <h1>
+          <strong>{{ ctrl.game.winner }}</strong> 
+          wins the game!
+        </h1>
+      </div>
     </div>
 
     <div flex="30" class="flex-right">
