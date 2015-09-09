@@ -9,6 +9,7 @@ function Users($rootScope) {
     isLogged: isLogged,
     isOwnerOrAdmin: isOwnerOrAdmin,
     isOwner: isOwner,
+    canAccess: canAccess,
     isAdmin: isAdmin
   };
 
@@ -36,12 +37,20 @@ function Users($rootScope) {
 
   function getRoles() {
     if (!isLogged())
-      return ;
+      return;
     return Roles.getRolesForUser(getId());
   }
 
   function isOwnerOrAdmin(item) {
     return isOwner(item) || isAdmin();
   }
+
+  function canAccess(item) {
+    if ( isOwner(item) )
+      return true;
+
+    return !( item.requireUser && !isLogged() ) &&
+           !( item.requireAdmin && !isAdmin() );
+  }   
 
 }

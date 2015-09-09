@@ -1,27 +1,30 @@
 <md-toolbar md-scroll-shrink layout="row" layout-align="start center" layout-padding class="topbar">
+  
   <logo flex="20"></logo>
+  
   <h1 ng-if="ctrl.getDynamicTitle()" class="topbar-title" flex="20">{{ ctrl.getDynamicTitle() }}</h1>
+  
   <span ng-if="ctrl.getDynamicText()" class="topbar-text" flex="20">{{ ctrl.getDynamicText() }}</span>
+  
   <div class="flex-right">
     <a ui-sref="games">Games</a>
 
-    <md-menu>
+    <meteor-include src="loginButtons"></meteor-include>
+
+    <md-menu ng-if="ctrl.getDynamicItems().length">
 
       <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Open sample menu">
         <md-icon md-svg-icon="navigation:ic_menu_24px" class="menu-icon"></md-icon>
       </md-button>
 
       <md-menu-content>
-        <md-menu-item>
-          <meteor-include src="loginButtons"></meteor-include>
-        </md-menu-item>
-
-        <md-menu-item ng-repeat="item in ctrl.getDynamicItems()" ng-if="ctrl.userCanAccess(item)">
+        <md-menu-item ng-repeat="item in ctrl.getDynamicItems()">
           <md-button ng-click="item.click()" ng-disabled="item.isDisabled()">{{ item.label }}</md-button>
         </md-menu-item>
-
       </md-menu-content>
+
     </md-menu>
   </div>
+
 </md-toolbar>
 <md-divider></md-divider>

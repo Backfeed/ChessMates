@@ -20,21 +20,12 @@ function topBarController($meteor, TopBar, Users) {
   angular.extend(ctrl, {
     getDynamicTitle: getDynamicTitle,
     getDynamicItems: getDynamicItems,
-    getDynamicText: getDynamicText,
-    userCanAccess: userCanAccess
+    getDynamicText: getDynamicText
   });
 
   function getDynamicItems() {
-    return TopBar.dynamicItems;
+    return _.filter(TopBar.dynamicItems, Users.canAccess);
   }
-
-  function userCanAccess(item) {
-    if (Users.isOwner(item))
-      return true;
-
-    return !(item.requireUser && !Users.isLogged()) &&
-           !(item.requireAdmin && !Users.isAdmin());
-  }   
 
   function getDynamicTitle() {
     return TopBar.dynamicTitle;
