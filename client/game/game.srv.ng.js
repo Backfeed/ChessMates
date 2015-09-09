@@ -117,12 +117,11 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     return Timer.getTurnTimeLeft(gameId) < 7000;
   }
 
-  function notifyNewTurn (turnIndex) {
+  function notifyNewTurn (gameTitle, turnIndex) {
     // TODO :: Add user's changes: rep, tokens
     // TODO :: Add msg if user's move was chosen
-    var msg = 'Turn ' + turnIndex + ' has begun!';
+    var msg = gameTitle + ': Turn ' + turnIndex + ' has begun!';
     DesktopNotifier.notify(msg);
-
   }
 
 }

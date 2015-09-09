@@ -35,7 +35,7 @@ function GameController($meteor, $state, $timeout, $scope, $rootScope, Evaluatio
   function notifyNewTurn(turnIndex, prevTurnIndex) {
     if (! turnIndex || turnIndex === 1 || ! prevTurnIndex || turnIndex === prevTurnIndex) return;
 
-    GameService.notifyNewTurn(turnIndex);
+    GameService.notifyNewTurn(ctrl.game.title, turnIndex);
   }
 
   function init() {
