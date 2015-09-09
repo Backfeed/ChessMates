@@ -26,8 +26,15 @@ function ChessBoard($rootScope, $window, $injector, ChessValidator, Toast, SugMo
     $(selector).removeClass('highlight-square');
   }
 
-  function getSquareSelector(squares) {
-    return _.map(squares, addSquarePrefix).join(", ");
+  function getSquareSelector(squareOrSquares) {
+    if ( typeof squareOrSquares === 'string') {
+      return addSquarePrefix(squareOrSquares)
+    }
+
+    else {
+      return _.map(squareOrSquares, addSquarePrefix).join(", ");
+    }
+
   }
 
   function addSquarePrefix(square) {
