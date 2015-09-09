@@ -11,7 +11,7 @@ function Toast($mdToast) {
 
   function toast(msg) {
 
-    $mdToast.show($mdToast.simple().content(msg));
+    $mdToast.show($mdToast.simple({ position: "top" }).content(msg));
     
   }
 
