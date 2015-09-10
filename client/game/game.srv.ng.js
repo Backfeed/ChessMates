@@ -96,7 +96,7 @@ function GameService($meteor, $state, $timeout, Toast, GameModel, ChessValidator
     ChessBoard.cancelHighlights();
     if (!move || !move.notation) { return; }
     var formatted = formatMoveFrom(move.notation);
-    ChessBoard.highlight(formatted.from, formatted.to);
+    ChessBoard.highlight([formatted.from, formatted.to]);
   }
 
   function movePieceBack(gameId) {
