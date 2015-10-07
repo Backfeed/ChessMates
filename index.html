@@ -1,33 +1,51 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Chessmates by Backfeed</title>
+    <meta name="viewport" content="width=640">
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
     <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>ChessMates by Backfeed</title>
   </head>
+
   <body>
-    <div class="wrapper">
+    <a id="forkme_banner" href="https://github.com/Backfeed/ChessMates">View on GitHub</a>
+    <div class="shell">
+
       <header>
-        <h1>Chessmates</h1>
-        <p>A group of cooperative chess players can suggest and evaluate moves in a Massively Multiplayer Online (MMO) chess game</p>
-
-        <p class="view"><a href="https://github.com/Backfeed/ChessMates">View the Project on GitHub <small>Backfeed/ChessMates</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/Backfeed/ChessMates/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/Backfeed/ChessMates/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/Backfeed/ChessMates">View On <strong>GitHub</strong></a></li>
-        </ul>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>ChessMates</h1>
+            <h2>A group of cooperative chess players can suggest and evaluate moves in a Massively Multiplayer Online (MMO) chess game</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
       </header>
-      <section>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/Backfeed/ChessMates/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/Backfeed/ChessMates/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
         <h2>
 <a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Start</h2>
 
@@ -57,13 +75,24 @@ Remove npm-container</p>
 
 <pre><code>meteor
 </code></pre>
+
+<p>Play - <a href="http://chessmates.io/">http://chessmates.io/</a></p>
       </section>
+
       <footer>
-        <p>This project is maintained by <a href="https://github.com/Backfeed">Backfeed</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/Backfeed">Backfeed</a> can be found on <a href="https://github.com/Backfeed/ChessMates">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="https://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
       </footer>
+
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+
     
   </body>
 </html>
