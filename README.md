@@ -4,7 +4,7 @@ The BACKFEED protocols are aimed at aligning a large but free and uncoordinated 
 
 ## Demo
 
-  at (chessmates.io)[http://chessmates.io]
+  at [chessmates.io](http://chessmates.io)
   
 ## Develop
   
