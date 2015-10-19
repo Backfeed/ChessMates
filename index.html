@@ -3,96 +3,66 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=640">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
-    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-    <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('#main_content').headsmart()
-      })
-    </script>
     <title>ChessMates by Backfeed</title>
   </head>
 
   <body>
-    <a id="forkme_banner" href="https://github.com/Backfeed/ChessMates">View on GitHub</a>
-    <div class="shell">
+    <header>
+      <div class="inner">
+        <h1>ChessMates</h1>
+        <h2>A group of cooperative chess players can suggest and evaluate moves in a Massively Multiplayer Online (MMO) chess game</h2>
+        <a href="https://github.com/Backfeed/ChessMates" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
 
-      <header>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <h1>ChessMates</h1>
-            <h2>A group of cooperative chess players can suggest and evaluate moves in a Massively Multiplayer Online (MMO) chess game</h2>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-      </header>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="chessmates" class="anchor" href="#chessmates" aria-hidden="true"><span class="octicon octicon-link"></span></a>ChessMates</h1>
 
-      <section id="downloads">
-        <span class="inner">
-          <a href="https://github.com/Backfeed/ChessMates/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/Backfeed/ChessMates/tarball/master" class="tgz"><em>download</em> .TGZ</a>
-        </span>
-      </section>
+<p>The BACKFEED protocols are aimed at aligning a large but free and uncoordinated group of creators into a coherent collaboration through a smart distribution of value and reputation. As a fun proof of concept (PoC) for our protocols, we implement them in a multiplayer online chess game, allowing a large number of players jointly play a single hand without much of interactions. The PoC goal is to make a group play significantly better than any of the individual in the group. This is an improved, bionic version of crowd wisdom, implementing the principles of stigermy.</p>
 
+<h2>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h2>
 
-      <span class="banner-fix"></span>
+<p>at <a href="http://chessmates.io">chessmates.io</a></p>
 
+<p><img src="/screenshot.png" alt="in the making"></p>
 
-      <section id="main_content">
-        <h2>
-<a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Start</h2>
+<h2>
+<a id="develop" class="anchor" href="#develop" aria-hidden="true"><span class="octicon octicon-link"></span></a>Develop</h2>
 
-<p>Install Meteor:</p>
+<p><a href="/install.md">Installation</a></p>
+        </section>
 
-<pre><code>curl https://install.meteor.com | /bin/sh
-</code></pre>
+        <aside id="sidebar">
+          <a href="https://github.com/Backfeed/ChessMates/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/Backfeed/ChessMates/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
 
-<p>Documentation is available at <a href="http://docs.meteor.com/">http://docs.meteor.com/</a></p>
+          <p class="repo-owner"><a href="https://github.com/Backfeed/ChessMates"></a> is maintained by <a href="https://github.com/Backfeed">Backfeed</a>.</p>
 
-<p>Clone the project:</p>
-
-<pre><code>git clone https://github.com/Backfeed/blockchess.git
-
-cd blockchess
-</code></pre>
-
-<p>Go to file .meteor/packages
-Remove npm-container</p>
-
-<p>Make initial build:</p>
-
-<pre><code>meteor
-</code></pre>
-
-<p>Run it</p>
-
-<pre><code>meteor
-</code></pre>
-
-<p>Play - <a href="http://chessmates.io/">http://chessmates.io/</a></p>
-      </section>
-
-      <footer>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <p>this project by <a href="https://github.com/Backfeed">Backfeed</a> can be found on <a href="https://github.com/Backfeed/ChessMates">GitHub</a></p>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-        <p>Generated with <a href="https://pages.github.com">GitHub Pages</a> using Merlot</p>
-        <span class="octocat"></span>
-      </footer>
-
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
 
-    
+  
   </body>
 </html>
