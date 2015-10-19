@@ -6,6 +6,8 @@ The BACKFEED protocols are aimed at aligning a large but free and uncoordinated 
 
   at [chessmates.io](http://chessmates.io)
   
+  ![in the making](/screenshot.png)
+  
 ## Develop
   
   <a href="/install.md">Installation</a>
